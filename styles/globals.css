@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+:root {
+  /* BRAHMAKOSH Theme - User Requested Cream/Beige */
+  --background: #FFF0D2;
+  /* Light Cream (Papaya Whip) */
+  --foreground: #2D241E;
+  /* Deep Earthy Brown */
+  --primary: #D69E2E;
+  /* Vedic Gold (kept for accent) */
+  --secondary: #9F1239;
+  /* Ruby Red (kept for alerts) */
+  --accent: #EFDACB;
+  /* Secondary Beige for accents */
+
+  --muted: #EFDACB;
+  /* Warm Almond/Beige */
+  --muted-foreground: #786C60;
+  /* Earthy Gray */
+  --border: #DCC8B0;
+  /* Darker beige for borders */
+  --input: #FFFFFF;
+  /* White input backgrounds */
+  --card: #FFFFFF;
+  /* White cards */
+
+  --font-inter: var(--font-inter);
+  --font-playfair: var(--font-playfair);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-card: var(--card);
+
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
+
+  --animate-fade-in: fadeIn 0.5s ease-out forwards;
+  --animate-slide-up: slideUp 0.5s ease-out forwards;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  --animate-marquee: marquee 25s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+body {
+  background: linear-gradient(180deg, #FFF0D2 0%, #EFDACB 100%);
+  background-attachment: fixed;
+  /* Ensures gradient covers full scroll */
+  color: var(--foreground);
+  font-family: var(--font-inter), sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-playfair), serif;
+}
