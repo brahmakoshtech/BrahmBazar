@@ -32,13 +32,13 @@ export default function AdminDashboard() {
     }, []);
 
     if (loading) return (
-        <div className="space-y-8">
+        <div className="space-y-8 animate-pulse">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[...Array(4)].map((_, i) => (
-                    <Skeleton key={i} height="120px" className="w-full bg-neutral-900 shadow-sm border border-white/10" />
+                    <div key={i} className="h-[120px] w-full bg-white/40 rounded-3xl border border-primary/10 shadow-sm" />
                 ))}
             </div>
-            <Skeleton height="400px" className="w-full bg-neutral-900 shadow-sm border border-white/10" />
+            <div className="h-[400px] w-full bg-white/40 rounded-3xl border border-primary/10 shadow-sm" />
         </div>
     );
 
@@ -53,98 +53,98 @@ export default function AdminDashboard() {
 
     return (
         <div>
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                 <div>
-                    <h1 className="text-3xl font-serif font-bold text-white tracking-wide">Dashboard Overview</h1>
-                    <p className="text-gray-400 mt-1">Welcome back. Your spiritual store insights.</p>
+                    <h1 className="text-3xl font-serif font-bold text-foreground">Dashboard Overview</h1>
+                    <p className="text-muted-foreground mt-2 font-medium">Welcome back. Your store's sacred insights.</p>
                 </div>
-                <div className="text-sm text-primary font-medium border border-primary/20 px-4 py-2 rounded-full bg-primary/10">
-                    {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                <div className="text-xs font-bold uppercase tracking-widest text-primary border border-primary/20 px-6 py-3 rounded-full bg-white/60 backdrop-blur-md shadow-sm">
+                    {new Date().toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                 </div>
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                 {statCards.map((stat, idx) => (
-                    <div key={idx} className="bg-neutral-900/50 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/5 hover:border-primary/30 transition-all group">
-                        <div className="flex items-start justify-between mb-4">
-                            <div className={`p-3 rounded-xl ${stat.bg} ${stat.color} group-hover:scale-110 transition-transform duration-300 border border-white/5`}>
+                    <div key={idx} className="bg-white/60 backdrop-blur-md p-6 rounded-3xl shadow-xl shadow-primary/5 border border-primary/10 hover:border-primary/40 transition-all hover:bg-white group">
+                        <div className="flex items-start justify-between mb-6">
+                            <div className={`p-4 rounded-2xl ${stat.bg} ${stat.color} group-hover:scale-110 transition-transform duration-300 border border-primary/5`}>
                                 {stat.icon}
                             </div>
-                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                {idx === 0 ? '+12% this month' : 'Updated now'}
+                            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider opacity-60">
+                                {idx === 0 ? '+12% growth' : 'Real-time'}
                             </span>
                         </div>
                         <div>
-                            <h3 className="text-gray-400 text-sm font-medium mb-1">{stat.title}</h3>
-                            <p className="text-3xl font-serif font-bold text-white tracking-tight">{stat.value}</p>
+                            <h3 className="text-muted-foreground text-[10px] uppercase font-bold tracking-[0.2em] mb-2">{stat.title}</h3>
+                            <p className="text-3xl font-serif font-bold text-foreground italic leading-none">{stat.value}</p>
                         </div>
                     </div>
                 ))}
             </div>
 
             {/* Recent Orders Section */}
-            <div className="bg-neutral-900/50 backdrop-blur-sm rounded-2xl shadow-lg border border-white/5 overflow-hidden">
-                <div className="p-6 border-b border-white/5 flex items-center justify-between">
-                    <h2 className="text-lg font-serif font-bold text-white flex items-center gap-2">
-                        <TrendingUp size={20} className="text-primary" />
+            <div className="bg-white/60 backdrop-blur-md rounded-3xl shadow-2xl shadow-primary/5 border border-primary/10 overflow-hidden mb-20">
+                <div className="p-8 border-b border-primary/5 flex items-center justify-between">
+                    <h2 className="text-xl font-serif font-bold text-foreground flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                            <TrendingUp size={20} className="text-secondary" />
+                        </div>
                         Recent Orders
                     </h2>
-                    <Link href="/admin/orders" className="text-sm font-semibold text-primary hover:text-white flex items-center gap-1 group transition-colors">
-                        View All
-                        <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                    <Link href="/admin/orders" className="text-xs font-bold uppercase tracking-widest text-primary hover:text-foreground flex items-center gap-2 group transition-all">
+                        View Database
+                        <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                     </Link>
                 </div>
 
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
-                        <thead className="bg-white/5">
+                        <thead className="bg-primary/5">
                             <tr>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Order ID</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Customer</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Date</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Total</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-right">Action</th>
+                                <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Transaction</th>
+                                <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Devotee</th>
+                                <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Timestamp</th>
+                                <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Offering</th>
+                                <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Status</th>
+                                <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] text-right">Access</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5">
+                        <tbody className="divide-y divide-primary/5">
                             {stats.recentOrders.map((order) => (
-                                <tr key={order._id} className="hover:bg-white/5 transition-colors">
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className="font-mono text-xs text-primary/80 bg-primary/10 px-2 py-1 rounded border border-primary/20">
-                                            #{order._id.substring(0, 8)}
+                                <tr key={order._id} className="hover:bg-primary/5 transition-all group">
+                                    <td className="px-8 py-6 whitespace-nowrap">
+                                        <span className="font-mono text-[10px] font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20">
+                                            #{order._id.substring(order._id.length - 6).toUpperCase()}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-full bg-neutral-800 border border-white/10 flex items-center justify-center text-primary font-bold text-xs">
+                                    <td className="px-8 py-6">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 rounded-full bg-secondary text-white font-serif font-bold text-sm flex items-center justify-center shadow-lg shadow-secondary/20">
                                                 {(order.user?.name || 'G')[0]}
                                             </div>
-                                            <div className="text-sm font-medium text-gray-200">
+                                            <div className="text-sm font-bold text-foreground">
                                                 {order.user?.name || 'Guest User'}
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-gray-400">
-                                        {new Date(order.createdAt).toLocaleDateString()}
+                                    <td className="px-8 py-6 text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                                        {new Date(order.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                                     </td>
-                                    <td className="px-6 py-4 text-sm font-bold text-white">
-                                        ₹{order.totalAmount.toLocaleString()}
+                                    <td className="px-8 py-6 text-base font-bold text-primary italic">
+                                        ₹{order.totalAmount.toLocaleString('en-IN')}
                                     </td>
-                                    <td className="px-6 py-4">
-                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${order.paymentStatus === 'Paid'
-                                            ? 'bg-green-900/20 text-green-400 border-green-900/30'
-                                            : 'bg-yellow-900/20 text-yellow-400 border-yellow-900/30'
+                                    <td className="px-8 py-6">
+                                        <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border transition-colors ${order.paymentStatus === 'Paid'
+                                            ? 'bg-green-500 text-white border-green-600'
+                                            : 'bg-amber-500 text-white border-amber-600'
                                             }`}>
-                                            <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${order.paymentStatus === 'Paid' ? 'bg-green-400' : 'bg-yellow-400'
-                                                }`}></span>
-                                            {order.paymentStatus}
+                                            {order.paymentStatus === 'Paid' ? 'Cleared' : 'Pending'}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <Link href={`/admin/orders/${order._id}`} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
-                                            Manage
+                                    <td className="px-8 py-6 text-right">
+                                        <Link href={`/admin/orders/${order._id}`} className="px-6 py-2.5 rounded-full bg-foreground text-background text-[10px] font-bold uppercase tracking-widest hover:bg-secondary hover:text-white transition-all shadow-md group-hover:shadow-lg">
+                                            Review
                                         </Link>
                                     </td>
                                 </tr>

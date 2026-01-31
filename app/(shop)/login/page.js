@@ -147,7 +147,7 @@ function LoginForm() {
                     </button>
 
                     <p className="mt-4 text-center text-sm text-gray-500">
-                        New to Rudra Divine?{' '}
+                        New to BRAHMAKOSH?{' '}
                         <Link href="/register" className="font-bold text-primary hover:text-white transition-colors">
                             Begin your journey
                         </Link>

@@ -80,37 +80,42 @@ export default function CustomizeSite() {
 
     if (loading) {
         return (
-            <div className="flex h-screen items-center justify-center bg-black text-white">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <div className="flex h-screen items-center justify-center bg-background">
+                <Loader2 className="h-10 w-10 animate-spin text-primary" />
             </div>
         );
     }
 
     return (
-        <div className="p-8 max-w-7xl mx-auto text-white">
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-serif font-bold text-primary">Customize Site Content</h1>
+        <div className="p-4 md:p-8 max-w-7xl mx-auto">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-12">
+                <div>
+                    <h1 className="text-3xl font-serif font-bold text-foreground">Sanctuary Scribe</h1>
+                    <p className="text-muted-foreground mt-2 font-medium">Fine-tune the sacred inscriptions of your digital temple.</p>
+                </div>
                 <button
                     onClick={handleSeed}
-                    className="bg-white/5 hover:bg-white/10 text-gray-300 px-4 py-2 rounded border border-white/10 text-sm transition-colors"
+                    className="bg-white/60 backdrop-blur-md hover:bg-foreground hover:text-white text-foreground px-6 py-3 rounded-full border border-primary/10 text-[10px] font-bold uppercase tracking-widest transition-all shadow-sm"
                 >
-                    Reset/Seed Defaults
+                    Restore Primal Word
                 </button>
             </div>
 
-            <div className="space-y-12">
+            <div className="space-y-16">
                 {Object.entries(groupedBlocks).map(([section, blocks]) => (
-                    <div key={section} className="bg-neutral-900/50 p-6 rounded-xl border border-white/5">
-                        <h2 className="text-xl font-bold uppercase tracking-widest text-gray-400 mb-6 border-b border-white/10 pb-2">
+                    <div key={section} className="bg-white/40 backdrop-blur-md p-8 rounded-[2.5rem] border border-primary/10 shadow-lg animate-in fade-in slide-in-from-bottom-4">
+                        <h2 className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary mb-8 flex items-center gap-4">
+                            <span className="w-8 h-[1px] bg-primary/30"></span>
                             {section.replace('_', ' ')}
+                            <span className="flex-1 h-[1px] bg-primary/30"></span>
                         </h2>
 
                         <div className="grid gap-6">
                             {blocks.map((block) => (
-                                <div key={block._id} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-black/40 p-4 rounded-lg">
+                                <div key={block._id} className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center bg-white/50 p-6 rounded-[2rem] border border-primary/5 hover:border-primary/20 transition-all group">
                                     <div className="md:col-span-3">
-                                        <label className="text-sm font-medium text-gray-300 block">{block.title}</label>
-                                        <span className="text-xs text-gray-600 font-mono">{block.identifier}</span>
+                                        <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest block mb-1">{block.title}</label>
+                                        <span className="text-[9px] text-primary/40 font-mono font-bold">/{block.identifier}</span>
                                     </div>
 
                                     <div className="md:col-span-8">
@@ -119,35 +124,37 @@ export default function CustomizeSite() {
                                                 type="text"
                                                 value={editValue}
                                                 onChange={(e) => setEditValue(e.target.value)}
-                                                className="w-full bg-neutral-800 border border-primary/50 rounded px-3 py-2 text-white focus:outline-none focus:ring-1 focus:ring-primary"
+                                                className="w-full bg-white border border-primary/20 rounded-xl px-5 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 font-medium text-sm transition-all shadow-inner"
                                                 autoFocus
                                             />
                                         ) : (
-                                            <p className="text-white/90 text-sm truncate bg-neutral-900/50 px-3 py-2 rounded">{block.content}</p>
+                                            <p className="text-foreground text-sm font-medium bg-background/30 px-5 py-3 rounded-xl border border-primary/5 italic truncate">
+                                                "{block.content}"
+                                            </p>
                                         )}
                                     </div>
 
                                     <div className="md:col-span-1 flex justify-end gap-2">
                                         {editingId === block.identifier ? (
-                                            <>
+                                            <div className="flex gap-2">
                                                 <button
                                                     onClick={() => handleSave(block.identifier)}
                                                     disabled={saving}
-                                                    className="p-2 bg-primary text-black rounded hover:bg-white transition disabled:opacity-50"
+                                                    className="p-3 bg-primary text-white rounded-full hover:bg-foreground transition-all disabled:opacity-50 shadow-lg shadow-primary/20"
                                                 >
-                                                    {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                                                    {saving ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} />}
                                                 </button>
                                                 <button
                                                     onClick={() => setEditingId(null)}
-                                                    className="p-2 bg-neutral-700 text-white rounded hover:bg-neutral-600 transition"
+                                                    className="p-3 bg-white text-muted-foreground rounded-full hover:bg-red-50 hover:text-red-500 transition-all shadow-lg border border-primary/5"
                                                 >
                                                     <X size={16} />
                                                 </button>
-                                            </>
+                                            </div>
                                         ) : (
                                             <button
                                                 onClick={() => handleEdit(block)}
-                                                className="p-2 bg-neutral-800 text-gray-400 rounded hover:text-white hover:bg-neutral-700 transition"
+                                                className="p-4 bg-white text-muted-foreground rounded-full hover:text-primary hover:bg-primary/5 transition-all opacity-0 group-hover:opacity-100 shadow-md border border-primary/5"
                                             >
                                                 <Edit3 size={16} />
                                             </button>

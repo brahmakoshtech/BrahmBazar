@@ -83,7 +83,7 @@ export default function Navbar() {
 
             {/* MAIN HEADER: Logo | Search | Actions */}
             <div className="container mx-auto px-4 max-w-7xl">
-               <div className="flex justify-between items-center py-4 md:py-6 gap-4 md:gap-8">
+               <div className="flex justify-between items-center py-2 md:py-3 gap-4 md:gap-8">
 
                   {/* LEFT: Mobile Menu & Logo */}
                   <div className="flex items-center gap-3 md:gap-0">
@@ -92,21 +92,22 @@ export default function Navbar() {
                      </button>
 
                      <Link href="/" className="flex items-center gap-3 group">
-                        <div className="relative w-14 h-14 md:w-20 md:h-20 shrink-0 filter drop-shadow-lg hover:scale-105 transition-transform duration-300 rounded-full overflow-hidden">
+                        <div className="relative w-12 h-12 md:w-16 md:h-16 shrink-0 filter drop-shadow-lg hover:scale-105 transition-transform duration-300 rounded-full overflow-hidden">
                            <Image
                               src="/images/Brahmokosh.png"
-                              alt="Brahmakosh Logo"
+                              alt="BRAHMAKOSH Logo"
                               fill
                               className="object-contain mix-blend-multiply"
                               priority
                            />
                         </div>
-                        <div className="flex flex-col leading-none">
-                           <span className="font-serif font-bold text-foreground text-xl md:text-2xl tracking-wide uppercase group-hover:text-primary transition-colors duration-300">
-                              {!loading ? getContent('navbar_logo_text', 'Brahmakosh') : 'Brahmakosh'}
+                        <div className="flex flex-col leading-none items-center justify-center">
+                           <span className="font-serif font-bold text-xl md:text-2xl tracking-wide uppercase flex">
+                              <span className="text-primary">BRAHMA</span>
+                              <span className="text-foreground transition-colors duration-300 group-hover:text-primary">KOSH</span>
                            </span>
-                           <span className="text-[8px] md:text-[9px] text-muted-foreground tracking-[0.3em] font-medium uppercase mt-1">
-                              {!loading && getContent('navbar_subtitle', 'Spiritual Store')}
+                           <span className="text-[7px] md:text-[8px] text-muted-foreground tracking-[0.2em] font-bold uppercase mt-1 text-center w-full">
+                              #No.1 Spiritual Store
                            </span>
                         </div>
                      </Link>
@@ -167,7 +168,7 @@ export default function Navbar() {
             {/* NAVIGATION LINKS (Desktop Only) */}
             <div className="hidden md:block border-t border-border bg-background/80 backdrop-blur-sm">
                <div className="container mx-auto px-4 max-w-7xl">
-                  <nav className="flex justify-center items-center gap-10 py-3">
+                  <nav className="flex justify-center items-center gap-10 py-1.5">
                      <Link
                         href="/"
                         className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary relative group py-1"

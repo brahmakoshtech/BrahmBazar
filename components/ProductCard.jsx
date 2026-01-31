@@ -59,108 +59,114 @@ export default function ProductCard({ product, activeCoupons = [] }) {
     if (!product) return null;
 
     return (
-        <div className="group bg-card rounded-xl overflow-hidden hover:shadow-lg hover:shadow-primary/10 transition-all duration-500 relative flex flex-col h-full border border-border hover:border-primary/50 hover:-translate-y-1">
+        <div className="group bg-card rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 relative flex flex-col h-full border border-border/50">
 
-            {/* Wishlist Button */}
-            <button
-                onClick={async (e) => {
-                    e.stopPropagation();
-                    try {
-                        await api.post('/api/users/wishlist', { productId: product._id });
-                        refreshCounts();
-                        // Consider toast notification instead of alert
-                    } catch (error) {
-                        console.error('Wishlist error', error);
-                    }
-                }}
-                className="absolute top-4 right-4 z-20 bg-white/90 backdrop-blur-md p-2.5 rounded-full shadow-sm text-muted-foreground hover:text-primary hover:bg-white transition-all transform hover:scale-110 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-300 border border-border"
-                title="Add to Wishlist"
-            >
-                <Heart size={18} />
-            </button>
-
-            {/* Image Container - Aspect Square (Compact) */}
+            {/* Image Container - Square Aspect Ratio for balanced look */}
             <Link href={`/product/${product._id}`} className="block relative aspect-square overflow-hidden bg-muted">
                 <img
                     src={product.images?.[0] || 'https://via.placeholder.com/400x500?text=No+Image'}
                     alt={product.title}
-                    className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                    className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700 ease-out"
                 />
 
+                {/* Overlay Gradient (Subtle) */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
                 {/* Status Badges */}
-                <div className="absolute top-4 left-4 flex flex-col gap-2">
+                <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
                     {product.stock <= 5 && product.stock > 0 && (
-                        <span className="bg-orange-500/90 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm border border-orange-400/20">
+                        <span className="bg-orange-500/90 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-widest shadow-sm">
                             Low Stock
                         </span>
                     )}
                     {product.stock === 0 && (
-                        <span className="bg-red-900/90 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm border border-red-500/20">
+                        <span className="bg-red-900/90 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-widest shadow-sm">
                             Sold Out
                         </span>
                     )}
                     {/* Coupon Badge */}
                     {bestCoupon && product.stock > 0 && (
-                        <span className="bg-primary/90 text-white backdrop-blur-sm text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md border border-primary/20 flex items-center gap-1 animate-pulse">
+                        <span className="bg-primary/95 text-white backdrop-blur-md text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-widest shadow-md flex items-center gap-1">
                             <Ticket size={10} className="fill-white" />
                             {bestCoupon.discountType === 'percentage' ? `${bestCoupon.discountValue}% OFF` : `₹${bestCoupon.discountValue} OFF`}
                         </span>
                     )}
                 </div>
+
+                {/* Wishlist Button - Floating Top Right */}
+                <button
+                    onClick={async (e) => {
+                        e.stopPropagation();
+                        try {
+                            await api.post('/api/users/wishlist', { productId: product._id });
+                            refreshCounts();
+                        } catch (error) {
+                            console.error('Wishlist error', error);
+                        }
+                    }}
+                    className="absolute top-3 right-3 z-20 bg-white/80 backdrop-blur-md p-2 rounded-full text-foreground/70 hover:text-red-500 hover:bg-white transition-all transform hover:scale-110 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 duration-300 shadow-sm"
+                    title="Add to Wishlist"
+                >
+                    <Heart size={16} />
+                </button>
+
             </Link>
 
-            {/* Content */}
-            <div className="p-4 flex flex-col flex-grow relative bg-card">
-                <div className="mb-2 flex justify-between items-start">
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{product.category}</span>
+            {/* Content Details */}
+            <div className="p-4 flex flex-col flex-grow relative">
+
+                {/* Category & Savings */}
+                <div className="flex justify-between items-center mb-1">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">{product.category}</span>
                     {bestCoupon && product.stock > 0 && (
-                        <span className="text-[10px] text-primary font-medium bg-primary/10 px-2 py-0.5 rounded border border-primary/20">
+                        <span className="text-[10px] font-medium text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
                             Save ₹{Math.round(bestCoupon.savings)}
                         </span>
                     )}
                 </div>
 
-                <Link href={`/product/${product._id}`} className="block flex-grow">
-                    <h3 className="font-serif font-medium text-foreground text-lg leading-snug line-clamp-2 hover:text-primary transition-colors mb-2">
+                {/* Title */}
+                <Link href={`/product/${product._id}`} className="block mb-2 group-hover:text-primary transition-colors pr-10">
+                    <h3 className="font-serif font-semibold text-foreground text-sm md:text-base leading-tight line-clamp-2 h-10">
                         {product.title}
                     </h3>
                 </Link>
 
-                <div className="flex items-center justify-between mt-auto pt-4 border-t border-border">
-                    <div className="flex flex-col items-start">
-                        {bestCoupon && bestCoupon.savings > 0 ? (
-                            <>
-                                <span className="text-xs text-muted-foreground line-through decoration-red-500/50 decoration-1">
-                                    ₹{product.price?.toLocaleString('en-IN')}
-                                </span>
-                                <span className="text-xl font-bold text-primary">
-                                    ₹{(Math.max(0, (product.price || 0) - bestCoupon.savings)).toLocaleString('en-IN')}
-                                </span>
-                            </>
-                        ) : (
-                            <span className="text-xl font-bold text-primary">₹{product.price?.toLocaleString('en-IN')}</span>
-                        )}
-                    </div>
-
-                    {/* Minimal Add Button */}
-                    <button
-                        onClick={async (e) => {
-                            e.stopPropagation();
-                            try {
-                                await addToCart(product, 1);
-                            } catch (error) {
-                                console.error('Cart error', error);
-                            }
-                        }}
-                        disabled={product.stock === 0}
-                        className="bg-muted text-foreground p-2.5 rounded-full hover:bg-primary hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed group/btn border border-border"
-                        title="Add to Cart"
-                    >
-                        <ShoppingCart size={20} className="group-hover/btn:scale-110 transition-transform" />
-                    </button>
+                {/* Price Section */}
+                <div className="mt-auto flex items-baseline gap-2">
+                    {bestCoupon && bestCoupon.savings > 0 ? (
+                        <>
+                            <span className="text-base md:text-lg font-bold text-primary">
+                                ₹{(Math.max(0, (product.price || 0) - bestCoupon.savings)).toLocaleString('en-IN')}
+                            </span>
+                            <span className="text-[10px] md:text-xs text-muted-foreground line-through decoration-red-500/40">
+                                ₹{product.price?.toLocaleString('en-IN')}
+                            </span>
+                        </>
+                    ) : (
+                        <span className="text-base md:text-lg font-bold text-primary">₹{product.price?.toLocaleString('en-IN')}</span>
+                    )}
                 </div>
+
+                {/* Add to Cart - Fixed Position in Content Area */}
+                <button
+                    onClick={async (e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        try {
+                            await addToCart(product, 1);
+                        } catch (error) {
+                            console.error('Cart error', error);
+                        }
+                    }}
+                    disabled={product.stock === 0}
+                    className="absolute bottom-4 right-4 bg-muted hover:bg-primary text-foreground hover:text-white p-3 rounded-full transition-all duration-300 shadow-sm border border-border/50 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group/cart"
+                    title="Add to Cart"
+                >
+                    <ShoppingCart size={18} className="transition-transform group-hover/cart:scale-110" />
+                </button>
             </div>
-        </div>
+        </div >
     );
 }
 

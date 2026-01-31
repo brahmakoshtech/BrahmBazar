@@ -44,10 +44,10 @@ export default function AdminLayout({ children }) {
 
     if (!authorized) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-black text-red-500">
+            <div className="min-h-screen flex items-center justify-center bg-background">
                 <div className="flex flex-col items-center gap-4">
-                    <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
-                    <p className="text-sm font-medium tracking-wide uppercase">Verifying Access...</p>
+                    <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-muted-foreground">Verifying Authority...</p>
                 </div>
             </div>
         );
@@ -58,9 +58,9 @@ export default function AdminLayout({ children }) {
     }
 
     return (
-        <div className="flex min-h-screen bg-black font-sans text-gray-200">
+        <div className="flex min-h-screen bg-transparent font-sans text-foreground">
             <AdminSidebar />
-            <div className="flex-1 ml-64 bg-black">
+            <div className="flex-1 ml-64 min-h-screen">
                 <main className="p-8 md:p-12 max-w-7xl mx-auto">
                     {children}
                 </main>

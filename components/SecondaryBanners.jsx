@@ -66,25 +66,25 @@ export default function SecondaryBanners() {
                                 alt={banner.title}
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-8 md:p-12">
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6 md:p-12">
                                 <motion.div
                                     initial={{ y: 20, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{ delay: 0.3 }}
                                     className="max-w-xl"
                                 >
-                                    <span className="text-secondary font-bold tracking-widest uppercase text-sm mb-2 block">
+                                    <span className="text-secondary font-bold tracking-widest uppercase text-[10px] md:text-sm mb-2 block">
                                         {banner.tag || 'Limited Edition'}
                                     </span>
-                                    <h2 className="text-3xl md:text-5xl font-serif font-bold text-white mb-4">
+                                    <h2 className="text-2xl md:text-5xl font-serif font-bold text-white mb-3 md:mb-4">
                                         {banner.title}
                                     </h2>
                                     {banner.description && (
-                                        <p className="text-gray-200 mb-6 line-clamp-2">
+                                        <p className="text-gray-200 mb-4 md:mb-6 line-clamp-2 text-sm md:text-base">
                                             {banner.description}
                                         </p>
                                     )}
-                                    <button className="text-white border-b border-secondary pb-1 hover:text-secondary hover:border-white transition-colors">
+                                    <button className="text-white border-b border-secondary pb-1 text-xs md:text-sm font-bold uppercase tracking-wider hover:text-secondary hover:border-white transition-colors">
                                         Explore Collection
                                     </button>
                                 </motion.div>

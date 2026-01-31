@@ -25,67 +25,79 @@ export default function AdminOrders() {
         fetchOrders();
     }, []);
 
-    if (loading) return <div className="p-6">Loading orders...</div>;
-    if (error) return <div className="p-6 text-red-500">Error: {error}</div>;
+    if (loading) return (
+        <div className="p-8 space-y-4 animate-pulse">
+            <div className="w-64 h-12 bg-white/40 rounded-full border border-primary/10 mb-8" />
+            <div className="h-96 w-full bg-white/40 rounded-3xl border border-primary/10 shadow-sm" />
+        </div>
+    );
+    if (error) return (
+        <div className="p-8">
+            <div className="bg-red-50 border border-red-200 p-6 rounded-2xl text-red-600 font-bold uppercase tracking-widest text-xs">
+                {error}
+            </div>
+        </div>
+    );
 
     return (
-        <div className="p-6">
-            <h1 className="text-3xl font-serif font-bold text-white tracking-wide mb-6">Manage Orders</h1>
+        <div className="p-4 md:p-8">
+            <div className="mb-10">
+                <h1 className="text-3xl font-serif font-bold text-foreground">Order Management</h1>
+                <p className="text-muted-foreground mt-2 font-medium">Oversee the fulfillment of sacred requests.</p>
+            </div>
 
-            <div className="bg-neutral-900/50 backdrop-blur-sm rounded-2xl shadow-lg border border-white/5 overflow-hidden">
+            <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-2xl shadow-primary/5 border border-primary/10 overflow-hidden animate-in slide-in-from-bottom-4 duration-500">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
-                        <thead className="bg-white/5">
+                        <thead className="bg-primary/5">
                             <tr>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Order ID</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">User</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Date</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Total</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Paid</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Delivered</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Action</th>
+                                <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Reference</th>
+                                <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">User</th>
+                                <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Timestamp</th>
+                                <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Value</th>
+                                <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Payment</th>
+                                <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Dispatch</th>
+                                <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] text-right">Review</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5">
+                        <tbody className="divide-y divide-primary/5">
                             {orders.map((order) => (
-                                <tr key={order._id} className="hover:bg-white/5 transition-colors">
-                                    <td className="px-6 py-4 text-sm text-primary/80 font-mono">
-                                        <span className="bg-primary/10 px-2 py-1 rounded border border-primary/20">
-                                            #{order._id.substring(0, 8)}
+                                <tr key={order._id} className="hover:bg-primary/5 transition-all group">
+                                    <td className="px-8 py-6">
+                                        <span className="font-mono text-[10px] font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20">
+                                            #{order._id.substring(order._id.length - 8).toUpperCase()}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-white font-medium">
+                                    <td className="px-8 py-6 text-sm text-foreground font-bold">
                                         {order.user?.name || 'Guest'}
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-gray-400">
-                                        {new Date(order.createdAt).toLocaleDateString()}
+                                    <td className="px-8 py-6 text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                                        {new Date(order.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-white font-bold">
-                                        ₹{order.totalAmount.toLocaleString()}
+                                    <td className="px-8 py-6 text-base font-bold text-primary italic">
+                                        ₹{order.totalAmount.toLocaleString('en-IN')}
                                     </td>
-                                    <td className="px-6 py-4 text-sm">
-                                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${order.paymentStatus === 'Paid' ? 'bg-green-900/20 text-green-400 border-green-900/30' : 'bg-red-900/20 text-red-400 border-red-900/30'
-                                            }`}>
+                                    <td className="px-8 py-6">
+                                        <span className={`px-3 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase border ${order.paymentStatus === 'Paid' ? 'bg-green-500 text-white border-green-600' : 'bg-red-500 text-white border-red-600'}`}>
                                             {order.paymentStatus}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-sm">
-                                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${order.orderStatus === 'Delivered' ? 'bg-green-900/20 text-green-400 border-green-900/30' : 'bg-yellow-900/20 text-yellow-400 border-yellow-900/30'
-                                            }`}>
+                                    <td className="px-8 py-6">
+                                        <span className={`px-3 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase border ${order.orderStatus === 'Delivered' ? 'bg-green-500 text-white border-green-600' : 'bg-amber-500 text-white border-amber-600'}`}>
                                             {order.orderStatus}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-sm">
-                                        <Link href={`/admin/orders/${order._id}`} className="text-gray-400 hover:text-white flex items-center gap-1 transition-colors">
-                                            <Eye size={18} /> Details
+                                    <td className="px-8 py-6 text-right">
+                                        <Link href={`/admin/orders/${order._id}`} className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-foreground text-background text-[10px] font-bold uppercase tracking-widest hover:bg-secondary hover:text-white transition-all shadow-md active:scale-95">
+                                            <Eye size={14} /> Review
                                         </Link>
                                     </td>
                                 </tr>
                             ))}
                             {orders.length === 0 && (
                                 <tr>
-                                    <td colSpan="7" className="px-6 py-12 text-center text-gray-500">
-                                        No orders found.
+                                    <td colSpan="7" className="px-8 py-20 text-center text-muted-foreground font-bold uppercase tracking-widest text-xs">
+                                        Database empty. No orders recorded.
                                     </td>
                                 </tr>
                             )}

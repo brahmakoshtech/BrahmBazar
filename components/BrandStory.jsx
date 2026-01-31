@@ -25,18 +25,23 @@ export default function BrandStory() {
                         transition={{ duration: 0.8 }}
                         className="w-full lg:w-1/2"
                     >
-                        <div className="relative aspect-[4/5] rounded-t-full rounded-b-2xl overflow-hidden border-4 border-border">
-                            <Image
-                                src="https://images.unsplash.com/photo-1528319725582-ddc096101511?w=800&auto=format&fit=crop&q=60"
-                                alt="Meditation and Peace"
-                                fill
-                                className="object-cover"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-
-                            <div className="absolute bottom-8 left-8 right-8 text-center">
-                                <p className="text-secondary font-serif italic text-xl">"Spirituality is not just a practice, it is a way of life."</p>
-                            </div>
+                        <div className="relative aspect-square rounded-full overflow-hidden border-4 border-primary/20 bg-secondary/5 shadow-2xl max-w-md mx-auto">
+                            <motion.div
+                                className="w-full h-full relative"
+                                animate={{ scale: [1, 1.15, 1] }}
+                                transition={{
+                                    duration: 8,
+                                    ease: "easeInOut",
+                                    repeat: Infinity,
+                                }}
+                            >
+                                <Image
+                                    src="/images/Brahmokosh.png"
+                                    alt="BRAHMAKOSH Logo"
+                                    fill
+                                    className="object-contain p-16 drop-shadow-2xl"
+                                />
+                            </motion.div>
                         </div>
                     </motion.div>
 
@@ -59,7 +64,7 @@ export default function BrandStory() {
 
                         <div className="space-y-6 text-muted-foreground text-lg font-light leading-relaxed">
                             <p>
-                                {!loading && getContent('story_text_1', 'The journey of the soul requires powerful allies. At Rudra Divine, we do not merely trade in objects; we are custodians of ancient energy. Each Rudraksha, Gemstone, and Yantra is chosen for its vibrational purity.')}
+                                {!loading && getContent('story_text_1', 'The journey of the soul requires powerful allies. At BRAHMAKOSH, we do not merely trade in objects; we are custodians of ancient energy. Each Rudraksha, Gemstone, and Yantra is chosen for its vibrational purity.')}
                             </p>
                             <p>
                                 {!loading && getContent('story_text_2', 'Our path is one of authenticity. Before reaching your hands, every sacred tool undergoes a rigorous Pran Pratistha ceremony by Vedic Brahmins in Kashi—transforming it from a stone into a living vessel of cosmic power, ready to guide your spiritual evolution.')}

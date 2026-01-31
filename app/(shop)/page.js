@@ -25,7 +25,10 @@ export default function Home() {
           api.get('/api/products'),
           api.get('/api/coupons/active')
         ]);
-        setProducts(productsRes.data);
+        const sortedProducts = (productsRes.data || []).sort((a, b) =>
+          new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+        );
+        setProducts(sortedProducts);
         setActiveCoupons(couponsRes.data);
       } catch (error) {
         console.error('Failed to fetch data:', error);
@@ -88,17 +91,14 @@ export default function Home() {
           )}
 
           <div className="mt-12 text-center">
-            <button
-              onClick={() => {
-                const section = document.getElementById('featured-products');
-                if (section) section.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="group relative px-8 py-3 bg-transparent border border-primary/40 rounded-full text-foreground font-serif tracking-wide hover:border-primary hover:bg-primary/5 transition-all duration-300"
+            <Link
+              href="/shop"
+              className="group relative px-8 py-3 bg-transparent border border-primary/40 rounded-full text-foreground font-serif tracking-wide hover:border-primary hover:bg-primary/5 transition-all duration-300 inline-block"
             >
               <span className="flex items-center gap-2">
                 See All Collection <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </span>
-            </button>
+            </Link>
           </div>
         </div>
       </section>

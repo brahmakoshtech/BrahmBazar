@@ -286,16 +286,16 @@ export default function CartPage() {
     };
 
     if (loading) return (
-        <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="min-h-screen flex items-center justify-center bg-background">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         </div>
     );
 
     if (cartItems.length === 0) {
         return (
-            <div className="min-h-screen bg-black flex items-center justify-center">
+            <div className="min-h-screen bg-transparent flex items-center justify-center">
                 <EmptyState
-                    icon={<ShoppingBag size={64} />}
+                    icon={<ShoppingBag size={64} className="text-primary/40" />}
                     title="Your cart is empty"
                     description="Looks like you haven't added anything yet. Explore our premium collection today."
                     actionLabel="Start Shopping"
@@ -306,20 +306,20 @@ export default function CartPage() {
     }
 
     return (
-        <div className="min-h-screen bg-black py-12 md:py-20 font-sans text-white">
+        <div className="min-h-screen bg-transparent py-10 md:py-20 font-sans text-foreground">
             <div className="container mx-auto px-4 max-w-7xl">
-                <h1 className="text-3xl md:text-4xl font-serif font-bold text-white mb-8 flex items-center gap-4">
-                    <ShoppingBag className="text-primary" size={36} />
-                    <span>Shopping Cart <span className="text-lg font-medium text-gray-500 ml-2">({cartItems.length} items)</span></span>
+                <h1 className="text-2xl md:text-4xl font-serif font-bold text-foreground mb-8 flex items-center gap-4">
+                    <ShoppingBag className="text-secondary" size={32} />
+                    <span>Shopping Cart <span className="text-sm md:text-lg font-medium text-muted-foreground ml-2">({cartItems.length} items)</span></span>
                 </h1>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
                     {/* Cart Items List */}
                     <div className="lg:col-span-2 space-y-6">
                         {cartItems.map((item) => (
-                            <div key={item._id} className="bg-neutral-900/50 backdrop-blur-sm rounded-2xl shadow-sm border border-white/5 p-6 flex flex-col sm:flex-row gap-6 transition-all hover:bg-neutral-900 group">
+                            <div key={item._id} className="bg-white/60 backdrop-blur-md rounded-2xl shadow-sm border border-primary/10 p-4 md:p-6 flex flex-row gap-4 md:gap-6 transition-all hover:bg-white group">
                                 {/* Product Image */}
-                                <div className="w-full sm:w-32 h-32 bg-black rounded-xl overflow-hidden flex-shrink-0 relative border border-white/10">
+                                <div className="w-24 md:w-32 h-24 md:h-32 bg-muted rounded-xl overflow-hidden flex-shrink-0 relative border border-primary/5">
                                     <img
                                         src={item.product?.images?.[0] || 'https://via.placeholder.com/150'}
                                         alt={item.product?.title}
@@ -331,16 +331,16 @@ export default function CartPage() {
                                 <div className="flex-1 flex flex-col justify-between">
                                     <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
                                         <div>
-                                            <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1">
+                                            <p className="text-[10px] md:text-xs font-bold text-secondary uppercase tracking-widest mb-1">
                                                 {item.product?.category}
                                             </p>
-                                            <h3 className="font-serif font-bold text-lg text-white hover:text-primary transition-colors leading-tight">
+                                            <h3 className="font-serif font-bold text-base md:text-lg text-foreground hover:text-primary transition-colors leading-tight line-clamp-2">
                                                 <Link href={`/product/${item.product?._id}`}>
                                                     {item.product?.title}
                                                 </Link>
                                             </h3>
                                         </div>
-                                        <p className="font-bold text-xl text-white">
+                                        <p className="font-bold text-lg md:text-xl text-primary">
                                             ₹{(item.product?.price * item.quantity).toLocaleString('en-IN')}
                                         </p>
                                     </div>
@@ -348,18 +348,18 @@ export default function CartPage() {
                                     {/* Validations / Controls */}
                                     <div className="flex flex-wrap items-center justify-between gap-4 mt-6">
                                         {/* Quantity Selector */}
-                                        <div className="flex items-center border border-white/10 rounded-lg bg-black">
+                                        <div className="flex items-center border border-primary/10 rounded-full bg-white/50 backdrop-blur-sm">
                                             <button
                                                 onClick={() => updateQuantity(item.product._id, item.quantity - 1)}
                                                 disabled={item.quantity <= 1}
-                                                className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-primary hover:bg-white/5 rounded-l-lg disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+                                                className="w-8 md:w-10 h-8 md:h-10 flex items-center justify-center text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
                                             >
                                                 -
                                             </button>
-                                            <span className="w-10 text-center font-bold text-white text-sm">{item.quantity}</span>
+                                            <span className="w-8 md:w-10 text-center font-bold text-foreground text-xs md:text-sm">{item.quantity}</span>
                                             <button
                                                 onClick={() => updateQuantity(item.product._id, item.quantity + 1)}
-                                                className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-primary hover:bg-white/5 rounded-r-lg transition-all"
+                                                className="w-8 md:w-10 h-8 md:h-10 flex items-center justify-center text-muted-foreground hover:text-primary transition-all"
                                             >
                                                 +
                                             </button>
@@ -367,12 +367,10 @@ export default function CartPage() {
 
                                         <button
                                             onClick={() => removeItem(item.product?._id)}
-                                            className="flex items-center gap-2 text-gray-500 hover:text-red-400 text-sm font-medium transition-colors group/delete"
+                                            className="flex items-center gap-1.5 text-muted-foreground hover:text-red-500 text-[10px] md:text-xs font-bold uppercase tracking-widest transition-colors group/delete"
                                         >
-                                            <div className="p-2 rounded-full bg-transparent group-hover/delete:bg-red-900/20 transition-colors">
-                                                <Trash2 size={18} />
-                                            </div>
-                                            <span className="group-hover/delete:underline">Remove</span>
+                                            <Trash2 size={14} className="md:size-[16px]" />
+                                            <span>Remove</span>
                                         </button>
                                     </div>
                                 </div>
@@ -382,39 +380,39 @@ export default function CartPage() {
 
                     {/* Order Summary - Sticky */}
                     <div className="lg:col-span-1">
-                        <div className="bg-neutral-900/50 backdrop-blur-sm rounded-2xl shadow-lg border border-white/10 p-8 sticky top-24">
-                            <h2 className="text-xl font-serif font-bold text-white mb-6 border-b border-white/10 pb-4">Order Summary</h2>
+                        <div className="bg-white/60 backdrop-blur-md rounded-2xl shadow-xl border border-primary/10 p-6 md:p-8 sticky top-24">
+                            <h2 className="text-xl font-serif font-bold text-foreground mb-6 border-b border-primary/10 pb-4">Order Summary</h2>
 
                             <div className="space-y-4 mb-8">
-                                <div className="flex justify-between text-gray-400 text-sm">
+                                <div className="flex justify-between text-muted-foreground text-sm">
                                     <span>Subtotal</span>
-                                    <span className="font-medium text-white">₹{total.toLocaleString('en-IN')}</span>
+                                    <span className="font-medium text-foreground">₹{total.toLocaleString('en-IN')}</span>
                                 </div>
-                                <div className="flex justify-between text-gray-400 text-sm">
+                                <div className="flex justify-between text-muted-foreground text-sm">
                                     <span>GST (18%)</span>
-                                    <span className="font-medium text-white">₹{Math.round(Math.max(0, total - discountAmount) * 0.18).toLocaleString('en-IN')}</span>
+                                    <span className="font-medium text-foreground">₹{Math.round(Math.max(0, total - discountAmount) * 0.18).toLocaleString('en-IN')}</span>
                                 </div>
-                                <div className="flex justify-between text-gray-400 text-sm items-center">
+                                <div className="flex justify-between text-muted-foreground text-sm items-center">
                                     <span>Shipping</span>
-                                    <span className="text-primary font-bold text-[10px] uppercase bg-primary/10 border border-primary/20 px-2 py-1 rounded-full tracking-wide">Free</span>
+                                    <span className="text-white font-bold text-[10px] uppercase bg-secondary px-2 py-1 rounded-full tracking-wide">Free</span>
                                 </div>
                             </div>
 
-                            <div className="border-t border-dashed border-white/10 pt-6 mb-8">
+                            <div className="border-t border-dashed border-primary/10 pt-6 mb-8">
                                 {/* COUPON SECTION */}
                                 <div className="mb-6">
                                     <div className="flex gap-2">
                                         <input
                                             type="text"
                                             placeholder="Coupon Code"
-                                            className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-primary uppercase font-mono text-sm"
+                                            className="w-full bg-white/50 border border-primary/10 rounded-xl px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary uppercase font-mono text-sm"
                                             value={couponCode}
                                             onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                                         />
                                         {appliedCoupon && couponCode === appliedCoupon ? (
                                             <button
                                                 onClick={removeCoupon}
-                                                className="bg-red-900/20 text-red-400 px-4 rounded-lg font-bold border border-red-500/20 hover:bg-red-900/40 transition-colors"
+                                                className="bg-red-50 text-red-500 px-4 rounded-xl font-bold border border-red-200 hover:bg-red-100 transition-colors"
                                             >
                                                 Remove
                                             </button>
@@ -422,21 +420,21 @@ export default function CartPage() {
                                             <button
                                                 onClick={() => applyCoupon()}
                                                 disabled={!couponCode || applyingCoupon}
-                                                className="bg-white/10 text-white px-4 rounded-lg font-bold hover:bg-white/20 transition-colors disabled:opacity-50"
+                                                className="bg-primary text-white px-4 rounded-xl font-bold hover:opacity-90 transition-colors disabled:opacity-50"
                                             >
                                                 {applyingCoupon ? '...' : (appliedCoupon ? 'Replace' : 'Apply')}
                                             </button>
                                         )}
                                     </div>
                                     {appliedCoupon && !userManuallyRemoved && (
-                                        <div className="mt-2 text-xs text-primary bg-primary/10 border border-primary/20 px-2 py-1 rounded inline-block animate-pulse">
-                                            ✨ Best coupon auto-applied
+                                        <div className="mt-2 text-[10px] text-secondary bg-secondary/10 border border-secondary/20 px-2 py-1 rounded-full inline-block font-bold">
+                                            ✨ Best coupon applied
                                         </div>
                                     )}
                                     {/* Available Coupons Hint */}
                                     {!appliedCoupon && (
-                                        <div className="mt-3">
-                                            <p className="text-xs text-gray-400 mb-2">Available Coupons:</p>
+                                        <div className="mt-4">
+                                            <p className="text-[10px] font-bold text-muted-foreground mb-2 uppercase tracking-widest">Available Coupons:</p>
                                             <div className="flex flex-wrap gap-2">
                                                 {activeCoupons.slice(0, 3).map(coupon => (
                                                     <button
@@ -454,40 +452,40 @@ export default function CartPage() {
 
                                 <div className="flex justify-between items-end">
                                     <div className="flex flex-col">
-                                        <span className="text-base font-bold text-white mb-1">Total Amount</span>
+                                        <span className="text-base font-bold text-foreground mb-1">Total Amount</span>
                                         {appliedCoupon && (
-                                            <span className="text-xs text-green-400 flex items-center gap-1">
+                                            <span className="text-xs text-green-600 font-bold flex items-center gap-1">
                                                 Coupon applied: -₹{discountAmount.toLocaleString()}
                                             </span>
                                         )}
                                     </div>
                                     <div className="text-right">
                                         {appliedCoupon && (
-                                            <span className="block text-sm text-gray-400 line-through mb-1">
+                                            <span className="block text-sm text-muted-foreground line-through mb-1">
                                                 ₹{Math.round(total * 1.18).toLocaleString('en-IN')}
                                             </span>
                                         )}
-                                        <span className="block text-2xl font-extrabold text-primary leading-none mb-1">
+                                        <span className="block text-3xl font-bold text-primary leading-none mb-1">
                                             ₹{Math.round((Math.max(0, total - discountAmount) * 1.18)).toLocaleString('en-IN')}
                                         </span>
-                                        <span className="text-[10px] text-gray-500 font-medium">Inclusive of all taxes</span>
+                                        <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Inclusive of all taxes</span>
                                     </div>
                                 </div>
                             </div>
 
                             <Link href="/checkout" className="block w-full">
-                                <button className="w-full bg-primary text-black py-4 rounded-xl font-bold hover:bg-white transition-all shadow-[0_0_15px_rgba(212,175,55,0.4)] flex items-center justify-center gap-2 group transform active:scale-[0.98]">
+                                <button className="w-full bg-foreground text-background py-4 rounded-xl font-bold hover:bg-secondary hover:text-white transition-all shadow-lg flex items-center justify-center gap-2 group transform active:scale-[0.98]">
                                     Proceed to Checkout
                                     <ArrowLeft className="rotate-180 group-hover:translate-x-1 transition-transform" size={20} />
                                 </button>
                             </Link>
 
-                            <div className="mt-8 pt-8 border-t border-white/5">
-                                <p className="text-center text-xs text-gray-500 mb-4 font-medium uppercase tracking-wider">Secure Payment via</p>
-                                <div className="flex justify-center gap-4 opacity-40 grayscale hover:grayscale-0 transition-all duration-500 hover:opacity-100">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" className="h-6 object-contain" />
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" className="h-6 object-contain" />
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" className="h-6 object-contain" />
+                            <div className="mt-8 pt-8 border-t border-primary/5">
+                                <p className="text-center text-[10px] text-muted-foreground mb-4 font-bold uppercase tracking-[0.2em]">Secure Payment via</p>
+                                <div className="flex justify-center gap-6 opacity-60 grayscale hover:grayscale-0 transition-all duration-500 hover:opacity-100">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" className="h-4 object-contain" />
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" className="h-4 object-contain" />
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" className="h-4 object-contain" />
                                 </div>
                             </div>
                         </div>
@@ -497,33 +495,31 @@ export default function CartPage() {
 
             {/* Recommendations Section (Carousel) */}
             {recommendations.length > 0 && (
-                <div className="mt-24 border-t border-white/10 pt-16 relative">
+                <div className="mt-24 border-t border-primary/5 pt-16 relative">
                     <div className="flex justify-between items-end mb-10 px-4">
                         <div>
-                            <h2 className="text-3xl font-serif font-bold text-white">
-                                You May Also <span className="text-primary">Like</span>
+                            <span className="text-primary font-bold tracking-[0.2em] uppercase text-[10px] mb-2 block">Specially Chosen</span>
+                            <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">
+                                You May Also <span className="text-primary italic">Like</span>
                             </h2>
                         </div>
 
-                        {/* Carousel Controls */}
-                        {recommendations.length > itemsPerView && (
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={() => setVisibleRecs(prev => Math.max(0, prev - 1))}
-                                    disabled={visibleRecs === 0}
-                                    className="p-2 rounded-full border border-white/10 hover:border-primary hover:text-primary transition-colors disabled:opacity-30 disabled:hover:border-white/10 disabled:hover:text-gray-500"
-                                >
-                                    <ChevronLeft size={24} />
-                                </button>
-                                <button
-                                    onClick={() => setVisibleRecs(prev => Math.min(recommendations.length - itemsPerView, prev + 1))}
-                                    disabled={visibleRecs >= recommendations.length - itemsPerView}
-                                    className="p-2 rounded-full border border-white/10 hover:border-primary hover:text-primary transition-colors disabled:opacity-30 disabled:hover:border-white/10 disabled:hover:text-gray-500"
-                                >
-                                    <ChevronRight size={24} />
-                                </button>
-                            </div>
-                        )}
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setVisibleRecs(prev => Math.max(0, prev - 1))}
+                                disabled={visibleRecs === 0}
+                                className="p-2 rounded-full border border-primary/10 hover:border-primary hover:text-primary transition-colors disabled:opacity-30"
+                            >
+                                <ChevronLeft size={20} />
+                            </button>
+                            <button
+                                onClick={() => setVisibleRecs(prev => Math.min(recommendations.length - itemsPerView, prev + 1))}
+                                disabled={visibleRecs >= recommendations.length - itemsPerView}
+                                className="p-2 rounded-full border border-primary/10 hover:border-primary hover:text-primary transition-colors disabled:opacity-30"
+                            >
+                                <ChevronRight size={20} />
+                            </button>
+                        </div>
                     </div>
 
                     {/* Carousel Track */}

@@ -137,43 +137,43 @@ export default function CategoriesPage() {
     );
 
     if (loading) return (
-        <div className="space-y-4">
-            <div className="flex justify-between">
-                <Skeleton className="w-48 h-10 rounded-lg bg-neutral-900 border border-white/10" />
-                <Skeleton className="w-32 h-10 rounded-lg bg-neutral-900 border border-white/10" />
+        <div className="p-8 space-y-6 animate-pulse">
+            <div className="flex justify-between items-center mb-8">
+                <div className="w-64 h-12 bg-white/40 rounded-full border border-primary/10" />
+                <div className="w-40 h-10 bg-white/40 rounded-full border border-primary/10" />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
-                    <Skeleton key={i} className="h-40 rounded-2xl bg-neutral-900 border border-white/10" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {[...Array(8)].map((_, i) => (
+                    <div key={i} className="h-64 w-full bg-white/40 rounded-3xl border border-primary/10 shadow-sm" />
                 ))}
             </div>
         </div>
     );
 
     return (
-        <div>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div className="p-4 md:p-8">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-10">
                 <div>
-                    <h1 className="text-3xl font-serif font-bold text-white tracking-wide">Categories</h1>
-                    <p className="text-gray-400 mt-1">Manage product categories</p>
+                    <h1 className="text-3xl font-serif font-bold text-foreground">Category Matrix</h1>
+                    <p className="text-muted-foreground mt-2 font-medium">Organize your sacred collections with intent.</p>
                 </div>
                 <Button
                     variant="primary"
-                    icon={<Plus size={20} />}
+                    icon={<Plus size={16} />}
                     onClick={() => handleOpenModal()}
-                    className="bg-primary hover:bg-white hover:text-black text-black font-bold shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all"
+                    className="bg-primary hover:bg-foreground text-white font-bold px-8 py-3.5 rounded-full shadow-xl shadow-primary/10 transition-all uppercase text-[10px] tracking-widest border-none"
                 >
-                    Add Category
+                    Add Collection
                 </Button>
             </div>
 
             {/* Search */}
-            <div className="relative mb-6">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+            <div className="relative mb-10 group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" size={18} />
                 <input
                     type="text"
-                    placeholder="Search categories..."
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-neutral-900 border border-white/10 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary/50 text-white placeholder-gray-600 transition-all font-sans"
+                    placeholder="Search sacred collections..."
+                    className="w-full pl-12 pr-6 py-4 rounded-full bg-white/60 backdrop-blur-md border border-primary/10 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary/50 text-foreground placeholder-gray-400 transition-all font-bold text-xs uppercase tracking-widest shadow-sm"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -189,49 +189,60 @@ export default function CategoriesPage() {
                     onAction={() => handleOpenModal()}
                 />
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                     {filteredCategories.map((cat) => (
-                        <div key={cat._id} className="group bg-neutral-900/50 backdrop-blur-sm rounded-2xl border border-white/5 shadow-lg hover:border-primary/30 transition-all overflow-hidden flex flex-col">
-                            <div className="h-40 bg-neutral-900 relative overflow-hidden">
+                        <div key={cat._id} className="group bg-white/60 backdrop-blur-md rounded-[2.5rem] border border-primary/10 shadow-lg hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 overflow-hidden flex flex-col animate-in fade-in zoom-in-95">
+                            <div className="h-52 bg-background relative overflow-hidden">
                                 {cat.image ? (
-                                    <img src={cat.image} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                    <img src={cat.image} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                 ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-gray-700">
-                                        <FolderOpen size={48} />
+                                    <div className="w-full h-full flex items-center justify-center text-primary/20 bg-primary/5">
+                                        <FolderOpen size={64} strokeWidth={1} />
                                     </div>
                                 )}
-                                <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+
+                                {/* Status Badge */}
+                                <div className={`absolute bottom-4 left-4 px-4 py-1.5 text-[9px] font-bold rounded-full uppercase tracking-widest border shadow-sm backdrop-blur-md ${cat.isActive ? 'bg-green-500 text-white border-green-600' : 'bg-red-500 text-white border-red-600'}`}>
+                                    {cat.isActive ? 'Public' : 'Hidden'}
+                                </div>
+
+                                {/* Actions Overlay */}
+                                <div className="absolute inset-0 bg-foreground/20 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-3">
                                     <button
                                         onClick={() => handleOpenModal(cat)}
-                                        className="p-2 bg-white/90 backdrop-blur rounded-full text-black hover:bg-primary transition-all shadow-sm"
+                                        className="p-3 bg-white text-foreground rounded-full hover:bg-primary hover:text-white transition-all shadow-xl hover:scale-110"
+                                        title="Edit Domain"
                                     >
-                                        <Edit2 size={16} />
+                                        <Edit2 size={18} />
+                                    </button>
+                                    <button
+                                        onClick={() => handleOpenSubModal(cat)}
+                                        className="p-3 bg-white text-foreground rounded-full hover:bg-foreground hover:text-white transition-all shadow-xl hover:scale-110"
+                                        title="Manage Lineage"
+                                    >
+                                        <Plus size={18} />
                                     </button>
                                     <button
                                         onClick={() => handleDelete(cat._id)}
-                                        className="p-2 bg-white/90 backdrop-blur rounded-full text-black hover:bg-red-500 hover:text-white transition-all shadow-sm"
-                                        title="Delete Category"
+                                        className="p-3 bg-white text-red-500 rounded-full hover:bg-red-500 hover:text-white transition-all shadow-xl hover:scale-110"
+                                        title="Dissolve Domain"
                                     >
-                                        <Trash2 size={16} />
+                                        <Trash2 size={18} />
                                     </button>
-                                </div>
-                                <div className="absolute top-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button
-                                        onClick={() => handleOpenSubModal(cat)}
-                                        className="p-2 bg-white/90 backdrop-blur rounded-full text-black hover:bg-blue-500 hover:text-white transition-all shadow-sm flex items-center gap-1 text-xs font-bold px-3"
-                                    >
-                                        <Plus size={12} /> Sub
-                                    </button>
-                                </div>
-                                <div className={`absolute bottom-3 left-3 px-2 py-1 text-xs font-bold rounded-md uppercase tracking-wide border ${cat.isActive ? 'bg-green-900/80 text-white border-green-500/30' : 'bg-red-900/80 text-white border-red-500/30'}`}>
-                                    {cat.isActive ? 'Active' : 'Inactive'}
                                 </div>
                             </div>
-                            <div className="p-5 flex-1 flex flex-col">
-                                <h3 className="text-lg font-bold text-white mb-1 group-hover:text-primary transition-colors">{cat.name}</h3>
-                                <p className="text-sm text-gray-400 line-clamp-2">{cat.description || 'No description'}</p>
-                                <div className="mt-4 pt-4 border-t border-white/5 text-xs text-gray-600 font-mono text-right mt-auto">
-                                    /{cat.slug}
+                            <div className="p-8 flex-1 flex flex-col">
+                                <h3 className="text-xl font-serif font-bold text-foreground mb-3 group-hover:text-primary transition-colors italic">{cat.name}</h3>
+                                <p className="text-xs text-muted-foreground font-medium line-clamp-2 leading-relaxed italic">
+                                    "{cat.description || 'A sacred collection awaiting manifestation details.'}"
+                                </p>
+                                <div className="mt-6 pt-6 border-t border-primary/5 flex items-center justify-between mt-auto">
+                                    <span className="text-[9px] font-bold text-primary uppercase tracking-[0.2em] bg-primary/5 px-3 py-1 rounded-full border border-primary/10 italic">
+                                        {cat.subcategories?.length || 0} Branches
+                                    </span>
+                                    <span className="text-[9px] font-mono font-bold text-muted-foreground/40 italic">
+                                        /{cat.slug}
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -245,57 +256,60 @@ export default function CategoriesPage() {
                 onClose={() => setIsModalOpen(false)}
                 title={editingCategory ? 'Edit Category' : 'New Category'}
             >
-                <form onSubmit={handleSubmit} className="space-y-5">
-                    <div>
-                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Category Name</label>
-                        <input
-                            type="text"
-                            required
-                            className="w-full px-4 py-2 rounded-lg bg-neutral-900 border border-white/10 focus:ring-1 focus:ring-primary focus:border-primary/50 outline-none text-white placeholder-gray-600 transition-all"
-                            value={formData.name}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        />
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Collection Title</label>
+                            <input
+                                type="text"
+                                required
+                                className="w-full px-5 py-3 rounded-2xl bg-white/50 border border-primary/10 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-foreground placeholder-gray-400 transition-all font-bold text-sm"
+                                value={formData.name}
+                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Artifact Image URL</label>
+                            <input
+                                type="url"
+                                placeholder="https://..."
+                                className="w-full px-5 py-3 rounded-2xl bg-white/50 border border-primary/10 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-foreground placeholder-gray-400 transition-all font-bold text-sm"
+                                value={formData.image}
+                                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                            />
+                        </div>
                     </div>
-                    <div>
-                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Description</label>
+                    <div className="space-y-2">
+                        <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Sacred Narrative</label>
                         <textarea
-                            rows="3"
-                            className="w-full px-4 py-2 rounded-lg bg-neutral-900 border border-white/10 focus:ring-1 focus:ring-primary focus:border-primary/50 outline-none text-white placeholder-gray-600 transition-all custom-scrollbar"
+                            rows="4"
+                            className="w-full px-5 py-4 rounded-3xl bg-white/50 border border-primary/10 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-foreground placeholder-gray-400 transition-all custom-scrollbar font-medium text-sm leading-relaxed"
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                            placeholder="Describe the essence of this collection..."
                         />
                     </div>
-                    <div>
-                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Image URL</label>
-                        <input
-                            type="url"
-                            placeholder="https://..."
-                            className="w-full px-4 py-2 rounded-lg bg-neutral-900 border border-white/10 focus:ring-1 focus:ring-primary focus:border-primary/50 outline-none text-white placeholder-gray-600 transition-all"
-                            value={formData.image}
-                            onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                        />
-                    </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4 bg-primary/5 p-4 rounded-2xl border border-primary/10 w-fit">
                         <input
                             type="checkbox"
                             id="isActive"
-                            className="w-5 h-5 rounded bg-neutral-900 border-gray-600 text-primary focus:ring-primary focus:ring-offset-gray-900"
+                            className="w-6 h-6 rounded-lg bg-white border-primary/20 text-primary focus:ring-primary"
                             checked={formData.isActive}
                             onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
                         />
-                        <label htmlFor="isActive" className="text-sm font-medium text-gray-300">Active Status</label>
+                        <label htmlFor="isActive" className="text-xs font-bold text-foreground uppercase tracking-widest cursor-pointer">Manifest in Temple (Public)</label>
                     </div>
 
                     {/* Subcategories (Create Mode Only) */}
                     {!editingCategory && (
-                        <div className="border-t border-white/10 pt-4">
-                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Subcategories</label>
+                        <div className="space-y-4 pt-6 mt-6 border-t border-primary/10">
+                            <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] ml-1">Initial Lineage (Subcategories)</label>
 
-                            <div className="flex gap-2 mb-3">
+                            <div className="flex gap-3">
                                 <input
                                     type="text"
-                                    className="flex-1 px-4 py-2 rounded-lg bg-neutral-900 border border-white/10 focus:ring-1 focus:ring-primary focus:border-primary/50 outline-none text-white placeholder-gray-600 transition-all"
-                                    placeholder="Add subcategory (e.g. 5 Mukhi)"
+                                    className="flex-1 px-5 py-3 rounded-2xl bg-white border border-primary/10 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-foreground placeholder-gray-400 transition-all font-bold text-sm shadow-inner"
+                                    placeholder="Manifest branch (e.g. Pure Silver Items)"
                                     value={newSubName}
                                     onChange={(e) => setNewSubName(e.target.value)}
                                     onKeyDown={(e) => {
@@ -311,9 +325,8 @@ export default function CategoriesPage() {
                                         }
                                     }}
                                 />
-                                <Button
+                                <button
                                     type="button"
-                                    variant="outline"
                                     onClick={() => {
                                         if (newSubName.trim()) {
                                             setFormData({
@@ -323,17 +336,17 @@ export default function CategoriesPage() {
                                             setNewSubName('');
                                         }
                                     }}
-                                    className="border-primary/50 text-primary hover:bg-primary hover:text-black"
+                                    className="p-3 bg-primary text-white rounded-2xl hover:bg-foreground transition-all shadow-lg shadow-primary/20"
                                 >
-                                    <Plus size={18} />
-                                </Button>
+                                    <Plus size={20} />
+                                </button>
                             </div>
 
                             {/* List of to-be-added subcategories */}
                             {formData.subcategories && formData.subcategories.length > 0 && (
-                                <div className="flex flex-wrap gap-2">
+                                <div className="flex flex-wrap gap-2 pt-2">
                                     {formData.subcategories.map((sub, idx) => (
-                                        <span key={idx} className="bg-white/10 text-white text-sm px-3 py-1 rounded-full flex items-center gap-2 border border-white/5">
+                                        <span key={idx} className="bg-white border border-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest px-4 py-2 rounded-full flex items-center gap-3 shadow-sm animate-in zoom-in-50 duration-300">
                                             {sub.name}
                                             <button
                                                 type="button"
@@ -341,9 +354,9 @@ export default function CategoriesPage() {
                                                     const newSubs = formData.subcategories.filter((_, i) => i !== idx);
                                                     setFormData({ ...formData, subcategories: newSubs });
                                                 }}
-                                                className="text-gray-400 hover:text-red-400"
+                                                className="text-muted-foreground hover:text-red-500 transition-colors"
                                             >
-                                                &times;
+                                                <Trash2 size={12} />
                                             </button>
                                         </span>
                                     ))}
@@ -352,10 +365,10 @@ export default function CategoriesPage() {
                         </div>
                     )}
 
-                    <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
-                        <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-white hover:bg-white/5">Cancel</Button>
-                        <Button type="submit" variant="primary" isLoading={submitting} className="bg-primary hover:bg-white hover:text-black text-black font-bold border-none">
-                            {editingCategory ? 'Save Changes' : 'Create Category'}
+                    <div className="flex justify-end gap-4 pt-6 border-t border-primary/10">
+                        <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)} className="rounded-full px-8 text-muted-foreground uppercase text-[10px] tracking-widest font-bold">Withdraw</Button>
+                        <Button type="submit" variant="primary" isLoading={submitting} className="rounded-full px-10 bg-primary text-white shadow-xl shadow-primary/20 uppercase text-[10px] tracking-widest font-bold border-none">
+                            {editingCategory ? 'Update Essence' : 'Manifest Collection'}
                         </Button>
                     </div>
                 </form>
@@ -367,54 +380,59 @@ export default function CategoriesPage() {
                 onClose={() => setIsSubModalOpen(false)}
                 title={`Manage Subcategories: ${selectedCategoryForSub?.name}`}
             >
-                <div className="space-y-6">
+                <div className="space-y-8">
                     {/* List Existing */}
                     <div>
-                        <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">Existing Subcategories</h4>
+                        <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-4">Current Lineage</h4>
                         {selectedCategoryForSub?.subcategories?.length > 0 ? (
-                            <ul className="space-y-2">
+                            <div className="grid grid-cols-1 gap-3">
                                 {selectedCategoryForSub.subcategories.map((sub, idx) => (
-                                    <li key={idx} className="flex justify-between items-center bg-white/5 p-3 rounded-lg border border-white/5">
-                                        <span className="text-white">{sub.name}</span>
-                                        <span className="text-xs text-gray-500 font-mono">/{sub.slug}</span>
-                                    </li>
+                                    <div key={idx} className="flex justify-between items-center bg-white/40 p-5 rounded-[1.5rem] border border-primary/5 hover:border-primary/20 transition-all group">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-2 h-2 rounded-full bg-primary" />
+                                            <span className="text-sm font-bold text-foreground">{sub.name}</span>
+                                        </div>
+                                        <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">/{sub.slug}</span>
+                                    </div>
                                 ))}
-                            </ul>
+                            </div>
                         ) : (
-                            <p className="text-gray-500 text-sm italic">No subcategories yet.</p>
+                            <div className="bg-background/50 rounded-3xl p-8 border border-dashed border-primary/10 text-center">
+                                <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">No lineage established.</p>
+                            </div>
                         )}
                     </div>
 
                     {/* Add New */}
-                    <div className="border-t border-white/10 pt-6">
+                    <div className="border-t border-primary/10 pt-8">
                         {!showAddSubForm ? (
                             <Button
                                 type="button"
                                 variant="outline"
                                 onClick={() => setShowAddSubForm(true)}
-                                className="w-full flex items-center justify-center gap-2 border-dashed border-white/20 hover:border-primary hover:text-primary transition-colors text-gray-400 py-3"
+                                className="w-full flex items-center justify-center gap-3 border-dashed border-primary/20 hover:border-primary hover:text-primary transition-all text-muted-foreground py-6 rounded-[2rem] font-bold text-[10px] uppercase tracking-widest"
                             >
-                                <Plus size={18} /> Add New Subcategory
+                                <Plus size={16} /> Establish New Branch
                             </Button>
                         ) : (
-                            <form onSubmit={handleAddSubcategory} className="space-y-4 animate-in fade-in slide-in-from-top-2">
+                            <form onSubmit={handleAddSubcategory} className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
                                 <div className="flex justify-between items-center mb-2">
-                                    <h4 className="text-sm font-bold text-primary uppercase tracking-wider">Add New Subcategory</h4>
-                                    <button type="button" onClick={() => setShowAddSubForm(false)} className="text-xs text-gray-500 hover:text-white">Cancel</button>
+                                    <h4 className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] italic">Branch Specification</h4>
+                                    <button type="button" onClick={() => setShowAddSubForm(false)} className="text-[10px] font-bold text-muted-foreground hover:text-foreground uppercase tracking-widest">Withdraw</button>
                                 </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Name</label>
+                                <div className="space-y-2">
+                                    <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Branch Name</label>
                                     <input
                                         type="text"
                                         required
-                                        className="w-full px-4 py-2 rounded-lg bg-neutral-900 border border-white/10 focus:ring-1 focus:ring-primary focus:border-primary/50 outline-none text-white placeholder-gray-600 transition-all"
+                                        className="w-full px-5 py-3 rounded-2xl bg-white/50 border border-primary/10 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-foreground placeholder-gray-400 transition-all font-bold text-sm"
                                         value={subFormData.name}
                                         onChange={(e) => setSubFormData({ ...subFormData, name: e.target.value })}
-                                        placeholder="e.g. Rudraksha Mala"
+                                        placeholder="e.g. 108 Bead Mala"
                                     />
                                 </div>
-                                <Button type="submit" variant="primary" isLoading={submitting} className="w-full bg-primary hover:bg-white hover:text-black text-black font-bold border-none">
-                                    Add Subcategory
+                                <Button type="submit" variant="primary" isLoading={submitting} className="w-full bg-foreground text-background hover:bg-secondary hover:text-white transition-all py-4 rounded-full font-bold text-[10px] uppercase tracking-[0.2em] shadow-xl border-none">
+                                    Finalize Branch
                                 </Button>
                             </form>
                         )}

@@ -254,15 +254,48 @@ export default function CategoryPage({ params }) {
             </div>
 
             <div className="container mx-auto px-4 pb-24 max-w-7xl">
-                {/* Mobile Filter Toggle (UI only for now, can extend to a drawer) */}
-                <div className="md:hidden flex gap-4 mb-6 sticky top-16 z-30 bg-[#FFF0D2]/90 backdrop-blur-md py-2 border-b border-[#DCC8B0]">
-                    <button className="flex-1 bg-white border border-[#DCC8B0] py-3 rounded-lg font-semibold text-foreground flex items-center justify-center gap-2 shadow-sm">Filters</button>
-                    <button className="flex-1 bg-white border border-[#DCC8B0] py-3 rounded-lg font-semibold text-foreground flex items-center justify-center gap-2 shadow-sm">Sort By</button>
+                {/* Mobile Subcategory & Filter Bar */}
+                <div className="md:hidden flex flex-col gap-4 mb-8 sticky top-[88px] z-30 bg-background/95 backdrop-blur-xl py-4 px-2 -mx-2 border-b border-border shadow-sm">
+                    {/* Horizontal Subcategory Scroll */}
+                    {categoriesData.find(c => c.slug === slug)?.subcategories?.length > 0 && (
+                        <div className="flex overflow-x-auto items-center gap-2 pb-1 px-2 scrollbar-hide">
+                            <button
+                                onClick={() => setSelectedSubcategories([])}
+                                className={`whitespace-nowrap px-5 py-2.5 rounded-full text-xs font-bold transition-all duration-300 ${selectedSubcategories.length === 0 ? 'bg-primary text-white shadow-md shadow-primary/20 scale-105' : 'bg-muted text-muted-foreground border border-border/50'}`}
+                            >
+                                All {slug}
+                            </button>
+                            {categoriesData.find(c => c.slug === slug).subcategories.map((sub, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => handleSubcategoryChange(sub.slug)}
+                                    className={`whitespace-nowrap px-5 py-2.5 rounded-full text-xs font-bold transition-all duration-300 ${selectedSubcategories.includes(sub.slug) ? 'bg-primary text-white shadow-md shadow-primary/20 scale-105' : 'bg-muted text-muted-foreground border border-border/50'}`}
+                                >
+                                    {sub.name}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                    <div className="flex gap-2">
+                        <button className="flex-1 bg-foreground text-background py-3 rounded-full font-bold text-xs flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all">
+                            Refine Filters
+                        </button>
+                        <select
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            className="flex-1 bg-background border border-border py-3 px-4 rounded-full font-bold text-xs outline-none"
+                        >
+                            <option>Featured</option>
+                            <option>Price: Low to High</option>
+                            <option>Price: High to Low</option>
+                            <option>Newest Arrivals</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div className="flex flex-col md:flex-row gap-10">
                     {/* SIDEBAR FILTERS */}
-                    <aside className="hidden md:block w-64 flex-shrink-0 space-y-8 sticky top-24 h-fit">
+                    <aside className="hidden md:block w-64 flex-shrink-0 space-y-8 sticky top-36 h-fit">
                         {/* Categories */}
                         {/* Subcategories Filter - Only for current category */}
                         {categoriesData.find(c => c.slug === slug)?.subcategories?.length > 0 && (

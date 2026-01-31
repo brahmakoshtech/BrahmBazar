@@ -142,39 +142,43 @@ export default function BannersPage() {
     );
 
     if (loading) return (
-        <div className="space-y-4">
-            <Skeleton className="w-full h-12 rounded-lg bg-neutral-900 border border-white/10" />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Skeleton className="h-64 rounded-2xl bg-neutral-900 border border-white/10" />
-                <Skeleton className="h-64 rounded-2xl bg-neutral-900 border border-white/10" />
+        <div className="p-8 space-y-6 animate-pulse">
+            <div className="flex justify-between items-center mb-8">
+                <div className="w-64 h-12 bg-white/40 rounded-full border border-primary/10" />
+                <div className="w-40 h-10 bg-white/40 rounded-full border border-primary/10" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {[...Array(4)].map((_, i) => (
+                    <div key={i} className="h-64 w-full bg-white/40 rounded-[2.5rem] border border-primary/10 shadow-sm" />
+                ))}
             </div>
         </div>
     );
 
     return (
-        <div>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div className="p-4 md:p-8">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-10">
                 <div>
-                    <h1 className="text-3xl font-serif font-bold text-white tracking-wide">Banners</h1>
-                    <p className="text-gray-400 mt-1">Manage promotional banners</p>
+                    <h1 className="text-3xl font-serif font-bold text-foreground">Visual Proclamations</h1>
+                    <p className="text-muted-foreground mt-2 font-medium">Govern the sacred imagery of your temple.</p>
                 </div>
                 <Button
                     variant="primary"
-                    icon={<Plus size={20} />}
+                    icon={<Plus size={16} />}
                     onClick={() => handleOpenModal()}
-                    className="bg-primary hover:bg-white hover:text-black text-black font-bold shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all"
+                    className="bg-primary hover:bg-foreground text-white font-bold px-8 py-3.5 rounded-full shadow-xl shadow-primary/10 transition-all uppercase text-[10px] tracking-widest border-none"
                 >
-                    Create Banner
+                    Manifest Banner
                 </Button>
             </div>
 
             {/* Search */}
-            <div className="relative mb-6">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+            <div className="relative mb-10 group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" size={18} />
                 <input
                     type="text"
-                    placeholder="Search banners..."
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-neutral-900 border border-white/10 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary/50 text-white placeholder-gray-600 transition-all font-sans"
+                    placeholder="Search sacred imagery..."
+                    className="w-full pl-12 pr-6 py-4 rounded-full bg-white/60 backdrop-blur-md border border-primary/10 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary/50 text-foreground placeholder-gray-400 transition-all font-bold text-xs uppercase tracking-widest shadow-sm"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -182,54 +186,57 @@ export default function BannersPage() {
 
             {/* Banners List */}
             {filteredBanners.length === 0 ? (
-                <EmptyState
-                    icon={<ImageIcon size={48} className="text-gray-600" />}
-                    title="No banners found"
-                    description="Create your first promotional banner to boost sales."
-                    actionLabel="Create Banner"
-                    onAction={() => handleOpenModal()}
-                />
+                <div className="bg-white/60 backdrop-blur-md rounded-[2.5rem] border border-primary/10 p-20 text-center animate-in fade-in slide-in-from-bottom-4">
+                    <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <ImageIcon size={32} className="text-primary" />
+                    </div>
+                    <h3 className="text-xl font-serif font-bold text-foreground mb-2">The Altar is Bare</h3>
+                    <p className="text-muted-foreground mb-8">Establish your first visual proclamation to inspire visitors.</p>
+                    <Button onClick={() => handleOpenModal()} className="rounded-full px-8 uppercase text-[10px] tracking-widest font-bold">Manifest Imagery</Button>
+                </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {filteredBanners.map((banner) => (
-                        <div key={banner._id} className="group bg-neutral-900/50 backdrop-blur-sm rounded-2xl border border-white/5 shadow-lg hover:border-primary/30 transition-all overflow-hidden flex flex-col">
+                        <div key={banner._id} className="group bg-white/60 backdrop-blur-md rounded-[2.5rem] border border-primary/10 shadow-lg hover:bg-white hover:shadow-2xl hover:shadow-primary/10 transition-all overflow-hidden flex flex-col animate-in slide-in-from-bottom-4 duration-500">
                             {/* Banner Preview */}
-                            <div className="aspect-video bg-neutral-900 relative overflow-hidden">
-                                <img src={banner.image} alt={banner.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 backdrop-blur-[2px]">
+                            <div className="aspect-video bg-background relative overflow-hidden shadow-inner">
+                                <img src={banner.image} alt={banner.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-4 backdrop-blur-[2px]">
                                     <button
                                         onClick={() => handleOpenModal(banner)}
-                                        className="p-3 bg-white rounded-full text-black hover:bg-primary transition-all shadow-lg transform translate-y-4 group-hover:translate-y-0"
+                                        className="p-4 bg-white rounded-full text-foreground hover:bg-foreground hover:text-background transition-all shadow-2xl transform translate-y-4 group-hover:translate-y-0"
                                     >
                                         <Edit2 size={18} />
                                     </button>
                                     <button
                                         onClick={() => handleDelete(banner._id)}
-                                        className="p-3 bg-white rounded-full text-black hover:bg-red-500 hover:text-white transition-all shadow-lg transform translate-y-4 group-hover:translate-y-0 delay-75"
+                                        className="p-4 bg-white rounded-full text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-2xl transform translate-y-4 group-hover:translate-y-0 delay-75"
                                     >
                                         <Trash2 size={18} />
                                     </button>
                                 </div>
-                                <div className="absolute top-3 left-3 flex gap-2">
-                                    <span className="bg-black/75 text-primary text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider backdrop-blur-md border border-white/10">
+                                <div className="absolute top-4 left-4 flex gap-2">
+                                    <span className="bg-white/95 text-primary text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-[0.2em] shadow-lg border border-primary/10">
                                         {banner.position}
                                     </span>
                                     {!banner.isActive && (
-                                        <span className="bg-red-900/80 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-red-500/30">
-                                            Inactive
+                                        <span className="bg-red-500 text-white text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-[0.2em] shadow-lg">
+                                            Hidden
                                         </span>
                                     )}
                                 </div>
                             </div>
 
                             {/* Info */}
-                            <div className="p-5 flex-1 flex flex-col">
-                                <div className="flex justify-between items-start mb-2">
-                                    <h3 className="text-lg font-bold text-white line-clamp-1" title={banner.title}>{banner.title}</h3>
-                                    <span className="text-xs font-mono text-primary/80 bg-primary/10 px-2 py-1 rounded border border-primary/20">Order: {banner.displayOrder}</span>
+                            <div className="p-8 flex-1 flex flex-col">
+                                <div className="flex justify-between items-start mb-4">
+                                    <div>
+                                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-1 block">Manifestation Order: {banner.displayOrder}</span>
+                                        <h3 className="text-xl font-serif font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors" title={banner.title}>{banner.title}</h3>
+                                    </div>
                                 </div>
-                                <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between text-sm text-gray-400">
-                                    <span className="truncate max-w-[200px]">{banner.link || 'No Link'}</span>
+                                <div className="mt-auto pt-6 border-t border-primary/5 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-muted-foreground italic h-4">
+                                    <span className="truncate max-w-[180px]">{banner.link || 'Internal Flow Only'}</span>
                                     {banner.link && <ExternalLink size={14} className="flex-shrink-0 text-primary" />}
                                 </div>
                             </div>
@@ -244,62 +251,63 @@ export default function BannersPage() {
                 onClose={() => setIsModalOpen(false)}
                 title={editingBanner ? 'Edit Banner' : 'New Banner'}
             >
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Banner Title</label>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="space-y-2">
+                        <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Sacred Title</label>
                         <input
                             type="text"
                             required
-                            className="w-full px-4 py-2 rounded-lg bg-neutral-900 border border-white/10 focus:ring-1 focus:ring-primary focus:border-primary/50 outline-none text-white placeholder-gray-600 transition-all"
+                            className="w-full px-5 py-3 rounded-2xl bg-white/50 border border-primary/10 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-foreground placeholder-gray-400 transition-all font-bold text-sm"
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                         />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Position</label>
+                    <div className="grid grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Altar Position</label>
                             <select
-                                className="w-full px-4 py-2 rounded-lg bg-neutral-900 border border-white/10 focus:ring-1 focus:ring-primary focus:border-primary/50 outline-none text-white transition-all"
+                                className="w-full px-5 py-3 rounded-2xl bg-white/50 border border-primary/10 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-foreground transition-all font-bold text-sm appearance-none cursor-pointer"
                                 value={formData.position}
                                 onChange={(e) => setFormData({ ...formData, position: e.target.value })}
                             >
                                 {positions.map(pos => (
-                                    <option key={pos.value} value={pos.value} className="bg-neutral-900 text-white">{pos.label}</option>
+                                    <option key={pos.value} value={pos.value}>{pos.label}</option>
                                 ))}
                             </select>
                         </div>
-                        <div>
-                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Display Order</label>
+                        <div className="space-y-2">
+                            <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Manifestation Order</label>
                             <input
                                 type="number"
-                                className="w-full px-4 py-2 rounded-lg bg-neutral-900 border border-white/10 focus:ring-1 focus:ring-primary focus:border-primary/50 outline-none text-white transition-all"
+                                className="w-full px-5 py-3 rounded-2xl bg-white/50 border border-primary/10 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-foreground transition-all font-bold text-sm"
                                 value={formData.displayOrder}
                                 onChange={(e) => setFormData({ ...formData, displayOrder: parseInt(e.target.value) })}
                             />
                         </div>
                     </div>
 
-                    <div>
-                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Banner Image</label>
-                        <div className="space-y-4">
+                    <div className="space-y-2">
+                        <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Sacred Artifact (Image)</label>
+                        <div className="space-y-6">
                             <div className="flex items-center justify-center w-full">
-                                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-white/20 rounded-xl cursor-pointer bg-neutral-900 hover:bg-white/5 transition-colors group">
+                                <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-primary/20 rounded-[2rem] cursor-pointer bg-primary/5 hover:bg-primary/10 transition-all group">
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                        <UploadCloud className="w-8 h-8 text-gray-500 group-hover:text-primary transition-colors mb-2" />
-                                        <p className="text-sm text-gray-400 group-hover:text-white transition-colors">Click to upload image</p>
-                                        <p className="text-xs text-gray-600 mt-1">SVG, PNG, JPG or WEBP</p>
+                                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform mb-3">
+                                            <UploadCloud className="w-6 h-6 text-primary" />
+                                        </div>
+                                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Enshrine New Image</p>
                                     </div>
                                     <input type="file" className="hidden" onChange={handleFileChange} accept="image/*" />
                                 </label>
                             </div>
 
                             {previewUrl && (
-                                <div className="relative h-40 rounded-xl overflow-hidden border border-white/10 bg-black/50">
+                                <div className="relative h-56 rounded-[2.5rem] overflow-hidden border border-primary/10 bg-background shadow-inner">
                                     <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
-                                        <p className="text-xs text-white/80 font-mono">
-                                            {selectedFile ? selectedFile.name : 'Current Image'}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+                                        <p className="text-[9px] text-white/80 font-bold uppercase tracking-[0.2em]">
+                                            {selectedFile ? selectedFile.name : 'Current Manifestation'}
                                         </p>
                                     </div>
                                 </div>
@@ -307,32 +315,32 @@ export default function BannersPage() {
                         </div>
                     </div>
 
-                    <div>
-                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Target Link (Optional)</label>
+                    <div className="space-y-2">
+                        <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Target Path (Optional)</label>
                         <input
                             type="text"
-                            placeholder="/category/men"
-                            className="w-full px-4 py-2 rounded-lg bg-neutral-900 border border-white/10 focus:ring-1 focus:ring-primary focus:border-primary/50 outline-none text-white placeholder-gray-600 transition-all"
+                            placeholder="/category/sacred-tools"
+                            className="w-full px-5 py-3 rounded-2xl bg-white/50 border border-primary/10 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-foreground placeholder-gray-400 transition-all font-bold text-sm italic"
                             value={formData.link}
                             onChange={(e) => setFormData({ ...formData, link: e.target.value })}
                         />
                     </div>
 
-                    <div className="flex items-center gap-3 pt-2">
+                    <div className="flex items-center gap-4 bg-primary/5 p-4 rounded-2xl border border-primary/10 w-fit">
                         <input
                             type="checkbox"
                             id="isActive"
-                            className="w-5 h-5 rounded bg-neutral-900 border-gray-600 text-primary focus:ring-primary focus:ring-offset-gray-900"
+                            className="w-6 h-6 rounded-lg bg-white border-primary/20 text-primary focus:ring-primary"
                             checked={formData.isActive}
                             onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
                         />
-                        <label htmlFor="isActive" className="text-sm font-medium text-gray-300">Active Status</label>
+                        <label htmlFor="isActive" className="text-[10px] font-bold text-foreground uppercase tracking-widest cursor-pointer">Manifest in Temple (Active)</label>
                     </div>
 
-                    <div className="flex justify-end gap-3 pt-4 border-t border-white/10 mt-4">
-                        <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-white hover:bg-white/5">Cancel</Button>
-                        <Button type="submit" variant="primary" isLoading={submitting} className="bg-primary hover:bg-white hover:text-black text-black font-bold border-none">
-                            {editingBanner ? 'Save Changes' : 'Create Banner'}
+                    <div className="flex justify-end gap-4 pt-6 border-t border-primary/10 mt-6">
+                        <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)} className="rounded-full px-8 text-muted-foreground uppercase text-[10px] tracking-widest font-bold">Withdraw</Button>
+                        <Button type="submit" variant="primary" isLoading={submitting} className="rounded-full px-10 bg-primary text-white shadow-xl shadow-primary/20 uppercase text-[10px] tracking-widest font-bold border-none">
+                            {editingBanner ? 'Finalize Changes' : 'Manifest Imagery'}
                         </Button>
                     </div>
                 </form>

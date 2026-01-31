@@ -39,7 +39,7 @@ const HeroVideo = () => {
                 {/* Overlay Gradient & Content */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30 flex flex-col items-center justify-center text-center px-4">
                     <span className="text-white/90 text-sm md:text-base font-medium tracking-[0.2em] uppercase mb-4 animate-fadeIn">
-                        Welcome to Rudra Divine
+                        Welcome to BRAHMAKOSH
                     </span>
                     <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight drop-shadow-xl max-w-4xl leading-tight">
                         {banner.title}
@@ -74,7 +74,7 @@ const HeroVideo = () => {
             {/* Overlay Gradient & Content */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30 flex flex-col items-center justify-center text-center px-4">
                 <span className="text-white/90 text-sm md:text-base font-medium tracking-[0.2em] uppercase mb-4 animate-fadeIn">
-                    Welcome to Rudra Divine
+                    Welcome to BRAHMAKOSH
                 </span>
                 <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight drop-shadow-xl max-w-4xl leading-tight">
                     Awaken Your <span className="text-red-500">Divine</span> Potential

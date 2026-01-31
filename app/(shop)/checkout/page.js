@@ -270,34 +270,39 @@ export default function CheckoutPage() {
     };
 
     if (loading) return (
-        <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="min-h-screen flex items-center justify-center bg-background">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         </div>
     );
 
     if (cartItems.length === 0) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center bg-black p-4 text-center">
-                <ShieldCheck size={48} className="text-gray-600 mb-4" />
-                <h2 className="text-xl font-serif font-bold text-white mb-2">Your cart is empty</h2>
-                <button onClick={() => router.push('/')} className="text-primary font-medium hover:underline hover:text-primary/80 transition-colors">Return to Home</button>
+            <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4 text-center">
+                <ShieldCheck size={48} className="text-secondary mb-4 opacity-40" />
+                <h2 className="text-xl font-serif font-bold text-foreground mb-4">Your cart is empty</h2>
+                <button
+                    onClick={() => router.push('/')}
+                    className="bg-primary text-white px-8 py-3 rounded-full font-bold shadow-lg hover:opacity-90 transition-all"
+                >
+                    Return to Shopping
+                </button>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-black py-12 md:py-16 font-sans text-white selection:bg-primary/30">
+        <div className="min-h-screen bg-transparent py-10 md:py-16 font-sans text-foreground selection:bg-primary/20">
             <div className="container mx-auto px-4 max-w-6xl">
 
                 {/* Header Phase */}
-                <div className="text-center mb-10">
-                    <h1 className="text-3xl md:text-4xl font-serif font-bold text-white mb-3">Checkout</h1>
-                    <div className="flex items-center justify-center gap-3 text-sm text-gray-400">
-                        <span className="text-primary font-medium">Cart</span>
-                        <span className="opacity-50">&gt;</span>
-                        <span className="text-white font-bold tracking-wide">Shipping & Payment</span>
-                        <span className="opacity-50">&gt;</span>
-                        <span>Confirmation</span>
+                <div className="text-center mb-12">
+                    <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">Checkout</h1>
+                    <div className="flex items-center justify-center gap-2 md:gap-4 text-[10px] md:text-xs uppercase tracking-[0.2em] text-muted-foreground font-bold">
+                        <span className="text-secondary">Cart</span>
+                        <span className="opacity-30">/</span>
+                        <span className="text-foreground">Shipping</span>
+                        <span className="opacity-30">/</span>
+                        <span>Payment</span>
                     </div>
                 </div>
 
@@ -307,59 +312,59 @@ export default function CheckoutPage() {
                     <div className="lg:col-span-2 space-y-8">
 
                         {/* 1. SHIPPING DETAILS */}
-                        <div className="bg-neutral-900/50 p-6 md:p-8 rounded-2xl shadow-xl border border-white/5 backdrop-blur-sm">
-                            <div className="flex items-center gap-4 mb-8 border-b border-white/10 pb-5">
-                                <div className="bg-primary text-black w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">1</div>
-                                <h2 className="text-xl font-serif font-bold text-white tracking-wide">Shipping Details</h2>
+                        <div className="bg-white/60 backdrop-blur-md p-6 md:p-8 rounded-3xl shadow-xl border border-primary/10">
+                            <div className="flex items-center gap-4 mb-8 border-b border-primary/10 pb-5">
+                                <div className="bg-secondary text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">1</div>
+                                <h2 className="text-xl font-serif font-bold text-foreground tracking-wide">Shipping Details</h2>
                             </div>
 
                             <form id="checkout-form" onSubmit={handleSubmit} className="space-y-6">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="col-span-1 md:col-span-2">
-                                        <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Full Name</label>
+                                        <label className="block text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-bold">Full Name</label>
                                         <input
                                             type="text"
                                             name="fullName"
                                             required
-                                            className="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-white/10 text-white placeholder-gray-500 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                            placeholder="John Doe"
+                                            className="w-full px-4 py-3 rounded-xl bg-white/50 border border-primary/10 text-foreground placeholder-muted-foreground focus:border-primary outline-none transition-all"
+                                            placeholder="Enter your full name"
                                             value={formData.fullName}
                                             onChange={handleInputChange}
                                         />
                                     </div>
 
                                     <div className="col-span-1 md:col-span-2">
-                                        <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Phone Number</label>
+                                        <label className="block text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-bold">Phone Number</label>
                                         <input
                                             type="tel"
                                             name="phone"
                                             required
-                                            className="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-white/10 text-white placeholder-gray-500 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                            placeholder="+91 98765 43210"
+                                            className="w-full px-4 py-3 rounded-xl bg-white/50 border border-primary/10 text-foreground placeholder-muted-foreground focus:border-primary outline-none transition-all"
+                                            placeholder="+91"
                                             value={formData.phone}
                                             onChange={handleInputChange}
                                         />
                                     </div>
 
                                     <div className="col-span-1 md:col-span-2">
-                                        <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Address</label>
+                                        <label className="block text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-bold">Address</label>
                                         <input
                                             name="address"
                                             required
-                                            className="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-white/10 text-white placeholder-gray-500 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                            placeholder="Flat No, Building, Street"
+                                            className="w-full px-4 py-3 rounded-xl bg-white/50 border border-primary/10 text-foreground placeholder-muted-foreground focus:border-primary outline-none transition-all"
+                                            placeholder="House No, Street, Locality"
                                             value={formData.address}
                                             onChange={handleInputChange}
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">City</label>
+                                        <label className="block text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-bold">City</label>
                                         <input
                                             type="text"
                                             name="city"
                                             required
-                                            className="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-white/10 text-white placeholder-gray-500 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                            className="w-full px-4 py-3 rounded-xl bg-white/50 border border-primary/10 text-foreground placeholder-muted-foreground focus:border-primary outline-none transition-all"
                                             placeholder="City"
                                             value={formData.city}
                                             onChange={handleInputChange}
@@ -367,12 +372,12 @@ export default function CheckoutPage() {
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">State</label>
+                                        <label className="block text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-bold">State</label>
                                         <input
                                             type="text"
                                             name="state"
                                             required
-                                            className="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-white/10 text-white placeholder-gray-500 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                            className="w-full px-4 py-3 rounded-xl bg-white/50 border border-primary/10 text-foreground placeholder-muted-foreground focus:border-primary outline-none transition-all"
                                             placeholder="State"
                                             value={formData.state}
                                             onChange={handleInputChange}
@@ -380,26 +385,26 @@ export default function CheckoutPage() {
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">PIN Code</label>
+                                        <label className="block text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-bold">PIN Code</label>
                                         <input
                                             type="text"
                                             name="postalCode"
                                             required
-                                            className="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-white/10 text-white placeholder-gray-500 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                            placeholder="000000"
+                                            className="w-full px-4 py-3 rounded-xl bg-white/50 border border-primary/10 text-foreground placeholder-muted-foreground focus:border-primary outline-none transition-all"
+                                            placeholder="000 000"
                                             value={formData.postalCode}
                                             onChange={handleInputChange}
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Country</label>
+                                        <label className="block text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-bold">Country</label>
                                         <input
                                             type="text"
                                             name="country"
                                             required
                                             readOnly
-                                            className="w-full px-4 py-3 rounded-lg bg-neutral-900 border border-white/10 text-gray-500 cursor-not-allowed outline-none"
+                                            className="w-full px-4 py-3 rounded-xl bg-primary/5 border border-primary/10 text-muted-foreground cursor-not-allowed outline-none"
                                             value={formData.country}
                                             onChange={handleInputChange}
                                         />
@@ -409,43 +414,43 @@ export default function CheckoutPage() {
                         </div>
 
                         {/* 2. PAYMENT METHOD */}
-                        <div className="bg-neutral-900/50 p-6 md:p-8 rounded-2xl shadow-xl border border-white/5 backdrop-blur-sm">
-                            <div className="flex items-center gap-4 mb-8 border-b border-white/10 pb-5">
-                                <div className="bg-primary text-black w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">2</div>
-                                <h2 className="text-xl font-serif font-bold text-white tracking-wide">Payment Method</h2>
+                        <div className="bg-white/60 backdrop-blur-md p-6 md:p-8 rounded-3xl shadow-xl border border-primary/10">
+                            <div className="flex items-center gap-4 mb-8 border-b border-primary/10 pb-5">
+                                <div className="bg-secondary text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">2</div>
+                                <h2 className="text-xl font-serif font-bold text-foreground tracking-wide">Payment Method</h2>
                             </div>
 
                             <div className="space-y-4">
-                                <label className={`relative flex items-center p-5 border rounded-xl cursor-pointer transition-all duration-300 group ${formData.paymentMethod === 'COD' ? 'border-primary bg-primary/10' : 'border-white/10 hover:border-white/20 hover:bg-white/5'}`}>
+                                <label className={`relative flex items-center p-5 border rounded-2xl cursor-pointer transition-all duration-300 group ${formData.paymentMethod === 'COD' ? 'border-primary bg-primary/5' : 'border-primary/10 hover:border-primary/30 hover:bg-white/40'}`}>
                                     <input
                                         type="radio"
                                         name="paymentMethod"
                                         value="COD"
                                         checked={formData.paymentMethod === 'COD'}
                                         onChange={handleInputChange}
-                                        className="w-5 h-5 accent-primary bg-black border-white/30"
+                                        className="w-5 h-5 accent-primary"
                                     />
                                     <div className="ml-5 flex-1">
-                                        <span className={`block font-bold text-lg ${formData.paymentMethod === 'COD' ? 'text-primary' : 'text-white'}`}>Cash on Delivery</span>
-                                        <span className="block text-sm text-gray-400 mt-1">Pay with reverence when your sacred order arrives.</span>
+                                        <span className={`block font-bold text-lg ${formData.paymentMethod === 'COD' ? 'text-secondary' : 'text-foreground'}`}>Cash on Delivery</span>
+                                        <span className="block text-sm text-muted-foreground mt-1">Pay when your sacred order arrives.</span>
                                     </div>
-                                    <Truck className={`${formData.paymentMethod === 'COD' ? 'text-primary' : 'text-gray-600 group-hover:text-gray-400'}`} />
+                                    <Truck className={`${formData.paymentMethod === 'COD' ? 'text-secondary' : 'text-muted-foreground opacity-40'}`} />
                                 </label>
 
-                                <label className={`relative flex items-center p-5 border rounded-xl cursor-pointer transition-all duration-300 group ${formData.paymentMethod === 'Card' ? 'border-primary bg-primary/10' : 'border-white/10 hover:border-white/20 hover:bg-white/5'}`}>
+                                <label className={`relative flex items-center p-5 border rounded-2xl cursor-pointer transition-all duration-300 group ${formData.paymentMethod === 'Card' ? 'border-primary bg-primary/5' : 'border-primary/10 hover:border-primary/30 hover:bg-white/40'}`}>
                                     <input
                                         type="radio"
                                         name="paymentMethod"
                                         value="Card"
                                         checked={formData.paymentMethod === 'Card'}
                                         onChange={handleInputChange}
-                                        className="w-5 h-5 accent-primary bg-black border-white/30"
+                                        className="w-5 h-5 accent-primary"
                                     />
                                     <div className="ml-5 flex-1">
-                                        <span className={`block font-bold text-lg ${formData.paymentMethod === 'Card' ? 'text-primary' : 'text-white'}`}>Pay Online</span>
-                                        <span className="block text-sm text-gray-400 mt-1">Secure Cards, UPI, Netbanking via Stripe.</span>
+                                        <span className={`block font-bold text-lg ${formData.paymentMethod === 'Card' ? 'text-secondary' : 'text-foreground'}`}>Pay Online</span>
+                                        <span className="block text-sm text-muted-foreground mt-1">Cards, UPI, Netbanking (Secure via Stripe).</span>
                                     </div>
-                                    <CreditCard className={`${formData.paymentMethod === 'Card' ? 'text-primary' : 'text-gray-600 group-hover:text-gray-400'}`} />
+                                    <CreditCard className={`${formData.paymentMethod === 'Card' ? 'text-secondary' : 'text-muted-foreground opacity-40'}`} />
                                 </label>
                             </div>
                         </div>
@@ -463,7 +468,7 @@ export default function CheckoutPage() {
                                     <input
                                         type="text"
                                         placeholder="Coupon Code"
-                                        className="flex-1 bg-black border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none uppercase font-mono"
+                                        className="flex-1 bg-white border border-primary/10 rounded-xl px-4 py-2 text-sm text-foreground focus:border-primary outline-none uppercase font-mono"
                                         value={couponCode}
                                         onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                                         disabled={appliedCoupon}
@@ -472,7 +477,7 @@ export default function CheckoutPage() {
                                         type="button"
                                         onClick={handleApplyCoupon}
                                         disabled={!couponCode || applyingCoupon || appliedCoupon}
-                                        className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-xs font-bold uppercase disabled:opacity-50 transition-all border border-white/5"
+                                        className="bg-primary hover:opacity-90 text-white px-4 py-2 rounded-xl text-[10px] font-bold uppercase disabled:opacity-50 transition-all"
                                     >
                                         {applyingCoupon ? '...' : appliedCoupon ? 'Applied' : 'Apply'}
                                     </button>
@@ -499,42 +504,42 @@ export default function CheckoutPage() {
                                             <img src={item.product?.images?.[0]} alt={item.title} className="w-full h-full object-cover opacity-90" />
                                         </div>
                                         <div className="flex-1">
-                                            <h4 className="text-sm font-medium text-white line-clamp-2">{item.product?.title}</h4>
+                                            <h4 className="text-sm font-bold text-foreground line-clamp-2 leading-tight">{item.product?.title}</h4>
                                             <div className="flex justify-between items-center mt-2">
-                                                <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
-                                                <p className="text-sm font-bold text-primary">₹{(item.product?.price * item.quantity).toLocaleString('en-IN')}</p>
+                                                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Qty: {item.quantity}</p>
+                                                <p className="text-sm font-bold text-primary italic">₹{(item.product?.price * item.quantity).toLocaleString('en-IN')}</p>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
                             </div>
 
-                            <div className="border-t border-dashed border-white/10 pt-6 space-y-3">
-                                <div className="flex justify-between text-sm text-gray-400">
+                            <div className="border-t border-dashed border-primary/10 pt-6 space-y-3">
+                                <div className="flex justify-between text-sm text-muted-foreground">
                                     <span>Subtotal</span>
-                                    <span className="font-medium text-gray-200">
+                                    <span className="font-medium text-foreground">
                                         ₹{cartItems.reduce((acc, item) => acc + (item.product.price * item.quantity), 0).toLocaleString('en-IN')}
                                     </span>
                                 </div>
                                 {appliedCoupon && (
-                                    <div className="flex justify-between text-sm text-green-400">
+                                    <div className="flex justify-between text-sm text-green-600 font-bold">
                                         <span>Discount ({appliedCoupon.code})</span>
                                         <span className="font-medium">-₹{appliedCoupon.discountAmount.toLocaleString('en-IN')}</span>
                                     </div>
                                 )}
-                                <div className="flex justify-between text-sm text-gray-400">
+                                <div className="flex justify-between text-sm text-muted-foreground">
                                     <span>GST (18%)</span>
-                                    <span className="font-medium text-gray-200">
+                                    <span className="font-medium text-foreground">
                                         ₹{Math.round(Math.max(0, (cartItems.reduce((acc, item) => acc + (item.product.price * item.quantity), 0) - (appliedCoupon?.discountAmount || 0))) * 0.18).toLocaleString('en-IN')}
                                     </span>
                                 </div>
-                                <div className="flex justify-between text-sm text-gray-400">
+                                <div className="flex justify-between text-sm text-muted-foreground items-center">
                                     <span>Shipping</span>
-                                    <span className="text-primary font-bold text-xs uppercase bg-primary/10 px-2 py-0.5 rounded border border-primary/20">Free</span>
+                                    <span className="text-white font-bold text-[10px] uppercase bg-secondary px-2 py-0.5 rounded-full">Free</span>
                                 </div>
-                                <div className="flex justify-between text-lg font-serif font-bold text-white pt-4 border-t border-white/10 mt-2">
+                                <div className="flex justify-between text-xl font-serif font-bold text-foreground pt-4 border-t border-primary/10 mt-2">
                                     <span>Total</span>
-                                    <span className="text-primary">₹{total.toLocaleString('en-IN')}</span>
+                                    <span className="text-primary italic">₹{total.toLocaleString('en-IN')}</span>
                                 </div>
                             </div>
 
@@ -543,11 +548,11 @@ export default function CheckoutPage() {
                                 form="checkout-form"
                                 disabled={submitting}
                                 className={`w-full mt-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-primary/25 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2
-                                    ${submitting ? 'bg-gray-700 cursor-not-allowed text-gray-400' : 'bg-primary text-black hover:bg-secondary'}
+                                    ${submitting ? 'bg-muted cursor-not-allowed text-muted-foreground' : 'bg-foreground text-background hover:bg-secondary hover:text-white'}
                                 `}
                             >
                                 {submitting ? (
-                                    <span className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Processing...</span>
+                                    <span className="flex items-center gap-2 font-bold"><div className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /> Processing...</span>
                                 ) : (
                                     <>
                                         {formData.paymentMethod === 'Card' ? 'Pay Securely' : 'Place Order'}
@@ -555,9 +560,9 @@ export default function CheckoutPage() {
                                 )}
                             </button>
 
-                            <div className="mt-6 flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest text-gray-500">
-                                <ShieldCheck size={14} className="text-primary/50" />
-                                <span>SSL Encrypted & Secure Payment</span>
+                            <div className="mt-6 flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-bold">
+                                <ShieldCheck size={14} className="text-secondary" />
+                                <span>Secured by BRAHMAKOSH</span>
                             </div>
                         </div>
                     </div>

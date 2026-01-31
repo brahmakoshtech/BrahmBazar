@@ -99,3 +99,15 @@ h5,
 h6 {
   font-family: var(--font-playfair), serif;
 }
+
+/* Custom Utilities */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

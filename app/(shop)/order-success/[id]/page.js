@@ -50,63 +50,73 @@ export default function OrderSuccessPage() {
         }
     }, [id, sessionId]);
 
-    if (loading || verifying) return <div className="min-h-screen flex items-center justify-center">Processing Payment Confirmation...</div>;
+    if (loading || verifying) return (
+        <div className="min-h-screen flex items-center justify-center bg-background">
+            <div className="flex flex-col items-center gap-4">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                <p className="text-secondary font-bold tracking-[0.2em] uppercase text-xs">Confirming your sacred order...</p>
+            </div>
+        </div>
+    );
 
     if (!order) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center">
-                <h1 className="text-2xl font-bold text-gray-900 mb-4">Order not found</h1>
-                <Link href="/" className="text-red-600 hover:underline">Return to Home</Link>
+            <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
+                <h1 className="text-2xl font-serif font-bold text-foreground mb-4">Order not found</h1>
+                <Link href="/" className="bg-primary text-white px-8 py-3 rounded-full font-bold shadow-lg">Return to Home</Link>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-transparent py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto text-center">
-                <div className="bg-white rounded-2xl shadow-sm p-12 mb-8">
-                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <CheckCircle className="text-green-600" size={40} />
+                <div className="bg-white/60 backdrop-blur-md rounded-3xl shadow-2xl p-8 md:p-12 mb-8 border border-primary/10">
+                    <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-primary/20">
+                        <CheckCircle className="text-secondary" size={40} />
                     </div>
-                    <h1 className="text-4xl font-bold text-gray-900 mb-2">Order Confirmed!</h1>
-                    <p className="text-lg text-gray-600 mb-8">
-                        Thank you for your purchase. Your order <span className="font-mono font-bold text-gray-900">#{order._id.slice(-6).toUpperCase()}</span> has been placed.
+                    <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-2">Order Confirmed!</h1>
+                    <p className="text-base text-muted-foreground mb-10">
+                        Thank you for your purchase. Your order <span className="font-mono font-bold text-foreground">#{order._id.slice(-6).toUpperCase()}</span> has been placed with devotion.
                     </p>
 
-                    <div className="bg-gray-50 rounded-xl p-6 mb-8 text-left">
-                        <h2 className="text-lg font-bold text-gray-900 mb-4 border-b pb-2">Order Details</h2>
-                        <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div className="bg-white/40 rounded-2xl p-6 md:p-8 mb-10 text-left border border-primary/5">
+                        <h2 className="text-sm font-bold text-secondary uppercase tracking-[0.2em] mb-6 border-b border-primary/10 pb-2">Order Summary</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                             <div>
-                                <p className="text-gray-500">Order Number</p>
-                                <p className="font-medium text-gray-900">#{order._id}</p>
+                                <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest mb-1">Order ID</p>
+                                <p className="font-bold text-xs md:text-sm text-foreground break-all">#{order._id}</p>
                             </div>
                             <div>
-                                <p className="text-gray-500">Date</p>
-                                <p className="font-medium text-gray-900">{new Date(order.createdAt).toLocaleDateString()}</p>
+                                <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest mb-1">Placed On</p>
+                                <p className="font-bold text-sm text-foreground">{new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
                             </div>
                             <div>
-                                <p className="text-gray-500">Payment Method</p>
-                                <p className="font-medium text-gray-900">{order.paymentMethod}</p>
+                                <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest mb-1">Payment via</p>
+                                <p className="font-bold text-sm text-foreground">{order.paymentMethod}</p>
                             </div>
                             <div>
-                                <p className="text-gray-500">Total Amount</p>
-                                <p className="font-medium text-red-600 text-lg">₹{order.totalAmount.toLocaleString('en-IN')}</p>
+                                <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest mb-1">Amount Paid</p>
+                                <p className="font-bold text-primary text-xl italic">₹{order.totalAmount.toLocaleString('en-IN')}</p>
                             </div>
                             <div>
-                                <p className="text-gray-500">Payment Status</p>
-                                <p className={`font-medium ${order.paymentStatus === 'Paid' ? 'text-green-600' : 'text-yellow-600'}`}>
-                                    {order.paymentStatus === 'Paid' ? 'Paid' : 'Pending'}
-                                </p>
+                                <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest mb-1">Status</p>
+                                <div className="flex items-center gap-2">
+                                    <span className={`w-2 h-2 rounded-full ${order.paymentStatus === 'Paid' ? 'bg-green-500' : 'bg-yellow-500'}`} />
+                                    <p className={`font-bold text-sm uppercase tracking-widest ${order.paymentStatus === 'Paid' ? 'text-green-600' : 'text-yellow-600'}`}>
+                                        {order.paymentStatus === 'Paid' ? 'Paid' : 'Pending Confirmation'}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link href="/account" className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition">
-                            <Package className="mr-2" size={20} /> View Order
+                        <Link href="/account" className="inline-flex items-center justify-center px-8 py-4 border border-primary/20 text-sm font-bold uppercase tracking-widest rounded-full text-foreground bg-white/50 hover:bg-white transition shadow-sm">
+                            <Package className="mr-2" size={18} /> My Orders
                         </Link>
-                        <Link href="/" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-red-600 hover:bg-red-700 transition shadow-lg shadow-red-100">
-                            <Home className="mr-2" size={20} /> Continue Shopping
+                        <Link href="/" className="inline-flex items-center justify-center px-8 py-4 border border-transparent text-sm font-bold uppercase tracking-widest rounded-full text-white bg-foreground hover:bg-secondary transition shadow-xl">
+                            <Home className="mr-2" size={18} /> Continue Shopping
                         </Link>
                     </div>
                 </div>

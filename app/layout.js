@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' });
 
 export const metadata = {
-  title: 'Rudra Divine - Authentic Spiritual Products',
+  title: 'BrahmBazar',
   description: 'Discover genuine Rudraksha, Gemstones, and Yantras energized for your spiritual journey.',
 };
 

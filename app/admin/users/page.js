@@ -67,87 +67,89 @@ export default function AdminUsers() {
     );
 
     if (loading) return (
-        <div className="space-y-4">
-            <div className="flex justify-between">
-                <Skeleton className="w-48 h-10 rounded-lg bg-neutral-900 border border-white/10" />
+        <div className="p-8 space-y-6 animate-pulse">
+            <div className="flex justify-between items-center mb-8">
+                <div className="w-64 h-12 bg-white/40 rounded-full border border-primary/10" />
+                <div className="w-48 h-10 bg-white/40 rounded-full border border-primary/10" />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-4">
                 {[...Array(5)].map((_, i) => (
-                    <Skeleton key={i} className="h-16 w-full rounded-lg bg-neutral-900 border border-white/10" />
+                    <div key={i} className="h-20 w-full bg-white/40 rounded-3xl border border-primary/10 shadow-sm" />
                 ))}
             </div>
         </div>
     );
 
     return (
-        <div>
-            <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="p-4 md:p-8">
+            <div className="mb-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
                 <div>
-                    <h1 className="text-3xl font-serif font-bold text-white tracking-wide">Users</h1>
-                    <p className="text-gray-400 mt-1">Manage platform users and administrators</p>
+                    <h1 className="text-3xl font-serif font-bold text-foreground italic">Community Database</h1>
+                    <p className="text-muted-foreground mt-2 font-medium">Manage your platform devotees and guardians.</p>
                 </div>
-                <div className="relative w-full sm:w-64">
+                <div className="relative w-full lg:w-80 group">
                     <input
                         type="text"
-                        placeholder="Search by email or name..."
-                        className="w-full pl-4 pr-10 py-2 rounded-lg bg-neutral-900 border border-white/10 focus:ring-1 focus:ring-primary focus:border-primary/50 outline-none text-white placeholder-gray-600 transition-all"
+                        placeholder="Search by name or email..."
+                        className="w-full pl-12 pr-6 py-3.5 rounded-full bg-white/60 backdrop-blur-md border border-primary/10 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-foreground placeholder-gray-400 transition-all font-bold text-xs uppercase tracking-widest shadow-sm"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                     </div>
                 </div>
             </div>
 
-            <div className="bg-neutral-900/50 backdrop-blur-sm rounded-2xl shadow-lg border border-white/5 overflow-hidden">
+            <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-2xl shadow-primary/5 border border-primary/10 overflow-hidden animate-in slide-in-from-bottom-4 duration-500">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
-                        <thead className="bg-white/5">
+                        <thead className="bg-primary/5">
                             <tr>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">User</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Email</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Role</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Joined</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-right">Actions</th>
+                                <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Profile</th>
+                                <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Email Address</th>
+                                <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Authority</th>
+                                <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Joined</th>
+                                <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] text-right">Access</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5">
+                        <tbody className="divide-y divide-primary/5">
                             {filteredUsers.map((user) => (
-                                <tr key={user._id} className="hover:bg-white/5 transition-colors">
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-full bg-neutral-800 border border-white/10 flex items-center justify-center text-primary font-bold text-xs uppercase">
+                                <tr key={user._id} className="hover:bg-primary/5 transition-all group">
+                                    <td className="px-8 py-6">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 rounded-full bg-secondary text-white font-serif font-bold text-sm flex items-center justify-center shadow-lg shadow-secondary/20">
                                                 {user.name ? user.name[0] : 'U'}
                                             </div>
-                                            <span className="text-sm font-medium text-white">{user.name}</span>
+                                            <span className="text-sm font-bold text-foreground">{user.name}</span>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-gray-400">
+                                    <td className="px-8 py-6 text-sm text-foreground/70 font-medium">
                                         {user.email}
                                     </td>
-                                    <td className="px-6 py-4">
-                                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-800 text-gray-400 border border-gray-700">
-                                            <User size={12} /> User
+                                    <td className="px-8 py-6">
+                                        <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${user.role === 'admin' ? 'bg-primary text-white shadow-md shadow-primary/20' : 'bg-background text-muted-foreground border border-primary/10'}`}>
+                                            {user.role === 'admin' ? <Shield size={10} /> : <User size={10} />}
+                                            {user.role === 'admin' ? 'Guardian' : 'Devotee'}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">
-                                        {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
+                                    <td className="px-8 py-6 text-xs font-bold text-muted-foreground uppercase tracking-widest italic">
+                                        {user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : '---'}
                                     </td>
-                                    <td className="px-6 py-4 text-right flex justify-end gap-2">
+                                    <td className="px-8 py-6 text-right flex justify-end gap-3">
                                         <button
                                             onClick={() => handleViewUser(user)}
-                                            className="p-2 bg-white/5 rounded-full text-gray-400 hover:text-blue-400 hover:bg-blue-900/20 transition-all"
+                                            className="p-2.5 bg-foreground/5 rounded-full text-muted-foreground hover:text-white hover:bg-foreground transition-all shadow-sm"
                                             title="View Details"
                                         >
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                            <Eye size={16} />
                                         </button>
                                         <button
                                             onClick={() => handleDelete(user._id)}
-                                            className="p-2 bg-white/5 rounded-full text-gray-400 hover:text-red-400 hover:bg-red-900/20 transition-all"
+                                            className="p-2.5 bg-red-50 rounded-full text-red-400 hover:text-white hover:bg-red-500 transition-all shadow-sm"
                                             title="Delete User"
                                         >
-                                            <Trash2 size={18} />
+                                            <Trash2 size={16} />
                                         </button>
                                     </td>
                                 </tr>
@@ -165,104 +167,106 @@ export default function AdminUsers() {
             </div>
 
             {isModalOpen && selectedUser && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-                    <div className="bg-neutral-900 border border-white/10 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
-                        <div className="p-6 border-b border-white/10 flex justify-between items-center sticky top-0 bg-neutral-900 z-10">
-                            <h2 className="text-xl font-bold text-white flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center text-lg">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/40 backdrop-blur-md animate-in fade-in duration-300">
+                    <div className="bg-background border border-primary/20 rounded-[2.5rem] w-full max-w-2xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col scale-in duration-300">
+                        <div className="p-8 border-b border-primary/10 flex justify-between items-center bg-white/60 backdrop-blur-xl">
+                            <h2 className="text-2xl font-serif font-bold text-foreground flex items-center gap-4">
+                                <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center text-xl shadow-inner italic">
                                     {selectedUser.name ? selectedUser.name[0] : 'U'}
                                 </div>
-                                {selectedUser.name}
+                                <div className="flex flex-col">
+                                    <span>{selectedUser.name}</span>
+                                    <span className="font-sans text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-bold">{selectedUser.role} Account</span>
+                                </div>
                             </h2>
-                            <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            <button onClick={() => setIsModalOpen(false)} className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center text-muted-foreground hover:bg-foreground hover:text-background transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                             </button>
                         </div>
 
-                        <div className="p-6 space-y-8">
+                        <div className="p-8 space-y-10 overflow-y-auto custom-scrollbar">
                             {/* Contact Info */}
                             <div>
-                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">Contact Details</h3>
-                                <div className="bg-white/5 rounded-xl p-4 border border-white/5 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="text-xs text-gray-500 block">Email Address</label>
-                                        <div className="text-white font-mono flex items-center gap-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                                            <a href={`mailto:${selectedUser.email}`} className="hover:text-primary transition-colors">{selectedUser.email}</a>
+                                <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.3em] mb-4">Identity Matrix</h3>
+                                <div className="bg-white/40 rounded-3xl p-6 border border-primary/10 grid grid-cols-1 md:grid-cols-2 gap-8 shadow-inner">
+                                    <div className="space-y-1">
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-primary/60 block">Sacred Email</label>
+                                        <div className="text-foreground font-bold flex items-center gap-2">
+                                            <a href={`mailto:${selectedUser.email}`} className="hover:text-primary transition-colors truncate">{selectedUser.email}</a>
                                         </div>
                                     </div>
-                                    <div>
-                                        <label className="text-xs text-gray-500 block">Member Since</label>
-                                        <div className="text-white">
+                                    <div className="space-y-1">
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-primary/60 block">Initiation Date</label>
+                                        <div className="text-foreground font-serif font-bold italic">
                                             {selectedUser.createdAt ? new Date(selectedUser.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}
                                         </div>
                                     </div>
-                                    <div>
-                                        <label className="text-xs text-gray-500 block">User ID</label>
-                                        <div className="text-gray-400 text-xs font-mono">{selectedUser._id}</div>
+                                    <div className="col-span-1 md:col-span-2 pt-2">
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-primary/60 block mb-1">Entity Reference</label>
+                                        <div className="text-muted-foreground text-[10px] font-mono bg-background/50 px-3 py-1 rounded-full w-fit border border-primary/5 uppercase">{selectedUser._id}</div>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Order History */}
                             <div>
-                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3 flex justify-between items-center">
-                                    Order History
-                                    <span className="text-xs normal-case bg-white/10 px-2 py-0.5 rounded-full text-white">{userOrders.length} Orders</span>
+                                <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.3em] mb-4 flex justify-between items-center">
+                                    Journey Log
+                                    <span className="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-[10px] border border-secondary/20">{userOrders.length} Rituals</span>
                                 </h3>
 
                                 {loadingOrders ? (
-                                    <div className="space-y-3">
-                                        <Skeleton className="h-16 w-full bg-white/5 rounded-lg" />
-                                        <Skeleton className="h-16 w-full bg-white/5 rounded-lg" />
+                                    <div className="space-y-4">
+                                        <div className="h-20 w-full bg-white/20 rounded-3xl animate-pulse" />
+                                        <div className="h-20 w-full bg-white/20 rounded-3xl animate-pulse" />
                                     </div>
                                 ) : userOrders.length > 0 ? (
-                                    <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                                    <div className="space-y-4 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar">
                                         {userOrders.map(order => (
                                             <div
                                                 key={order._id}
                                                 onClick={() => router.push(`/admin/orders/${order._id}`)}
-                                                className="bg-white/5 rounded-xl p-4 border border-white/5 hover:border-primary/50 hover:bg-white/10 transition-all flex flex-col gap-4 cursor-pointer group"
+                                                className="bg-white/50 rounded-3xl p-6 border border-primary/5 hover:border-primary/40 hover:bg-white transition-all flex flex-col gap-6 cursor-pointer group shadow-sm hover:shadow-xl"
                                             >
                                                 <div className="flex flex-col sm:flex-row justify-between gap-4">
                                                     <div>
-                                                        <div className="flex items-center gap-2 mb-1">
-                                                            <span className="text-white font-bold">#{order._id.slice(-6).toUpperCase()}</span>
-                                                            <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide border ${order.orderStatus === 'Delivered' ? 'bg-green-900/30 text-green-400 border-green-500/30' :
-                                                                order.orderStatus === 'Cancelled' ? 'bg-red-900/30 text-red-400 border-red-500/30' :
-                                                                    'bg-yellow-900/30 text-yellow-400 border-yellow-500/30'
+                                                        <div className="flex items-center gap-3 mb-2">
+                                                            <span className="text-foreground font-bold font-mono text-xs">#{order._id.slice(-6).toUpperCase()}</span>
+                                                            <span className={`text-[9px] px-3 py-1 rounded-full font-bold uppercase tracking-widest border ${order.orderStatus === 'Delivered' ? 'bg-green-500 text-white border-green-600' :
+                                                                order.orderStatus === 'Cancelled' ? 'bg-red-500 text-white border-red-600' :
+                                                                    'bg-amber-500 text-white border-amber-600'
                                                                 }`}>
                                                                 {order.orderStatus}
                                                             </span>
                                                         </div>
-                                                        <div className="text-xs text-gray-500">
+                                                        <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">
                                                             {new Date(order.createdAt).toLocaleDateString()}
                                                         </div>
                                                     </div>
                                                     <div className="text-right">
-                                                        <div className="text-lg font-bold text-primary">₹{order.totalPrice?.toLocaleString()}</div>
-                                                        <div className="text-xs text-gray-500">
-                                                            Payment: <span className={order.paymentStatus === 'Paid' ? 'text-green-400' : 'text-red-400'}>{order.paymentStatus}</span>
+                                                        <div className="text-xl font-serif font-bold text-primary italic">₹{order.totalAmount?.toLocaleString()}</div>
+                                                        <div className="text-[10px] font-bold uppercase tracking-tighter text-muted-foreground mt-1">
+                                                            Status: <span className={order.paymentStatus === 'Paid' ? 'text-green-600' : 'text-red-500'}>{order.paymentStatus}</span>
                                                         </div>
                                                     </div>
                                                 </div>
 
                                                 {/* Products List */}
-                                                <div className="bg-black/20 rounded-lg p-3 space-y-2">
+                                                <div className="bg-background/40 rounded-2xl p-4 space-y-3">
                                                     {order.products?.map((item, idx) => (
-                                                        <div key={idx} className="flex items-center gap-3">
-                                                            <div className="w-8 h-8 rounded bg-neutral-800 overflow-hidden shrink-0 border border-white/10">
-                                                                {item.productId?.image ? (
-                                                                    <img src={item.productId.image} alt="" className="w-full h-full object-cover" />
+                                                        <div key={idx} className="flex items-center gap-4">
+                                                            <div className="w-10 h-10 rounded-xl bg-white overflow-hidden shrink-0 border border-primary/10 shadow-sm">
+                                                                {item.productId?.images?.[0] ? (
+                                                                    <img src={item.productId.images[0]} alt="" className="w-full h-full object-cover" />
                                                                 ) : (
-                                                                    <div className="w-full h-full flex items-center justify-center text-xs text-gray-600">Img</div>
+                                                                    <div className="w-full h-full flex items-center justify-center text-[8px] font-bold text-muted-foreground uppercase opacity-40">IMG</div>
                                                                 )}
                                                             </div>
                                                             <div className="flex-1 min-w-0">
-                                                                <p className="text-xs text-gray-300 truncate">{item.productId?.title || 'Unknown Product'}</p>
-                                                                <p className="text-[10px] text-gray-500">Qty: {item.quantity}</p>
+                                                                <p className="text-xs font-bold text-foreground truncate">{item.productId?.title || 'Unknown Product'}</p>
+                                                                <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Qty: {item.quantity}</p>
                                                             </div>
-                                                            <div className="text-xs text-gray-400 font-mono">
+                                                            <div className="text-xs font-bold text-primary italic">
                                                                 ₹{item.price?.toLocaleString()}
                                                             </div>
                                                         </div>
@@ -274,19 +278,19 @@ export default function AdminUsers() {
                                     </div>
 
                                 ) : (
-                                    <div className="text-center py-8 text-gray-500 bg-white/5 rounded-xl border border-dashed border-white/10">
-                                        No orders placed yet.
+                                    <div className="text-center py-12 text-muted-foreground font-bold uppercase tracking-widest text-[10px] bg-white/40 rounded-3xl border border-dashed border-primary/20">
+                                        No rituals recorded in this lifetime.
                                     </div>
                                 )}
                             </div>
                         </div>
 
-                        <div className="p-6 border-t border-white/10 bg-neutral-900 sticky bottom-0 z-10 flex justify-end">
+                        <div className="p-8 border-t border-primary/10 bg-white/60 backdrop-blur-xl flex justify-end">
                             <button
                                 onClick={() => setIsModalOpen(false)}
-                                className="px-6 py-2 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition-colors"
+                                className="px-10 py-3.5 bg-foreground text-background font-bold text-[10px] uppercase tracking-[0.2em] rounded-full hover:bg-secondary hover:text-white transition-all shadow-xl active:scale-95"
                             >
-                                Close
+                                Close Portal
                             </button>
                         </div>
                     </div>

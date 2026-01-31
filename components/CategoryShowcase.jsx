@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -9,6 +9,7 @@ import api from '@/services/api';
 export default function CategoryShowcase() {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
+    const scrollRef = useRef(null);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -25,6 +26,24 @@ export default function CategoryShowcase() {
         fetchCategories();
     }, []);
 
+    const handleMouseEnter = () => {
+        if (scrollRef.current) {
+            const animations = scrollRef.current.getAnimations();
+            animations.forEach(animation => {
+                animation.updatePlaybackRate(0.2); // Slow down significantly
+            });
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (scrollRef.current) {
+            const animations = scrollRef.current.getAnimations();
+            animations.forEach(animation => {
+                animation.updatePlaybackRate(1); // Restore normal speed
+            });
+        }
+    };
+
     // Helper to determine column span for visual variety
     // Pattern: 2-col, 1-col, 1-col... or just purely responsive grid
     // Helper removed as we want uniform grid
@@ -34,68 +53,84 @@ export default function CategoryShowcase() {
     if (categories.length === 0) return null;
 
     return (
-        <section className="py-20 bg-background relative overflow-hidden">
-            {/* Background elements */}
-            <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none">
-                <div className="absolute top-10 right-10 w-96 h-96 bg-primary/10 rounded-full blur-[80px]" />
-                <div className="absolute bottom-10 left-10 w-72 h-72 bg-secondary/10 rounded-full blur-[60px]" />
-            </div>
+        <section className="py-24 relative overflow-hidden">
+            {/* Soft Radial Gradient Background for Depth */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/5 via-background to-background pointer-events-none" />
+
+            {/* Decorative Ambient Glows */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[100px] pointer-events-none" />
 
             <div className="container mx-auto px-4 max-w-7xl relative z-10">
-                <div className="flex flex-col items-center mb-16 text-center">
-                    <span className="text-secondary font-bold tracking-[0.3em] uppercase text-xs md:text-sm mb-3 block">
-                        Divinely Curated
-                    </span>
-                    <h2 className="text-3xl md:text-5xl font-serif font-medium text-foreground mb-4">
-                        Shop by <span className="text-primary italic">Category</span>
-                    </h2>
-                    <div className="flex gap-2 items-center opacity-70">
-                        <div className="h-px w-12 bg-primary"></div>
-                        <span className="text-primary text-xl">❖</span>
-                        <div className="h-px w-12 bg-primary"></div>
+
+                {/* Glassy Panel Container */}
+                <div className="relative backdrop-blur-md bg-white/40 dark:bg-black/20 rounded-[2.5rem] border border-primary/10 p-8 md:p-14 shadow-2xl shadow-primary/5">
+
+                    {/* Section Header */}
+                    <div className="flex flex-col items-center mb-12 text-center">
+                        <span className="text-secondary font-bold tracking-[0.4em] uppercase text-[10px] md:text-xs mb-4 block">
+                            Divinely Curated
+                        </span>
+                        <h2 className="text-3xl md:text-5xl font-serif font-medium text-foreground mb-4">
+                            Shop by <span className="text-primary italic">Category</span>
+                        </h2>
+                        <div className="flex gap-3 items-center opacity-60 mt-1">
+                            <div className="h-px w-16 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+                            <span className="text-primary text-xl">❖</span>
+                            <div className="h-px w-16 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+                        </div>
                     </div>
-                </div>
 
-                {/* Horizontal Auto-Scroll Container (Infinite Loop) */}
-                <div className="relative w-full overflow-hidden mask-gradient">
-                    <div className="flex gap-5 w-max animate-scroll-slow hover:pause-animation">
-                        {/* Duplicate content 3 times for seamless infinite scroll */}
-                        {[...categories, ...categories, ...categories].map((cat, idx) => (
-                            <div
-                                key={`${cat._id}-${idx}`}
-                                className="shrink-0 w-[160px] md:w-[220px] aspect-[3/4] group relative rounded-xl overflow-hidden cursor-pointer border border-primary/20 hover:border-primary/60 transition-all duration-500 shadow-sm hover:shadow-xl"
-                            >
-                                <Link href={`/category/${cat.slug}`} className="block w-full h-full relative">
-                                    <Image
-                                        src={cat.image || '/images/category-fallback.png'}
-                                        alt={cat.name}
-                                        fill
-                                        className="object-cover transition-transform duration-700 group-hover:scale-110"
-                                        sizes="(max-width: 768px) 160px, 220px"
-                                    />
+                    {/* Horizontal Auto-Scroll Container (Infinite Loop) */}
+                    <div className="relative w-full overflow-hidden">
+                        <div
+                            ref={scrollRef}
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                            className="flex gap-6 md:gap-8 w-max animate-scroll-slow py-4"
+                        >
+                            {/* Duplicate content 3 times for seamless infinite scroll */}
+                            {[...categories, ...categories, ...categories].map((cat, idx) => (
+                                <div
+                                    key={`${cat._id}-${idx}`}
+                                    className="shrink-0 w-[180px] md:w-[240px] aspect-[3/4] group relative rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:-translate-y-2 border border-white/50"
+                                >
+                                    <Link href={`/category/${cat.slug}`} className="block w-full h-full relative">
+                                        <Image
+                                            src={cat.image || '/images/category-fallback.png'}
+                                            alt={cat.name}
+                                            fill
+                                            className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                            sizes="(max-width: 768px) 180px, 240px"
+                                        />
 
-                                    {/* Elegant Overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent group-hover:via-black/30 transition-all duration-500" />
+                                        {/* Premium Overlay Gradient */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300" />
 
-                                    {/* Inner Border Frame */}
-                                    <div className="absolute inset-2 border border-white/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                                        {/* Inner Glassy Frame Effect */}
+                                        <div className="absolute inset-0 border-[1px] border-white/10 rounded-2xl pointer-events-none" />
 
-                                    {/* Content */}
-                                    <div className="absolute bottom-0 left-0 w-full p-4 text-center">
-                                        <h3 className="text-white text-lg font-serif font-medium tracking-wide group-hover:text-primary transition-colors duration-300 drop-shadow-md">
-                                            {cat.name}
-                                        </h3>
-                                        <div className="w-8 h-0.5 bg-primary mx-auto mt-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform scale-x-0 group-hover:scale-x-100" />
-                                    </div>
-                                </Link>
-                            </div>
-                        ))}
+                                        {/* Content */}
+                                        <div className="absolute bottom-0 left-0 w-full p-5 text-center transform translate-y-1 group-hover:translate-y-0 transition-transform duration-500">
+                                            <h3 className="text-white text-lg md:text-xl font-serif font-medium tracking-wide drop-shadow-lg">
+                                                {cat.name}
+                                            </h3>
+                                            <div className="flex justify-center items-center gap-2 mt-2 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                                                <span className="h-px w-4 bg-primary" />
+                                                <span className="text-[10px] text-primary uppercase tracking-widest">Explore</span>
+                                                <span className="h-px w-4 bg-primary" />
+                                            </div>
+                                        </div>
+                                    </Link>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </div>
 
-                {/* Interaction hint */}
-                <div className="flex justify-center mt-6 opacity-40 text-xs tracking-widest uppercase">
-                    Hover to Pause
+                    {/* Interaction hint */}
+                    <div className="flex justify-center mt-8 opacity-40 text-[10px] tracking-[0.2em] uppercase text-foreground/60">
+                        Hover to Slow
+                    </div>
                 </div>
             </div>
             <style jsx global>{`
@@ -105,13 +140,6 @@ export default function CategoryShowcase() {
                 }
                 .animate-scroll-slow {
                     animation: scroll-slow 40s linear infinite;
-                }
-                .hover\:pause-animation:hover {
-                    animation-play-state: paused;
-                }
-                .mask-gradient {
-                    mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-                    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
                 }
             `}</style>
         </section>

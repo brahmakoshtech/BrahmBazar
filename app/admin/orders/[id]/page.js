@@ -75,83 +75,88 @@ export default function OrderDetailsPage({ params }) {
     };
 
     if (loading) return (
-        <div className="p-6 flex items-center justify-center min-h-[50vh]">
-            <div className="text-gray-400 animate-pulse">Loading order details...</div>
+        <div className="p-8 flex items-center justify-center min-h-[50vh] animate-pulse">
+            <div className="flex flex-col items-center gap-4">
+                <Package className="text-primary animate-bounce" size={48} />
+                <div className="text-primary font-serif font-bold italic">Deciphering Scroll...</div>
+            </div>
         </div>
     );
-    if (error) return <div className="p-6 text-red-500">Error: {error}</div>;
-    if (!order) return <div className="p-6 text-white">Order not found</div>;
+    if (error) return <div className="p-8 text-red-500 font-bold bg-red-500/10 rounded-2xl border border-red-500/20 text-center">Error: {error}</div>;
+    if (!order) return <div className="p-8 text-foreground font-serif text-center">Sacred Order not found in the archives</div>;
 
     return (
-        <div className="max-w-6xl mx-auto space-y-6">
-            <div className="flex items-center gap-4">
-                <Link href="/admin/orders" className="p-2 rounded-full bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+        <div className="p-4 md:p-8 space-y-10">
+            <div className="flex flex-col md:flex-row md:items-center gap-6">
+                <Link href="/admin/orders" className="w-12 h-12 flex items-center justify-center rounded-full bg-white/60 backdrop-blur-md text-foreground hover:bg-foreground hover:text-white transition-all shadow-md border border-primary/10">
                     <ArrowLeft size={20} />
                 </Link>
                 <div>
-                    <h1 className="text-2xl font-serif font-bold text-white tracking-wide">Order Details</h1>
-                    <p className="text-gray-400 text-sm font-mono mt-1">ID: #{order._id}</p>
+                    <h1 className="text-3xl font-serif font-bold text-foreground italic">Order Scroll</h1>
+                    <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest mt-1">Fragment: #{order._id}</p>
                 </div>
-                <div className="ml-auto">
+                <div className="md:ml-auto">
                     <button
                         onClick={handleDelete}
-                        className="bg-red-900/20 text-red-400 border border-red-900/50 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-red-900/40 transition-colors text-sm font-medium"
+                        className="bg-red-500/10 text-red-500 border border-red-500/20 px-6 py-3 rounded-full flex items-center gap-2 hover:bg-red-500 hover:text-white transition-all text-[10px] font-bold uppercase tracking-widest shadow-sm"
                     >
-                        <Trash2 size={16} /> Cancel/Delete Order
+                        <Trash2 size={16} /> Nullify Order
                     </button>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Shipping Info */}
-                <div className="bg-neutral-900/50 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/5 lg:col-span-2 space-y-6">
-                    <div className="flex items-center gap-3 pb-4 border-b border-white/5">
-                        <Truck className="text-primary" size={24} />
-                        <h2 className="text-lg font-bold text-white">Shipping Information</h2>
+                <div className="bg-white/60 backdrop-blur-md p-8 rounded-[2.5rem] shadow-lg border border-primary/10 lg:col-span-2 space-y-8 animate-in fade-in slide-in-from-left-4 duration-500">
+                    <div className="flex items-center gap-4 pb-6 border-b border-primary/5">
+                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                            <Truck className="text-primary" size={24} />
+                        </div>
+                        <h2 className="text-xl font-serif font-bold text-foreground italic">Expedition Details</h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div className="space-y-6">
                             <div>
-                                <label className="text-xs text-gray-500 uppercase tracking-wider font-bold">Customer</label>
-                                <p className="text-white text-base font-medium mt-1">{order.user?.name || 'Guest'}</p>
-                                <p className="text-gray-400 text-sm">{order.user?.email || 'N/A'}</p>
+                                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-2 block">The Recipient</label>
+                                <p className="text-foreground text-lg font-bold">{order.user?.name || 'Wandering Soul (Guest)'}</p>
+                                <p className="text-muted-foreground font-medium text-sm italic">{order.user?.email || 'N/A'}</p>
                             </div>
                             <div>
-                                <label className="text-xs text-gray-500 uppercase tracking-wider font-bold">Shipping Address</label>
-                                <div className="text-gray-300 mt-1 leading-relaxed">
+                                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-2 block">Destination Sanctuary</label>
+                                <div className="text-foreground/80 text-sm font-medium leading-relaxed bg-primary/5 p-4 rounded-2xl border border-primary/5 italic">
                                     <p>{order.shippingAddress?.address}</p>
                                     <p>{order.shippingAddress?.city}, {order.shippingAddress?.postalCode}</p>
                                     <p>{order.shippingAddress?.country}</p>
-                                    <p className="mt-1 text-primary text-sm font-mono">{order.shippingAddress?.phone}</p>
+                                    <p className="mt-2 text-primary font-bold tracking-widest">{order.shippingAddress?.phone}</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="p-5 rounded-xl bg-black/20 border border-white/5 space-y-4">
+                        <div className="p-6 rounded-[2rem] bg-white/40 border border-primary/10 space-y-8 shadow-inner">
                             <div>
-                                <label className="text-xs text-gray-500 uppercase tracking-wider font-bold mb-2 block">Current Status</label>
-                                <div className="flex items-center gap-3">
-                                    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide border ${order.orderStatus === 'Delivered' ? 'bg-green-900/30 text-green-400 border-green-500/30' :
-                                        order.orderStatus === 'Cancelled' ? 'bg-red-900/30 text-red-400 border-red-500/30' :
-                                            'bg-yellow-900/30 text-yellow-400 border-yellow-500/30'
+                                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-3 block text-center">Phase Manifestation</label>
+                                <div className="flex flex-col items-center gap-3">
+                                    <span className={`px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest border shadow-sm ${order.orderStatus === 'Delivered' ? 'bg-green-500 text-white border-green-600' :
+                                        order.orderStatus === 'Cancelled' ? 'bg-red-500 text-white border-red-600' :
+                                            'bg-primary text-white border-primary/20'
                                         }`}>
                                         {order.orderStatus}
                                     </span>
                                     {order.orderStatus === 'Delivered' && order.deliveredAt && (
-                                        <span className="text-xs text-gray-500">
-                                            on {new Date(order.deliveredAt).toLocaleDateString()}
+                                        <span className="text-[10px] text-muted-foreground font-bold italic tracking-widest">
+                                            Arrived: {new Date(order.deliveredAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                                         </span>
                                     )}
                                 </div>
                             </div>
 
                             <div>
-                                <label className="text-xs text-gray-500 uppercase tracking-wider font-bold mb-2 block">Update Status</label>
+                                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-3 block text-center">Alter Status</label>
                                 <select
                                     value={order.orderStatus}
                                     onChange={handleStatusChange}
-                                    className="w-full bg-neutral-800 border border-white/10 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary transition-colors"
+                                    className="w-full bg-white border border-primary/10 text-foreground font-bold rounded-full px-6 py-3 text-[10px] uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all appearance-none cursor-pointer text-center"
                                 >
                                     <option value="Processing">Processing</option>
                                     <option value="Shipped">Shipped</option>
@@ -164,31 +169,33 @@ export default function OrderDetailsPage({ params }) {
                 </div>
 
                 {/* Payment Info */}
-                <div className="bg-neutral-900/50 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/5 space-y-6 h-fit">
-                    <div className="flex items-center gap-3 pb-4 border-b border-white/5">
-                        <CreditCard className="text-primary" size={24} />
-                        <h2 className="text-lg font-bold text-white">Payment</h2>
+                <div className="bg-white/60 backdrop-blur-md p-8 rounded-[2.5rem] shadow-lg border border-primary/10 space-y-8 h-fit animate-in fade-in slide-in-from-right-4 duration-500">
+                    <div className="flex items-center gap-4 pb-6 border-b border-primary/5">
+                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                            <CreditCard className="text-primary" size={24} />
+                        </div>
+                        <h2 className="text-xl font-serif font-bold text-foreground italic">Offering</h2>
                     </div>
 
                     <div>
-                        <label className="text-xs text-gray-500 uppercase tracking-wider font-bold">Method</label>
-                        <p className="text-white text-base font-medium mt-1">{order.paymentMethod}</p>
+                        <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-2 block">Transaction Ritual</label>
+                        <p className="text-foreground text-lg font-bold italic">{order.paymentMethod}</p>
                     </div>
 
-                    <div className={`p-4 rounded-xl border ${order.paymentStatus === 'Paid'
-                        ? 'bg-green-900/20 border-green-500/30'
-                        : 'bg-red-900/20 border-red-500/30'
+                    <div className={`p-6 rounded-[2rem] border shadow-inner ${order.paymentStatus === 'Paid'
+                        ? 'bg-green-500/10 border-green-500/20'
+                        : 'bg-red-500/10 border-red-500/20'
                         }`}>
-                        <div className="flex justify-between items-center mb-1">
-                            <span className="text-xs font-bold text-gray-400 uppercase">Status</span>
-                            <span className={`font-bold uppercase ${order.paymentStatus === 'Paid' ? 'text-green-400' : 'text-red-400'
+                        <div className="flex flex-col items-center gap-2">
+                            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Sacred Status</span>
+                            <span className={`text-xl font-serif font-bold italic ${order.paymentStatus === 'Paid' ? 'text-green-600' : 'text-red-500'
                                 }`}>
                                 {order.paymentStatus}
                             </span>
                         </div>
                         {order.paymentStatus === 'Paid' && order.paidAt && (
-                            <p className="text-xs text-gray-500 mt-1">
-                                Paid on {new Date(order.paidAt).toLocaleDateString()}
+                            <p className="text-[10px] text-muted-foreground font-bold text-center mt-3 uppercase tracking-widest italic">
+                                Aligned: {new Date(order.paidAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                             </p>
                         )}
                     </div>
@@ -196,44 +203,48 @@ export default function OrderDetailsPage({ params }) {
                     {order.paymentStatus !== 'Paid' && (
                         <button
                             onClick={handlePaymentHandler}
-                            className="w-full bg-primary hover:bg-primary/90 text-black font-bold py-2.5 rounded-lg transition-all shadow-lg shadow-primary/20"
+                            className="w-full bg-primary hover:bg-foreground text-white font-bold py-4 rounded-full transition-all shadow-xl shadow-primary/20 uppercase text-[10px] tracking-widest"
                         >
-                            Mark As Paid
+                            Authorize Receipt
                         </button>
                     )}
                 </div>
 
                 {/* Order Items */}
-                <div className="bg-neutral-900/50 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/5 lg:col-span-3">
-                    <div className="flex items-center gap-3 pb-4 border-b border-white/5 mb-4">
-                        <Package className="text-primary" size={24} />
-                        <h2 className="text-lg font-bold text-white">Order Items</h2>
+                <div className="bg-white/60 backdrop-blur-md p-10 rounded-[2.5rem] shadow-lg border border-primary/10 lg:col-span-3 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                    <div className="flex items-center gap-4 pb-8 border-b border-primary/5 mb-8">
+                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                            <Package className="text-primary" size={24} />
+                        </div>
+                        <h2 className="text-xl font-serif font-bold text-foreground italic">Relics of Acquisition</h2>
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                         {(!order.products || order.products.length === 0) ? (
-                            <p className="text-gray-500 text-center py-8">Order is empty</p>
+                            <div className="py-20 text-center">
+                                <p className="text-muted-foreground font-serif text-lg italic tracking-widest uppercase">The Ledger is Void</p>
+                            </div>
                         ) : (
                             order.products.map((item, index) => (
-                                <div key={index} className="flex items-center justify-between p-4 bg-black/20 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-                                    <div className="flex items-center gap-4">
-                                        <div className="h-16 w-16 bg-neutral-800 rounded-lg overflow-hidden border border-white/10 shrink-0">
+                                <div key={index} className="flex flex-col sm:flex-row items-center justify-between p-6 bg-white/40 rounded-[2rem] border border-primary/5 hover:border-primary/20 transition-all group gap-6">
+                                    <div className="flex items-center gap-6 w-full">
+                                        <div className="h-24 w-24 bg-background rounded-2xl overflow-hidden border border-primary/10 shadow-md group-hover:scale-105 transition-transform duration-500 shrink-0">
                                             {item.image ? (
                                                 <img src={item.image} alt={item.title || 'Product'} className="h-full w-full object-cover" />
                                             ) : (
-                                                <div className="h-full w-full flex items-center justify-center text-gray-600 text-xs">No Img</div>
+                                                <div className="h-full w-full flex items-center justify-center text-primary/30 text-xs font-bold uppercase tracking-widest">No Manifestation</div>
                                             )}
                                         </div>
                                         <div>
-                                            <p className="font-bold text-white text-base mb-1">{item.title || 'Unknown Product'}</p>
-                                            <p className="text-sm text-gray-400 font-mono">
-                                                {item.quantity} x ₹{item.price?.toLocaleString()}
+                                            <p className="font-serif font-bold text-foreground text-xl italic group-hover:text-primary transition-colors">{item.title || 'Nameless Artifact'}</p>
+                                            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-2 h-4">
+                                                {item.quantity} Unit{item.quantity > 1 ? 's' : ''} × <span className="text-primary">₹{item.price?.toLocaleString('en-IN')}</span>
                                             </p>
                                         </div>
                                     </div>
-                                    <div className="text-right">
-                                        <p className="font-bold text-primary text-lg">
-                                            ₹{(item.quantity * item.price)?.toLocaleString()}
+                                    <div className="text-right w-full sm:w-auto">
+                                        <p className="text-2xl font-serif font-bold text-primary italic">
+                                            ₹{(item.quantity * item.price)?.toLocaleString('en-IN')}
                                         </p>
                                     </div>
                                 </div>

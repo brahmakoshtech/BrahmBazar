@@ -121,14 +121,14 @@ export default function HeroSection() {
                     className="max-w-2xl space-y-6"
                 >
                     <span className="text-primary font-bold tracking-[0.3em] uppercase text-sm md:text-base">
-                        Rudra Divine Spiritual Store
+                        BRAHMAKOSH Spiritual Store
                     </span>
 
-                    <h1 className="text-5xl md:text-7xl font-serif font-bold leading-tight drop-shadow-lg">
+                    <h1 className="text-4xl md:text-7xl font-serif font-bold leading-tight drop-shadow-lg">
                         {slides[current].title}
                     </h1>
 
-                    <p className="text-lg md:text-2xl text-gray-200 font-light max-w-xl">
+                    <p className="text-base md:text-2xl text-gray-200 font-light max-w-xl">
                         {slides[current].subtitle}
                     </p>
 
