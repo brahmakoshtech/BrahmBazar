@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import {
    Search,
@@ -12,6 +13,8 @@ import {
    X,
    Home,
    Grid,
+   ShoppingBag,
+   LayoutGrid,
    ChevronDown
 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
@@ -20,6 +23,7 @@ import api from '@/services/api';
 import { useContent } from '@/hooks/useContent';
 
 export default function Navbar() {
+   const pathname = usePathname();
    const [isSticky, setIsSticky] = useState(false);
    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
    const [expandedCategory, setExpandedCategory] = useState(null); // For mobile accordion
@@ -49,10 +53,10 @@ export default function Navbar() {
    }, []);
 
    return (
-      <>
+      <div className="fixed top-0 left-0 w-full z-50">
          {/* 1. TOP ANNOUNCEMENT BAR - Sacred Dark & Gold */}
          {/* 1. TOP ANNOUNCEMENT BAR - SCROLLING TICKER */}
-         <div className="bg-foreground text-[#E6DCC3] text-[11px] md:text-xs py-2 border-b border-[#E6DCC3]/20 tracking-wider font-serif overflow-hidden relative z-[60]">
+         <div className="bg-orange-500 text-white text-[11px] md:text-xs py-2 border-b border-white/10 tracking-wider font-serif overflow-hidden relative z-[60]">
             <div className="flex animate-marquee whitespace-nowrap gap-16 md:gap-32 w-max">
                {/* Content Duplicated for seamless loop */}
                {[1, 2, 3, 4].map((key) => (
@@ -78,8 +82,8 @@ export default function Navbar() {
             </div>
          </div>
 
-         {/* 2. STICKY HEADER CONTAINER */}
-         <header className={`sticky top-0 z-50 transition-all duration-300 ${isSticky ? 'bg-background/90 backdrop-blur-md shadow-md border-b border-border' : 'bg-transparent border-b border-transparent'}`}>
+         {/* 2. HEADER CONTAINER */}
+         <header className={`transition-all duration-300 ${isSticky ? 'bg-background/90 backdrop-blur-md shadow-md border-b border-border' : 'bg-background/40 backdrop-blur-sm border-b border-transparent'}`}>
 
             {/* MAIN HEADER: Logo | Search | Actions */}
             <div className="container mx-auto px-4 max-w-7xl">
@@ -103,8 +107,8 @@ export default function Navbar() {
                         </div>
                         <div className="flex flex-col leading-none items-center justify-center">
                            <span className="font-serif font-bold text-xl md:text-2xl tracking-wide uppercase flex">
-                              <span className="text-primary">BRAHMA</span>
-                              <span className="text-foreground transition-colors duration-300 group-hover:text-primary">KOSH</span>
+                              <span className="text-orange-500">BRAHMA</span>
+                              <span className="text-foreground">KOSH</span>
                            </span>
                            <span className="text-[7px] md:text-[8px] text-muted-foreground tracking-[0.2em] font-bold uppercase mt-1 text-center w-full">
                               #No.1 Spiritual Store
@@ -286,25 +290,42 @@ export default function Navbar() {
             </div>
          </div>
 
-         {/* 4. MOBILE BOTTOM NAV (Fixed at bottom) */}
-         <div className="md:hidden fixed bottom-0 left-0 w-full bg-background/90 backdrop-blur-xl border-t border-border z-50 flex justify-between px-8 items-center py-3 pb-safe shadow-[0_-5px_10px_rgba(0,0,0,0.05)]">
-            <Link href="/" className="flex flex-col items-center text-primary gap-1">
-               <Home size={22} className="drop-shadow-sm" />
-               <span className="text-[9px] font-medium tracking-wide">Home</span>
+         <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[94%] max-w-lg bg-[#111111]/95 backdrop-blur-2xl border border-white/10 z-50 flex justify-around items-center py-3 px-2 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] ring-1 ring-white/10">
+            <Link href="/" className={`flex flex-col items-center justify-center flex-1 gap-1 group/nav transition-colors duration-300 ${pathname === '/' ? 'text-orange-500' : 'text-gray-400'}`}>
+               <div className={`p-1 rounded-xl transition-all duration-300 group-active/nav:bg-orange-500/10 group-active/nav:scale-90 ${pathname === '/' ? 'bg-orange-500/10' : ''}`}>
+                  <Home size={20} className="drop-shadow-sm" />
+               </div>
+               <span className="text-[9px] font-bold uppercase tracking-tighter">Home</span>
             </Link>
-            <Link href="/" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(true); }} className="flex flex-col items-center text-muted-foreground hover:text-primary gap-1 transition-colors">
-               <Grid size={22} />
-               <span className="text-[9px] font-medium tracking-wide">Menu</span>
+
+            <Link href="/shop" className={`flex flex-col items-center justify-center flex-1 gap-1 group/nav transition-colors duration-300 ${pathname === '/shop' ? 'text-orange-500' : 'text-gray-400'}`}>
+               <div className={`p-1 rounded-xl transition-all duration-300 group-active/nav:bg-orange-500/10 group-active/nav:scale-90 ${pathname === '/shop' ? 'bg-orange-500/10' : ''}`}>
+                  <ShoppingBag size={20} />
+               </div>
+               <span className="text-[9px] font-bold uppercase tracking-tighter">Products</span>
             </Link>
-            <Link href="/wishlist" className="flex flex-col items-center text-muted-foreground hover:text-primary gap-1 transition-colors">
-               <Heart size={22} />
-               <span className="text-[9px] font-medium tracking-wide">Saved</span>
+
+            <Link href="/" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(true); }} className="flex flex-col items-center justify-center flex-1 text-gray-400 hover:text-orange-500 gap-1 transition-colors group/nav">
+               <div className="p-1 rounded-xl transition-all duration-300 group-active/nav:bg-orange-500/10 group-active/nav:scale-90">
+                  <LayoutGrid size={20} />
+               </div>
+               <span className="text-[9px] font-bold uppercase tracking-tighter">Category</span>
             </Link>
-            <Link href="/account" className="flex flex-col items-center text-muted-foreground hover:text-primary gap-1 transition-colors">
-               <User size={22} />
-               <span className="text-[9px] font-medium tracking-wide">Profile</span>
+
+            <Link href="/wishlist" className={`flex flex-col items-center justify-center flex-1 gap-1 group/nav transition-colors duration-300 ${pathname === '/wishlist' ? 'text-orange-500' : 'text-gray-400'}`}>
+               <div className={`p-1 rounded-xl transition-all duration-300 group-active/nav:bg-orange-500/10 group-active/nav:scale-90 ${pathname === '/wishlist' ? 'bg-orange-500/10' : ''}`}>
+                  <Heart size={20} />
+               </div>
+               <span className="text-[9px] font-bold uppercase tracking-tighter">Wishlist</span>
+            </Link>
+
+            <Link href="/account" className={`flex flex-col items-center justify-center flex-1 gap-1 group/nav transition-colors duration-300 ${pathname === '/account' ? 'text-orange-500' : 'text-gray-400'}`}>
+               <div className={`p-1 rounded-xl transition-all duration-300 group-active/nav:bg-orange-500/10 group-active/nav:scale-90 ${pathname === '/account' ? 'bg-orange-500/10' : ''}`}>
+                  <User size={20} />
+               </div>
+               <span className="text-[9px] font-bold uppercase tracking-tighter">Account</span>
             </Link>
          </div>
-      </>
+      </div>
    );
 }

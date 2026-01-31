@@ -6,7 +6,7 @@ export default function ShopLayout({ children }) {
     return (
         <CartProvider>
             <Navbar />
-            <main className="flex-grow pb-10">
+            <main className="flex-grow pb-10 pt-36 md:pt-44">
                 {children}
             </main>
             <Footer />

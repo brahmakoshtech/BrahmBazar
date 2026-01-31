@@ -112,30 +112,39 @@ export default function ShopPage() {
             <div className="container mx-auto px-4 max-w-7xl">
 
                 {/* Header */}
-                <div className="mb-4 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-primary/20 pb-3">
-                    <div>
+                <div className="mb-6 px-1 flex flex-col items-start md:items-end md:flex-row justify-between gap-6 border-b border-primary/10 pb-6">
+                    <div className="flex flex-col items-start">
                         <span className="text-secondary font-bold tracking-[0.2em] uppercase text-[10px] mb-1 block">
                             Our Collection
                         </span>
-                        <h1 className="text-2xl md:text-4xl font-serif font-bold text-foreground">
-                            Shop <span className="text-primary italic">Treasures</span>
-                        </h1>
+                        <div className="flex items-center gap-4">
+                            <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground">
+                                Shop <span className="text-primary italic">Treasures</span>
+                            </h1>
+                            {/* Compact Mobile Filter Icon */}
+                            <button
+                                onClick={() => setMobileFiltersOpen(true)}
+                                className="lg:hidden p-2.5 bg-muted/50 border border-border/50 rounded-xl text-foreground active:scale-95 transition-all"
+                            >
+                                <Filter size={18} />
+                            </button>
+                        </div>
                     </div>
 
-                    {/* Sort Dropdown */}
-                    <div className="flex items-center gap-3">
-                        <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">Sort By:</span>
+                    {/* Sort Dropdown (Desktop only, mobile moves to drawer) */}
+                    <div className="hidden md:flex items-center gap-3 bg-muted/30 px-4 py-2 rounded-full border border-border/50">
+                        <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider whitespace-nowrap">Sort By</span>
                         <div className="relative">
                             <select
                                 value={sortBy}
                                 onChange={(e) => setSortBy(e.target.value)}
-                                className="appearance-none bg-background border border-border rounded-full px-4 py-2 pr-8 text-sm font-medium focus:outline-none focus:border-primary cursor-pointer hover:bg-muted/50 transition-colors"
+                                className="appearance-none bg-transparent border-none pr-6 text-sm font-bold focus:outline-none cursor-pointer text-foreground"
                             >
                                 <option value="newest">New Arrivals</option>
-                                <option value="price-low-high">Price: Low to High</option>
-                                <option value="price-high-low">Price: High to Low</option>
+                                <option value="price-low-high">Lowest Price</option>
+                                <option value="price-high-low">Highest Price</option>
                             </select>
-                            <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground" />
+                            <ChevronDown size={14} className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-primary" />
                         </div>
                     </div>
                 </div>
@@ -147,7 +156,6 @@ export default function ShopPage() {
 
                             {/* Categories List */}
                             <div className="space-y-1">
-                                {/* Title removed as requested */}
                                 <button
                                     onClick={() => handleCategoryClick('all')}
                                     className={`w-full text-left py-2 px-3 rounded-lg text-sm transition-all duration-300 font-medium flex items-center justify-between group ${selectedCategory === 'all' ? 'bg-primary text-white shadow-md shadow-primary/20' : 'hover:bg-muted text-muted-foreground hover:text-foreground'}`}
@@ -206,7 +214,7 @@ export default function ShopPage() {
                                 })}
                             </div>
 
-                            {/* Price Filter Card - Moved below Categories */}
+                            {/* Price Filter Card */}
                             <div className="bg-card/50 border border-border rounded-xl p-3 shadow-sm">
                                 <h3 className="text-xs font-serif font-bold mb-2 uppercase tracking-wide flex items-center gap-2">
                                     Price Range
@@ -242,36 +250,7 @@ export default function ShopPage() {
 
 
                     {/* Main Content (Scrollable Products) */}
-                    <div className="flex-1">
-                        {/* Mobile Category & Filter Bar */}
-                        <div className="lg:hidden mb-6 sticky top-[88px] z-30 bg-background/95 backdrop-blur-xl py-4 px-2 -mx-2 border-b border-border flex flex-col gap-4 shadow-sm">
-                            {/* Horizontal Category Scroll */}
-                            <div className="flex overflow-x-auto items-center gap-2 pb-1 px-2 scrollbar-hide">
-                                <button
-                                    onClick={() => handleCategoryClick('all')}
-                                    className={`whitespace-nowrap px-5 py-2.5 rounded-full text-xs font-bold transition-all duration-300 ${selectedCategory === 'all' ? 'bg-primary text-white shadow-md shadow-primary/20 scale-105' : 'bg-muted text-muted-foreground border border-border/50'}`}
-                                >
-                                    All
-                                </button>
-                                {categories.map(cat => (
-                                    <button
-                                        key={cat._id}
-                                        onClick={() => handleCategoryClick(cat.slug)}
-                                        className={`whitespace-nowrap px-5 py-2.5 rounded-full text-xs font-bold transition-all duration-300 ${selectedCategory === cat.slug ? 'bg-primary text-white shadow-md shadow-primary/20 scale-105' : 'bg-muted text-muted-foreground border border-border/50'}`}
-                                    >
-                                        {cat.name}
-                                    </button>
-                                ))}
-                            </div>
-
-                            <button
-                                onClick={() => setMobileFiltersOpen(true)}
-                                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-foreground text-background rounded-full text-xs font-bold shadow-lg active:scale-95 transition-all duration-300 border border-foreground/10"
-                            >
-                                <Filter size={14} /> Refine Filters & Price Range
-                            </button>
-                        </div>
-
+                    <div className="flex-1 w-full">
                         {loading ? (
                             <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
                                 {[...Array(6)].map((_, i) => (
@@ -316,98 +295,106 @@ export default function ShopPage() {
                 </div>
             </div>
 
-            {/* Mobile Filter Drawer */}
-            {mobileFiltersOpen && (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-[100] flex justify-end"
-                >
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileFiltersOpen(false)} />
-
+            {/* Mobile Filter Drawer (Bottom Sheet Style) */}
+            <AnimatePresence>
+                {mobileFiltersOpen && (
                     <motion.div
-                        initial={{ x: '100%' }}
-                        animate={{ x: 0 }}
-                        className="relative w-full max-w-xs bg-background h-full shadow-2xl p-6 overflow-y-auto"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] flex items-end justify-center"
                     >
-                        <div className="flex justify-between items-center mb-8 border-b border-border pb-4">
-                            <h3 className="text-xl font-bold font-serif">Filters</h3>
-                            <button onClick={() => setMobileFiltersOpen(false)} className="p-2 hover:bg-muted rounded-full transition-colors">
-                                <X size={24} />
-                            </button>
-                        </div>
+                        {/* Backdrop */}
+                        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileFiltersOpen(false)} />
 
-                        {/* Mobile Price Filter */}
-                        <div className="mb-8">
-                            <h4 className="font-bold mb-4 text-sm uppercase tracking-wider text-muted-foreground">Price Range</h4>
-                            <div className="flex items-center gap-3">
-                                <input
-                                    type="number"
-                                    placeholder="Min"
-                                    value={priceRange.min}
-                                    onChange={(e) => setPriceRange(prev => ({ ...prev, min: e.target.value }))}
-                                    className="w-full px-3 py-2 bg-muted rounded-lg text-sm"
-                                />
-                                <span className="text-muted-foreground">-</span>
-                                <input
-                                    type="number"
-                                    placeholder="Max"
-                                    value={priceRange.max}
-                                    onChange={(e) => setPriceRange(prev => ({ ...prev, max: e.target.value }))}
-                                    className="w-full px-3 py-2 bg-muted rounded-lg text-sm"
-                                />
-                            </div>
-                        </div>
+                        {/* Sheet */}
+                        <motion.div
+                            initial={{ translateY: '100%' }}
+                            animate={{ translateY: 0 }}
+                            exit={{ translateY: '100%' }}
+                            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                            className="relative w-full bg-white rounded-t-[2rem] shadow-2xl p-6 pb-10 overflow-hidden max-h-[85vh] flex flex-col"
+                        >
+                            {/* Handle */}
+                            <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6 shrink-0" />
 
-
-                        <h4 className="font-bold mb-4 text-sm uppercase tracking-wider text-muted-foreground">Categories</h4>
-                        <ul className="space-y-2">
-                            <li>
-                                <button
-                                    onClick={() => handleCategoryClick('all')}
-                                    className={`w-full text-left py-2 px-3 rounded-lg ${selectedCategory === 'all' ? 'bg-primary/10 text-primary font-bold' : 'text-foreground'}`}
-                                >
-                                    All Products
+                            <div className="flex justify-between items-center mb-8 shrink-0">
+                                <h3 className="text-2xl font-bold font-serif text-foreground">Sort & Filter</h3>
+                                <button onClick={() => setMobileFiltersOpen(false)} className="p-2 bg-muted rounded-full transition-colors">
+                                    <X size={20} />
                                 </button>
-                            </li>
-                            {categories.map(cat => (
-                                <li key={cat._id}>
-                                    <button
-                                        onClick={() => handleCategoryClick(cat.slug)}
-                                        className={`w-full text-left py-2 px-3 rounded-lg flex justify-between items-center ${selectedCategory === cat.slug ? 'text-primary font-bold' : 'text-foreground hover:bg-muted'}`}
-                                    >
-                                        {cat.name}
-                                    </button>
-                                    {cat.subcategories?.length > 0 && (
-                                        <ul className="pl-6 mt-1 space-y-1 border-l-2 border-border ml-3 my-2">
-                                            {cat.subcategories.map(sub => (
-                                                <li key={sub._id}>
-                                                    <button
-                                                        onClick={() => handleCategoryClick(cat.slug, sub.slug)}
-                                                        className={`w-full text-left py-1.5 text-sm ${selectedSubcategory === sub.slug ? 'text-primary font-bold' : 'text-muted-foreground'}`}
-                                                    >
-                                                        {sub.name}
-                                                    </button>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                </li>
-                            ))}
-                        </ul>
+                            </div>
 
-                        <div className="mt-8 pt-4 border-t border-border">
-                            <button
-                                onClick={clearFilters}
-                                className="w-full py-3 border border-border rounded-xl font-medium hover:bg-muted transition-colors"
-                            >
-                                Clear All Filters
-                            </button>
-                        </div>
+                            <div className="overflow-y-auto flex-1 space-y-10 scrollbar-hide pb-6">
+                                {/* Sort Options (List Style) */}
+                                <div>
+                                    <h4 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4">Sort By</h4>
+                                    <div className="space-y-3">
+                                        {[
+                                            { label: 'New Arrivals', value: 'newest' },
+                                            { label: 'Lowest Price', value: 'price-low-high' },
+                                            { label: 'Highest Price', value: 'price-high-low' }
+                                        ].map((opt) => (
+                                            <button
+                                                key={opt.value}
+                                                onClick={() => setSortBy(opt.value)}
+                                                className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all ${sortBy === opt.value ? 'border-primary bg-primary/5 text-primary' : 'border-muted bg-transparent text-foreground'}`}
+                                            >
+                                                <span className="font-bold text-sm">{opt.label}</span>
+                                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${sortBy === opt.value ? 'border-primary' : 'border-gray-300'}`}>
+                                                    {sortBy === opt.value && <div className="w-2.5 h-2.5 bg-primary rounded-full transition-all" />}
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Mobile Price Filter */}
+                                <div>
+                                    <h4 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4">Price Range (₹)</h4>
+                                    <div className="flex items-center gap-4">
+                                        <div className="relative flex-1">
+                                            <input
+                                                type="number"
+                                                placeholder="Min"
+                                                value={priceRange.min}
+                                                onChange={(e) => setPriceRange(prev => ({ ...prev, min: e.target.value }))}
+                                                className="w-full px-5 py-4 bg-muted/50 border border-border rounded-xl text-sm font-bold focus:ring-2 focus:ring-primary/20 outline-none"
+                                            />
+                                        </div>
+                                        <div className="text-muted-foreground font-bold">—</div>
+                                        <div className="relative flex-1">
+                                            <input
+                                                type="number"
+                                                placeholder="Max"
+                                                value={priceRange.max}
+                                                onChange={(e) => setPriceRange(prev => ({ ...prev, max: e.target.value }))}
+                                                className="w-full px-5 py-4 bg-muted/50 border border-border rounded-xl text-sm font-bold focus:ring-2 focus:ring-primary/20 outline-none"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="flex flex-col gap-3 pt-6 border-t border-border shrink-0">
+                                <button
+                                    onClick={() => setMobileFiltersOpen(false)}
+                                    className="w-full py-4 bg-primary text-white rounded-xl font-bold uppercase tracking-widest shadow-lg shadow-primary/20 text-sm active:scale-95 transition-all"
+                                >
+                                    Update Results
+                                </button>
+                                <button
+                                    onClick={() => { clearFilters(); setMobileFiltersOpen(false); }}
+                                    className="w-full py-4 bg-muted text-foreground rounded-xl font-bold uppercase tracking-widest text-sm active:scale-95 transition-all"
+                                >
+                                    Reset Filters
+                                </button>
+                            </div>
+                        </motion.div>
                     </motion.div>
-                </motion.div>
-            )}
+                )}
+            </AnimatePresence>
         </div>
     );
 }
