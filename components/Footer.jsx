@@ -8,10 +8,10 @@ export default function Footer() {
     const { getContent, loading } = useContent();
 
     return (
-        <footer className="bg-foreground text-[#E6DCC3]/80 mt-auto border-t border-[#E6DCC3]/10 font-sans relative z-10 transition-colors duration-500">
+        <footer className="bg-foreground text-[#E6DCC3]/80 mt-auto border-t border-[#E6DCC3]/10 font-sans relative z-10 transition-colors duration-500 pb-20 md:pb-0">
             {/* Main Footer Content */}
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-20">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
 
                     {/* Column 1: Brand Info */}
                     <div className="space-y-4 md:space-y-6">
@@ -49,7 +49,7 @@ export default function Footer() {
                     <div className="grid grid-cols-2 gap-4 sm:gap-8 md:contents">
                         {/* Column 2: Shopping */}
                         <div>
-                            <h3 className="text-white font-serif font-medium text-lg mb-4 md:mb-6">Sacred Tools</h3>
+                            <h3 className="text-white font-serif font-medium text-lg mb-2 md:mb-6">Sacred Tools</h3>
                             <ul className="space-y-3 md:space-y-4 text-xs md:text-sm">
                                 <li><Link href="/category/rudraksha" className="hover:text-primary transition-colors">Rudraksha Beads</Link></li>
                                 <li><Link href="/category/gemstones" className="hover:text-primary transition-colors">Healing Gemstones</Link></li>
@@ -61,7 +61,7 @@ export default function Footer() {
 
                         {/* Column 3: Customer Care */}
                         <div>
-                            <h3 className="text-white font-serif font-medium text-lg mb-4 md:mb-6">Support & Care</h3>
+                            <h3 className="text-white font-serif font-medium text-lg mb-2 md:mb-6">Support & Care</h3>
                             <ul className="space-y-3 md:space-y-4 text-xs md:text-sm">
                                 <li><a href="#" className="hover:text-primary transition-colors">Energization Process</a></li>
                                 <li><a href="#" className="hover:text-primary transition-colors">Authenticity Promise</a></li>
@@ -74,7 +74,7 @@ export default function Footer() {
 
                     {/* Column 4: Contact & Newsletter */}
                     <div>
-                        <h3 className="text-white font-serif font-medium text-lg mb-4 md:mb-6">Journey</h3>
+                        <h3 className="text-white font-serif font-medium text-lg mb-2 md:mb-6">Journey</h3>
                         <div className="space-y-3 md:space-y-4 mb-6 text-xs md:text-sm">
                             <div className="flex items-start gap-3 text-[#E6DCC3]/70">
                                 <MapPin size={16} className="mt-0.5 text-primary flex-shrink-0" />
@@ -95,8 +95,8 @@ export default function Footer() {
             </div>
 
             {/* Bottom Bar */}
-            <div className="bg-black/20 py-6 border-t border-[#E6DCC3]/10">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="bg-black/20 py-4 border-t border-[#E6DCC3]/10">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3">
                     <p className="text-[10px] md:text-sm text-[#E6DCC3]/50 text-center md:text-left uppercase tracking-widest font-bold">
                         {/* Dynamic Copyright */}
                         {getContent('footer_copyright', '© 2026 BRAHMAKOSH. With Blessings.')}

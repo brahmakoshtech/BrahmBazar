@@ -25,23 +25,18 @@ export default function BrandStory() {
                         transition={{ duration: 0.8 }}
                         className="w-full lg:w-1/2"
                     >
-                        <div className="relative aspect-square rounded-full overflow-hidden border-4 border-primary/20 bg-secondary/5 shadow-2xl max-w-md mx-auto">
-                            <motion.div
-                                className="w-full h-full relative"
-                                animate={{ scale: [1, 1.15, 1] }}
+                        <div className="relative aspect-square rounded-full overflow-hidden border-2 border-primary/10 bg-white shadow-xl max-w-[280px] md:max-w-md mx-auto p-6 md:p-12">
+                            <motion.img
+                                src="/images/Brahmokosh.png"
+                                alt="BRAHMAKOSH Logo"
+                                className="w-full h-full object-contain relative z-10"
+                                animate={{ scale: [1, 1.05, 1] }}
                                 transition={{
-                                    duration: 8,
+                                    duration: 6,
                                     ease: "easeInOut",
                                     repeat: Infinity,
                                 }}
-                            >
-                                <Image
-                                    src="/images/Brahmokosh.png"
-                                    alt="BRAHMAKOSH Logo"
-                                    fill
-                                    className="object-contain p-16 drop-shadow-2xl"
-                                />
-                            </motion.div>
+                            />
                         </div>
                     </motion.div>
 

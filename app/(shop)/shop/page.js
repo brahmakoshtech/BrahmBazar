@@ -22,6 +22,18 @@ export default function ShopPage() {
     // UI States
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
+    // Prevent body scroll when mobile filters are open
+    useEffect(() => {
+        if (mobileFiltersOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [mobileFiltersOpen]);
+
     // Initial Fetch
     useEffect(() => {
         const fetchData = async () => {
@@ -146,6 +158,38 @@ export default function ShopPage() {
                             </select>
                             <ChevronDown size={14} className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-primary" />
                         </div>
+                    </div>
+                </div>
+
+                {/* Mobile Unified Filter Bar - Always Fixed Right Filter */}
+                <div className="lg:hidden flex items-center justify-between gap-2 mb-6 sticky top-[80px] z-30 bg-[#FFF0D2]/95 backdrop-blur-xl py-2 px-3 -mx-4 border-b border-primary/10 shadow-sm overflow-hidden min-h-[52px]">
+                    {/* Categories Scroll Area - Always flex-1 to push icon right */}
+                    <div className="flex-1 flex overflow-x-auto items-center gap-1.5 scrollbar-hide py-1">
+                        <button
+                            onClick={() => handleCategoryClick('all')}
+                            className={`whitespace-nowrap px-3.5 py-1.5 rounded-full text-[9px] font-black uppercase tracking-tight transition-all duration-300 border ${selectedCategory === 'all' ? 'bg-primary text-white border-primary shadow-sm' : 'bg-white/50 text-muted-foreground border-[#DCC8B0]/30'}`}
+                        >
+                            All
+                        </button>
+                        {categories.map((cat) => (
+                            <button
+                                key={cat._id}
+                                onClick={() => handleCategoryClick(cat.slug)}
+                                className={`whitespace-nowrap px-3.5 py-1.5 rounded-full text-[9px] font-black uppercase tracking-tight transition-all duration-300 border ${selectedCategory === cat.slug ? 'bg-primary text-white border-primary shadow-sm' : 'bg-white/50 text-muted-foreground border-[#DCC8B0]/30'}`}
+                            >
+                                {cat.name}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Fixed Filter Icon - Always Rendered & Fixed Right */}
+                    <div className="flex items-center pl-2 border-l border-primary/10 shrink-0 bg-[#FFF0D2] z-10 shadow-[-10px_0_15px_-5px_rgba(255,240,210,1)] ml-auto">
+                        <button
+                            onClick={() => setMobileFiltersOpen(true)}
+                            className="p-2.5 bg-[#2D241E] text-[#FFF0D2] rounded-full active:scale-95 transition-all shadow-md flex items-center justify-center"
+                        >
+                            <Filter size={15} strokeWidth={2.5} />
+                        </button>
                     </div>
                 </div>
 
@@ -293,10 +337,10 @@ export default function ShopPage() {
                         )}
                     </div>
                 </div>
-            </div>
+            </div >
 
             {/* Mobile Filter Drawer (Bottom Sheet Style) */}
-            <AnimatePresence>
+            < AnimatePresence >
                 {mobileFiltersOpen && (
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -315,18 +359,18 @@ export default function ShopPage() {
                             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                             className="relative w-[85%] max-w-sm h-full bg-white shadow-2xl p-6 flex flex-col"
                         >
-                            <div className="flex justify-between items-center mb-8 shrink-0">
-                                <h3 className="text-2xl font-bold font-serif text-foreground">Sort & Filter</h3>
-                                <button onClick={() => setMobileFiltersOpen(false)} className="p-2 bg-muted rounded-full transition-colors">
-                                    <X size={20} />
+                            <div className="flex justify-between items-center mb-5 shrink-0">
+                                <h3 className="text-xl font-bold font-serif text-foreground">Sort & Filter</h3>
+                                <button onClick={() => setMobileFiltersOpen(false)} className="p-1.5 bg-muted rounded-full transition-colors">
+                                    <X size={18} />
                                 </button>
                             </div>
 
-                            <div className="overflow-y-auto flex-1 space-y-10 scrollbar-hide pb-6">
+                            <div className="overflow-y-auto flex-1 space-y-6 scrollbar-hide pb-4">
                                 {/* Sort Options (List Style) */}
                                 <div>
-                                    <h4 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4">Sort By</h4>
-                                    <div className="space-y-3">
+                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2.5">Sort By</h4>
+                                    <div className="space-y-2">
                                         {[
                                             { label: 'New Arrivals', value: 'newest' },
                                             { label: 'Lowest Price', value: 'price-low-high' },
@@ -335,11 +379,11 @@ export default function ShopPage() {
                                             <button
                                                 key={opt.value}
                                                 onClick={() => setSortBy(opt.value)}
-                                                className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all ${sortBy === opt.value ? 'border-primary bg-primary/5 text-primary' : 'border-muted bg-transparent text-foreground'}`}
+                                                className={`w-full flex items-center justify-between py-2.5 px-4 rounded-xl border-2 transition-all ${sortBy === opt.value ? 'border-primary bg-primary/5 text-primary' : 'border-[#DCC8B0]/20 bg-transparent text-foreground'}`}
                                             >
-                                                <span className="font-bold text-sm">{opt.label}</span>
-                                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${sortBy === opt.value ? 'border-primary' : 'border-gray-300'}`}>
-                                                    {sortBy === opt.value && <div className="w-2.5 h-2.5 bg-primary rounded-full transition-all" />}
+                                                <span className="font-bold text-xs">{opt.label}</span>
+                                                <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${sortBy === opt.value ? 'border-primary' : 'border-gray-300'}`}>
+                                                    {sortBy === opt.value && <div className="w-2 h-2 bg-primary rounded-full transition-all" />}
                                                 </div>
                                             </button>
                                         ))}
@@ -348,25 +392,25 @@ export default function ShopPage() {
 
                                 {/* Mobile Price Filter */}
                                 <div>
-                                    <h4 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4">Price Range (₹)</h4>
-                                    <div className="flex items-center gap-4">
+                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2.5">Price Range (₹)</h4>
+                                    <div className="flex items-center gap-3">
                                         <div className="relative flex-1">
                                             <input
                                                 type="number"
                                                 placeholder="Min"
                                                 value={priceRange.min}
                                                 onChange={(e) => setPriceRange(prev => ({ ...prev, min: e.target.value }))}
-                                                className="w-full px-5 py-4 bg-muted/50 border border-border rounded-xl text-sm font-bold focus:ring-2 focus:ring-primary/20 outline-none"
+                                                className="w-full px-4 py-2.5 bg-[#FFF0D2]/50 border border-[#DCC8B0]/30 rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary/20 outline-none"
                                             />
                                         </div>
-                                        <div className="text-muted-foreground font-bold">—</div>
+                                        <div className="text-muted-foreground font-black text-xs">—</div>
                                         <div className="relative flex-1">
                                             <input
                                                 type="number"
                                                 placeholder="Max"
                                                 value={priceRange.max}
                                                 onChange={(e) => setPriceRange(prev => ({ ...prev, max: e.target.value }))}
-                                                className="w-full px-5 py-4 bg-muted/50 border border-border rounded-xl text-sm font-bold focus:ring-2 focus:ring-primary/20 outline-none"
+                                                className="w-full px-4 py-2.5 bg-[#FFF0D2]/50 border border-[#DCC8B0]/30 rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary/20 outline-none"
                                             />
                                         </div>
                                     </div>
@@ -374,16 +418,16 @@ export default function ShopPage() {
                             </div>
 
                             {/* Actions */}
-                            <div className="flex flex-col gap-3 pt-6 border-t border-border shrink-0">
+                            <div className="flex flex-col gap-2.5 pt-4 border-t border-[#DCC8B0]/30 shrink-0">
                                 <button
                                     onClick={() => setMobileFiltersOpen(false)}
-                                    className="w-full py-4 bg-primary text-white rounded-xl font-bold uppercase tracking-widest shadow-lg shadow-primary/20 text-sm active:scale-95 transition-all"
+                                    className="w-full py-3 bg-primary text-white rounded-xl font-bold uppercase tracking-widest shadow-md shadow-primary/20 text-[11px] active:scale-95 transition-all"
                                 >
                                     Update Results
                                 </button>
                                 <button
                                     onClick={() => { clearFilters(); setMobileFiltersOpen(false); }}
-                                    className="w-full py-4 bg-muted text-foreground rounded-xl font-bold uppercase tracking-widest text-sm active:scale-95 transition-all"
+                                    className="w-full py-3 bg-white/50 text-foreground rounded-xl font-bold uppercase tracking-widest text-[11px] border border-[#DCC8B0]/30 active:scale-95 transition-all"
                                 >
                                     Reset Filters
                                 </button>
@@ -391,7 +435,7 @@ export default function ShopPage() {
                         </motion.div>
                     </motion.div>
                 )}
-            </AnimatePresence>
-        </div>
+            </AnimatePresence >
+        </div >
     );
 }

@@ -29,6 +29,7 @@ export default function Navbar() {
    const [expandedCategory, setExpandedCategory] = useState(null); // For mobile accordion
    const [categories, setCategories] = useState([]);
    const { cartCount, wishlistCount } = useCart();
+   const [isMobileSearching, setIsMobileSearching] = useState(false);
 
    // Fetch Navbar content
    const { getContent, loading } = useContent('navbar');
@@ -52,11 +53,22 @@ export default function Navbar() {
       return () => window.removeEventListener('scroll', handleScroll);
    }, []);
 
+   // Scroll Lock for Mobile Menu
+   useEffect(() => {
+      if (mobileMenuOpen) {
+         document.body.style.overflow = 'hidden';
+      } else {
+         document.body.style.overflow = 'unset';
+      }
+      return () => {
+         document.body.style.overflow = 'unset';
+      };
+   }, [mobileMenuOpen]);
+
    return (
       <div className="fixed top-0 left-0 w-full z-50">
-         {/* 1. TOP ANNOUNCEMENT BAR - Sacred Dark & Gold */}
          {/* 1. TOP ANNOUNCEMENT BAR - SCROLLING TICKER */}
-         <div className="bg-orange-500 text-white text-[11px] md:text-xs py-2 border-b border-white/10 tracking-wider font-serif overflow-hidden relative z-[60]">
+         <div className="bg-orange-500 text-white text-[11px] md:text-xs py-1.5 md:py-2 border-b border-white/10 tracking-wider font-serif overflow-hidden relative z-[60]">
             <div className="flex animate-marquee whitespace-nowrap gap-16 md:gap-32 w-max">
                {/* Content Duplicated for seamless loop */}
                {[1, 2, 3, 4].map((key) => (
@@ -83,39 +95,65 @@ export default function Navbar() {
          </div>
 
          {/* 2. HEADER CONTAINER */}
-         <header className={`transition-all duration-300 ${isSticky ? 'bg-background/90 backdrop-blur-md shadow-md border-b border-border' : 'bg-background/40 backdrop-blur-sm border-b border-transparent'}`}>
+         <header className={`transition-all duration-300 ${isSticky ? 'bg-background shadow-md border-b border-border' : 'bg-[#FDF2E3] md:bg-background/40 md:backdrop-blur-sm border-b border-transparent'}`}>
 
             {/* MAIN HEADER: Logo | Search | Actions */}
             <div className="container mx-auto px-4 max-w-7xl">
-               <div className="flex justify-between items-center py-2 md:py-3 gap-4 md:gap-8">
+               <div className={`flex justify-between items-center py-1.5 md:py-3 transition-all duration-300 ${isMobileSearching ? 'gap-2' : 'gap-4 md:gap-8'}`}>
 
                   {/* LEFT: Mobile Menu & Logo */}
-                  <div className="flex items-center gap-3 md:gap-0">
-                     <button onClick={() => setMobileMenuOpen(true)} className="md:hidden p-2 -ml-2 text-foreground hover:text-primary transition-colors">
-                        <Menu size={24} />
-                     </button>
+                  <div className={`flex items-center transition-all duration-300 ${isMobileSearching ? 'shrink-0' : 'gap-3 md:gap-0'}`}>
+                     {!isMobileSearching && (
+                        <button onClick={() => setMobileMenuOpen(true)} className="md:hidden p-1 -ml-2 text-foreground hover:text-primary transition-colors">
+                           <Menu size={22} />
+                        </button>
+                     )}
 
-                     <Link href="/" className="flex items-center gap-3 group">
-                        <div className="relative w-12 h-12 md:w-16 md:h-16 shrink-0 filter drop-shadow-lg hover:scale-105 transition-transform duration-300 rounded-full overflow-hidden">
+                     <Link href="/" className="flex items-center gap-1.5 md:gap-2.5 group">
+                        <div className="relative shrink-0 transition-transform duration-300 hidden md:block">
                            <Image
                               src="/images/Brahmokosh.png"
                               alt="BRAHMAKOSH Logo"
-                              fill
-                              className="object-contain mix-blend-multiply"
+                              width={64}
+                              height={64}
+                              className="object-contain"
                               priority
                            />
                         </div>
-                        <div className="flex flex-col leading-none items-center justify-center">
-                           <span className="font-serif font-bold text-xl md:text-2xl tracking-wide uppercase flex">
+                        <div className={`flex flex-col leading-none items-start justify-center transition-all duration-300 ${isMobileSearching ? 'scale-90 -translate-x-1' : ''}`}>
+                           <span className={`font-serif font-black tracking-tight uppercase flex transition-all duration-300 ${isMobileSearching ? 'text-[10px] md:text-2xl' : 'text-xl md:text-2xl'}`}>
                               <span className="text-orange-500">BRAHMA</span>
                               <span className="text-foreground">KOSH</span>
                            </span>
-                           <span className="text-[7px] md:text-[8px] text-muted-foreground tracking-[0.2em] font-bold uppercase mt-1 text-center w-full">
-                              #No.1 Spiritual Store
-                           </span>
+                           {!isMobileSearching && (
+                              <span className="text-[6px] md:text-[8px] text-muted-foreground tracking-[0.2em] font-bold uppercase mt-1 text-center w-full">
+                                 #NO.1 SPIRITUAL STORE
+                              </span>
+                           )}
                         </div>
                      </Link>
                   </div>
+
+                  {/* MOBILE CENTER: Search Input when active */}
+                  {isMobileSearching && (
+                     <div className="flex-1 md:hidden animate-in fade-in slide-in-from-right duration-300">
+                        <div className="relative">
+                           <input
+                              autoFocus
+                              type="text"
+                              placeholder="Search authentic spiritual tools..."
+                              onBlur={() => {
+                                 // Simple delay to ensure interactions are smooth
+                                 setTimeout(() => setIsMobileSearching(false), 200);
+                              }}
+                              className="w-full pl-4 pr-10 py-2 bg-white/60 border border-primary/30 rounded-full text-[13px] text-foreground outline-none focus:ring-1 focus:ring-primary/40 shadow-inner"
+                           />
+                           <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-primary/60">
+                              <Search size={16} />
+                           </div>
+                        </div>
+                     </div>
+                  )}
 
                   {/* CENTER: Premium Modern Search Bar (Desktop) */}
                   <div className="hidden md:flex flex-1 max-w-xl mx-auto px-6">
@@ -132,13 +170,16 @@ export default function Navbar() {
                   </div>
 
                   {/* RIGHT: Actions */}
-                  <div className="flex items-center gap-2 md:gap-8">
-                     <Link href="/" className="hidden md:hidden"> {/* Placeholder */}</Link>
-
-                     {/* Mobile Search Icon */}
-                     <button className="md:hidden p-2 text-muted-foreground hover:text-primary transition-colors">
-                        <Search size={22} />
-                     </button>
+                  <div className="flex items-center gap-3 md:gap-8">
+                     {/* Mobile Search Icon Toggle */}
+                     {!isMobileSearching && (
+                        <button
+                           onClick={() => setIsMobileSearching(true)}
+                           className="md:hidden p-1 text-muted-foreground hover:text-primary transition-all duration-300"
+                        >
+                           <Search size={22} />
+                        </button>
+                     )}
 
                      <Link href="/wishlist" className="hidden md:flex flex-col items-center group relative text-muted-foreground hover:text-primary transition-colors">
                         <div className="relative p-1">
@@ -157,14 +198,16 @@ export default function Navbar() {
                         <span className="text-[9px] font-medium uppercase tracking-widest mt-1 opacity-60 group-hover:opacity-100">Account</span>
                      </Link>
 
-                     <Link href="/cart" className="flex flex-col items-center group relative text-foreground transition-colors">
-                        <div className="relative p-2 bg-muted rounded-full group-hover:bg-primary/20 transition-colors duration-300 border border-border group-hover:border-primary/30">
-                           <ShoppingCart size={20} className="text-foreground group-hover:text-primary transition-colors duration-300" strokeWidth={1.5} />
-                           {cartCount > 0 && (
-                              <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold h-4 w-4 flex items-center justify-center rounded-full shadow-md animate-in fade-in zoom-in">{cartCount}</span>
-                           )}
-                        </div>
-                     </Link>
+                     {!isMobileSearching && (
+                        <Link href="/cart" className="flex flex-col items-center group relative text-foreground transition-colors">
+                           <div className="relative p-1.5 bg-muted rounded-full group-hover:bg-primary/20 transition-colors duration-300 border border-border group-hover:border-primary/30">
+                              <ShoppingCart size={18} className="text-foreground group-hover:text-primary transition-colors duration-300" strokeWidth={1.5} />
+                              {cartCount > 0 && (
+                                 <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold h-4 w-4 flex items-center justify-center rounded-full shadow-md animate-in fade-in zoom-in">{cartCount}</span>
+                              )}
+                           </div>
+                        </Link>
+                     )}
                   </div>
                </div>
             </div>
@@ -200,7 +243,7 @@ export default function Navbar() {
                                     {cat.subcategories.map((sub, idx) => (
                                        <Link
                                           key={idx}
-                                          href={`/category/${cat.slug}?subcategory=${sub.slug}`} // Pass subcategory as query param
+                                          href={`/category/${cat.slug}?subcategory=${sub.slug}`}
                                           className="block px-4 py-3 text-sm text-muted-foreground hover:text-primary hover:bg-muted transition-colors border-b border-border last:border-none"
                                        >
                                           {sub.name}
@@ -217,80 +260,92 @@ export default function Navbar() {
          </header>
 
          {/* 3. MOBILE MENU DRAWER */}
-         <div className={`fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-all duration-500 ${mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={() => setMobileMenuOpen(false)}>
-            <div className={`absolute top-0 left-0 w-[85%] max-w-sm h-full bg-background border-r border-border shadow-2xl transform transition-transform duration-500 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`} onClick={(e) => e.stopPropagation()}>
-               {/* Drawer Header */}
-               <div className="bg-muted p-6 flex justify-between items-center border-b border-border">
-                  <span className="font-serif font-bold text-xl tracking-wider text-foreground">MENU</span>
-                  <button onClick={() => setMobileMenuOpen(false)} className="hover:bg-slate-200 rounded-full p-2 transition text-muted-foreground hover:text-foreground"><X size={24} /></button>
+         <div className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-md transition-all duration-500 ${mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={() => setMobileMenuOpen(false)}>
+            <div className={`absolute top-0 left-0 w-[85%] max-w-sm h-full bg-[#FFF0D2] shadow-[20px_0_60px_rgba(0,0,0,0.15)] transform transition-transform duration-500 ease-out border-r border-[#DCC8B0]/30 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`} onClick={(e) => e.stopPropagation()}>
+               {/* Drawer Header - Branded & Compact */}
+               <div className="bg-[#EFDACB] p-4 flex justify-between items-center relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-2xl" />
+                  <div className="flex flex-col relative z-10">
+                     <div className="flex items-center gap-2">
+                        <div className="w-12 h-12 relative flex-shrink-0">
+                           <Image src="/images/Brahmokosh.png" alt="Logo" width={48} height={48} className="object-contain w-full h-full" priority />
+                        </div>
+                        <div className="flex flex-col leading-none">
+                           <span className="font-serif font-black text-xl tracking-tight uppercase">
+                              <span className="text-orange-500">BRAHMA</span>
+                              <span className="text-foreground">KOSH</span>
+                           </span>
+                           <span className="text-[7px] text-muted-foreground tracking-[0.1em] font-bold uppercase mt-1">
+                              #NO.1 SPIRITUAL STORE
+                           </span>
+                        </div>
+                     </div>
+                  </div>
+                  <button onClick={() => setMobileMenuOpen(false)} className="p-2 transition-all text-muted-foreground hover:text-primary active:scale-90 relative z-10">
+                     <X size={24} />
+                  </button>
                </div>
 
-               {/* Drawer Content */}
-               <div className="py-4 px-6 h-full overflow-y-auto">
-                  <ul className="flex flex-col space-y-2">
-                     <li>
-                        <Link
-                           href="/"
-                           className="flex items-center justify-between py-4 text-foreground font-medium tracking-wide border-b border-border hover:text-primary transition-colors"
-                           onClick={() => setMobileMenuOpen(false)}
-                        >
-                           Home
-                        </Link>
-                     </li>
+               {/* Drawer Content - Ultra High Density */}
+               <div className="py-2 h-[calc(100vh-60px)] overflow-y-auto custom-scrollbar">
+                  <div className="px-6 mb-1">
+                     <h2 className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1 opacity-70 border-b border-[#DCC8B0]/20 pb-0.5">Collections</h2>
+                  </div>
+                  <ul className="flex flex-col gap-0.5 px-3">
                      {categories.map((cat) => (
-                        <li key={cat._id} className="border-b border-border">
-                           <div className="flex items-center justify-between py-4">
-                              <Link
-                                 href={`/category/${cat.slug}`}
-                                 className="text-foreground font-medium tracking-wide hover:text-primary transition-colors flex-1"
-                                 onClick={() => setMobileMenuOpen(false)}
-                              >
-                                 {cat.name}
-                              </Link>
-                              {cat.subcategories && cat.subcategories.length > 0 && (
-                                 <button
-                                    onClick={() => setExpandedCategory(expandedCategory === cat._id ? null : cat._id)}
-                                    className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+                        <li key={cat._id}>
+                           <div className={`rounded-full transition-all duration-300 group ${expandedCategory === cat._id ? 'bg-primary text-white shadow-md' : 'hover:bg-primary/20 bg-white/40'}`}>
+                              <div className="flex items-center justify-between py-1 px-4 cursor-pointer">
+                                 <Link
+                                    href={`/category/${cat.slug}`}
+                                    className="flex items-center gap-2.5 font-bold tracking-tight transition-all flex-1"
+                                    onClick={() => setMobileMenuOpen(false)}
                                  >
-                                    <ChevronDown size={16} className={`transition-transform duration-300 ${expandedCategory === cat._id ? 'rotate-180' : ''}`} />
-                                 </button>
+                                    <div className={`w-1 h-1 rounded-full transition-all duration-300 ${expandedCategory === cat._id ? 'bg-white scale-150' : 'bg-primary group-hover:bg-primary'}`} />
+                                    <span className="text-[12px]">{cat.name}</span>
+                                 </Link>
+                                 {cat.subcategories && cat.subcategories.length > 0 && (
+                                    <button
+                                       onClick={() => setExpandedCategory(expandedCategory === cat._id ? null : cat._id)}
+                                       className={`p-1.5 rounded-full transition-all ${expandedCategory === cat._id ? 'bg-white/20' : 'text-muted-foreground hover:bg-white'}`}
+                                    >
+                                       <ChevronDown size={14} className={`transition-transform duration-500 ${expandedCategory === cat._id ? 'rotate-180' : ''}`} />
+                                    </button>
+                                 )}
+                              </div>
+
+                              {/* Mobile Subcategories Accordion - Compact */}
+                              {cat.subcategories && cat.subcategories.length > 0 && (
+                                 <div className={`overflow-hidden transition-all duration-500 ease-in-out ${expandedCategory === cat._id ? 'max-h-96 opacity-100 pb-2' : 'max-h-0 opacity-0'}`}>
+                                    <ul className="ml-10 space-y-0.5 border-l border-white/10">
+                                       {cat.subcategories.map((sub, idx) => (
+                                          <li key={idx}>
+                                             <Link
+                                                href={`/category/${cat.slug}?subcategory=${sub.slug}`}
+                                                className={`block text-[11px] font-medium transition-all py-1 px-4 rounded-full ${expandedCategory === cat._id ? 'text-white/80 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-primary hover:bg-white'}`}
+                                                onClick={() => setMobileMenuOpen(false)}
+                                             >
+                                                {sub.name}
+                                             </Link>
+                                          </li>
+                                       ))}
+                                    </ul>
+                                 </div>
                               )}
                            </div>
-
-                           {/* Mobile Subcategories Accordion */}
-                           {cat.subcategories && cat.subcategories.length > 0 && (
-                              <div className={`overflow-hidden transition-all duration-300 ${expandedCategory === cat._id ? 'max-h-96 opacity-100 mb-4' : 'max-h-0 opacity-0'}`}>
-                                 <ul className="pl-4 space-y-2 border-l border-border ml-2">
-                                    {cat.subcategories.map((sub, idx) => (
-                                       <li key={idx}>
-                                          <Link
-                                             href={`/category/${cat.slug}?subcategory=${sub.slug}`}
-                                             className="block text-sm text-gray-600 hover:text-primary transition-colors py-1"
-                                             onClick={() => setMobileMenuOpen(false)}
-                                          >
-                                             {sub.name}
-                                          </Link>
-                                       </li>
-                                    ))}
-                                 </ul>
-                              </div>
-                           )}
                         </li>
                      ))}
-                     <li className="mt-8 pt-8 border-t border-border space-y-4">
-                        <Link href="/account" className="flex items-center gap-4 py-3 text-gray-600 font-medium hover:text-foreground transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                           <User size={20} className="text-primary" /> My Profile
-                        </Link>
-                        <Link href="/wishlist" className="flex items-center gap-4 py-3 text-gray-600 font-medium hover:text-foreground transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                           <Heart size={20} className="text-primary" /> My Wishlist
-                        </Link>
-                     </li>
                   </ul>
+
+                  {/* Sacred Footer Note - Minimal */}
+                  <div className="mt-8 px-8 py-6 text-center border-t border-[#DCC8B0]/20 mx-4">
+                     <p className="text-[9px] text-muted-foreground font-medium italic tracking-wide">"Where tradition meets the soul."</p>
+                  </div>
                </div>
             </div>
          </div>
 
-         <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[94%] max-w-lg bg-[#111111]/95 backdrop-blur-2xl border border-white/10 z-50 flex justify-around items-center py-3 px-2 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] ring-1 ring-white/10">
+         <div className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 w-[94%] max-w-lg bg-[#111111]/95 backdrop-blur-2xl border border-white/10 z-50 flex justify-around items-center py-2 px-2 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] ring-1 ring-white/10">
             <Link href="/" className={`flex flex-col items-center justify-center flex-1 gap-1 group/nav transition-colors duration-300 ${pathname === '/' ? 'text-orange-500' : 'text-gray-400'}`}>
                <div className={`p-1 rounded-xl transition-all duration-300 group-active/nav:bg-orange-500/10 group-active/nav:scale-90 ${pathname === '/' ? 'bg-orange-500/10' : ''}`}>
                   <Home size={20} className="drop-shadow-sm" />
