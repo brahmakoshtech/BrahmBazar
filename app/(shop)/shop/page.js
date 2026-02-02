@@ -302,22 +302,19 @@ export default function ShopPage() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] flex items-end justify-center"
+                        className="fixed inset-0 z-[100] flex justify-end"
                     >
                         {/* Backdrop */}
                         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileFiltersOpen(false)} />
 
-                        {/* Sheet */}
+                        {/* Side Drawer */}
                         <motion.div
-                            initial={{ translateY: '100%' }}
-                            animate={{ translateY: 0 }}
-                            exit={{ translateY: '100%' }}
+                            initial={{ translateX: '100%' }}
+                            animate={{ translateX: 0 }}
+                            exit={{ translateX: '100%' }}
                             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                            className="relative w-full bg-white rounded-t-[2rem] shadow-2xl p-6 pb-10 overflow-hidden max-h-[85vh] flex flex-col"
+                            className="relative w-[85%] max-w-sm h-full bg-white shadow-2xl p-6 flex flex-col"
                         >
-                            {/* Handle */}
-                            <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6 shrink-0" />
-
                             <div className="flex justify-between items-center mb-8 shrink-0">
                                 <h3 className="text-2xl font-bold font-serif text-foreground">Sort & Filter</h3>
                                 <button onClick={() => setMobileFiltersOpen(false)} className="p-2 bg-muted rounded-full transition-colors">

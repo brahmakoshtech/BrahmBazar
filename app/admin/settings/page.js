@@ -1,17 +1,44 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/context/ToastContext';
 import Button from '@/components/ui/Button';
 import { Settings, User, Bell, Shield } from 'lucide-react';
+import api from '@/services/api';
 
 export default function AdminSettings() {
-    const { success } = useToast();
+    const { success, error } = useToast();
     const [activeTab, setActiveTab] = useState('general');
+    const [email, setEmail] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const handleSave = () => {
-        // Placeholder save
-        setTimeout(() => success('Settings saved locally (Demo)'), 500);
+    // Fetch Settings on Mount
+    useEffect(() => {
+        if (activeTab === 'general') {
+            const fetchSettings = async () => {
+                try {
+                    const { data } = await api.get('/api/contact/settings');
+                    setEmail(data.receiverEmail);
+                } catch (err) {
+                    console.error("Failed to fetch settings", err);
+                    // error("Failed to load settings"); // Optional: don't annoy user on load
+                }
+            };
+            fetchSettings();
+        }
+    }, [activeTab]);
+
+    const handleSave = async () => {
+        setLoading(true);
+        try {
+            await api.put('/api/contact/settings', { receiverEmail: email });
+            success('Configuration sealed successfully');
+        } catch (err) {
+            console.error("Failed to save settings", err);
+            error(err.response?.data?.message || 'Failed to save configuration');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -27,6 +54,7 @@ export default function AdminSettings() {
                     >
                         <Settings size={18} /> General
                     </button>
+                    {/* Other buttons remain same, assume they are handled by parent or just static here for now */}
                     <button
                         onClick={() => setActiveTab('profile')}
                         className={`w-full flex items-center gap-4 px-6 py-4 rounded-[2rem] text-[10px] font-bold uppercase tracking-[0.3em] transition-all border ${activeTab === 'profile' ? 'bg-primary text-white border-transparent shadow-xl shadow-primary/20 scale-105' : 'text-muted-foreground bg-white/40 border-primary/10 hover:bg-white hover:text-foreground'}`}
@@ -58,14 +86,28 @@ export default function AdminSettings() {
                             <div className="space-y-6 pt-6 border-t border-primary/10">
                                 <div className="space-y-2">
                                     <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] ml-1">Establishment Name</label>
-                                    <input type="text" defaultValue="BRAHMAKOSH" className="w-full bg-white/50 border border-primary/10 rounded-2xl px-6 py-4 text-foreground font-bold focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all shadow-inner" />
+                                    <input type="text" readOnly defaultValue="BRAHMAKOSH" className="w-full bg-white/50 border border-primary/10 rounded-2xl px-6 py-4 text-foreground font-bold focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all shadow-inner opacity-60 cursor-not-allowed" title="Contact developer to change" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] ml-1">Sacred Support Link (Email)</label>
-                                    <input type="email" defaultValue="divine@BRAHMAKOSH.com" className="w-full bg-white/50 border border-primary/10 rounded-2xl px-6 py-4 text-foreground font-bold focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all shadow-inner" />
+                                    <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] ml-1">Receiver Email for Contact Requests</label>
+                                    <input
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        placeholder="Enter email to receive contact forms..."
+                                        className="w-full bg-white/50 border border-primary/10 rounded-2xl px-6 py-4 text-foreground font-bold focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all shadow-inner"
+                                    />
+                                    <p className="text-[10px] text-muted-foreground pl-2">* All new contact form submissions will be sent here.</p>
                                 </div>
                                 <div className="pt-4">
-                                    <Button onClick={handleSave} variant="primary" className="bg-primary text-white font-bold px-10 py-4 rounded-full shadow-xl shadow-primary/20 uppercase text-[10px] tracking-widest border-none">Seal Changes</Button>
+                                    <Button
+                                        onClick={handleSave}
+                                        loading={loading}
+                                        variant="primary"
+                                        className="bg-primary text-white font-bold px-10 py-4 rounded-full shadow-xl shadow-primary/20 uppercase text-[10px] tracking-widest border-none hover:bg-primary/90"
+                                    >
+                                        Seal Changes
+                                    </Button>
                                 </div>
                             </div>
                         </div>

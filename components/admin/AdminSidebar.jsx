@@ -15,6 +15,7 @@ export default function AdminSidebar() {
         { name: 'Banners', href: '/admin/banners', icon: <Image size={20} /> },
         { name: 'Coupons', href: '/admin/coupons', icon: <Ticket size={20} /> },
         { name: 'Customize Site', href: '/admin/customize', icon: <Edit3 size={20} /> },
+        { name: 'Contact Requests', href: '/admin/contacts', icon: <Users size={20} /> },
         { name: 'Settings', href: '/admin/settings', icon: <Settings size={20} /> },
     ];
 
