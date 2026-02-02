@@ -4,6 +4,7 @@ import { useState, Suspense } from 'react';
 import api from '@/services/api';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import SupportChat from '@/components/SupportChat';
 
@@ -67,30 +68,41 @@ function LoginForm() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-black py-12 px-4 sm:px-6 lg:px-8 font-sans relative overflow-hidden">
-            {/* Background Gradient/Effects */}
-            <div className="absolute inset-0 bg-radial-gradient from-primary/10 to-transparent opacity-30 pointer-events-none"></div>
+        <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 font-sans relative overflow-hidden">
+            {/* Background Effects */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] opacity-60" />
+                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange-500/5 rounded-full blur-[100px] opacity-60" />
+            </div>
 
-            <div className="max-w-md w-full bg-neutral-900/60 backdrop-blur-xl p-8 md:p-10 rounded-2xl shadow-2xl border border-white/10 relative z-10">
-                <div className="mb-8 text-center">
-                    <span className="text-3xl mb-4 block filter drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]">🕉️</span>
-                    <h2 className="text-3xl font-serif font-bold text-white tracking-wide">
+            <div className="max-w-md w-full bg-white/60 backdrop-blur-xl p-8 md:p-10 rounded-[2rem] shadow-2xl shadow-[#D69E2E]/10 border border-white/40 relative z-10">
+                <div className="mb-8 text-center flex flex-col items-center justify-center">
+                    <div className="relative w-24 h-24 mb-4 filter drop-shadow-sm">
+                        <Image
+                            src="/images/Brahmokosh.png"
+                            alt="BRAHMAKOSH Logo"
+                            fill
+                            className="object-contain"
+                            priority
+                        />
+                    </div>
+                    <h2 className="text-3xl font-serif font-bold text-foreground tracking-wide">
                         Welcome Back
                     </h2>
-                    <p className="mt-2 text-sm text-gray-400 tracking-wide uppercase">
+                    <p className="mt-2 text-sm text-muted-foreground tracking-wide uppercase font-bold">
                         Continue your sacred journey
                     </p>
                 </div>
 
                 <form className="space-y-6" onSubmit={handleSubmit}>
                     {error && (
-                        <div className="bg-red-900/20 border-l-4 border-red-500 p-4 rounded-md flex flex-col gap-2">
-                            <span className="text-red-400 text-sm font-medium">{error}</span>
+                        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md flex flex-col gap-2">
+                            <span className="text-red-700 text-sm font-bold">{error}</span>
                             {showSupport && (
                                 <button
                                     type="button"
                                     onClick={() => setShowSupport(true)}
-                                    className="text-sm font-bold underline text-red-300 hover:text-red-200 text-left"
+                                    className="text-sm font-bold underline text-red-600 hover:text-red-800 text-left"
                                 >
                                     Contact Support for Activation
                                 </button>
@@ -100,14 +112,14 @@ function LoginForm() {
 
                     <div className="space-y-5">
                         <div>
-                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1" htmlFor="email">
+                            <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-1 ml-1" htmlFor="email">
                                 Email Address
                             </label>
                             <input
                                 id="email"
                                 type="email"
                                 required
-                                className="appearance-none block w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary/50 text-white transition-all"
+                                className="appearance-none block w-full px-5 py-3.5 bg-white border border-[#DCC8B0] rounded-xl text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all shadow-sm font-medium"
                                 placeholder="seeker@example.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -115,13 +127,13 @@ function LoginForm() {
                         </div>
 
                         <div>
-                            <div className="flex items-center justify-between mb-1">
-                                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider" htmlFor="password">
+                            <div className="flex items-center justify-between mb-1 ml-1">
+                                <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]" htmlFor="password">
                                     Password
                                 </label>
                                 <Link
                                     href="/forgot-password"
-                                    className="text-xs font-semibold text-primary hover:text-white transition-colors"
+                                    className="text-[10px] font-bold uppercase tracking-wider text-primary hover:text-[#B58324] transition-colors"
                                 >
                                     Forgot password?
                                 </Link>
@@ -130,7 +142,7 @@ function LoginForm() {
                                 id="password"
                                 type="password"
                                 required
-                                className="appearance-none block w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary/50 text-white transition-all"
+                                className="appearance-none block w-full px-5 py-3.5 bg-white border border-[#DCC8B0] rounded-xl text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all shadow-sm font-medium"
                                 placeholder="••••••••"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -141,24 +153,24 @@ function LoginForm() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full flex justify-center py-3.5 px-4 border border-transparent text-sm font-bold rounded-lg text-black bg-primary hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-70 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(212,175,55,0.3)] hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all transform active:scale-[0.98]"
+                        className="w-full flex justify-center py-3.5 px-4 border border-transparent text-sm font-bold uppercase tracking-[0.1em] rounded-xl text-white bg-primary hover:bg-[#B58324] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all transform active:scale-[0.98]"
                     >
                         {loading ? 'Authenticating...' : 'Sign In'}
                     </button>
 
                     <div className="relative my-6">
                         <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-white/10"></div>
+                            <div className="w-full border-t border-[#DCC8B0]/50"></div>
                         </div>
                         <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-[#171717] px-2 text-gray-500 font-bold tracking-wider">Or continue with</span>
+                            <span className="bg-white/80 backdrop-blur px-2 text-muted-foreground font-bold tracking-wider">Or continue with</span>
                         </div>
                     </div>
 
                     <button
                         type="button"
-                        onClick={() => console.log('Google Login clicked - Integration Required')}
-                        className="w-full flex items-center justify-center gap-3 py-3.5 px-4 border border-white/10 rounded-lg text-sm font-bold text-white bg-white/5 hover:bg-white/10 hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 transition-all transform active:scale-[0.98]"
+                        onClick={() => window.location.href = 'https://store.brahmakosh.com/auth/google'}
+                        className="w-full flex items-center justify-center gap-3 py-3.5 px-4 border border-[#DCC8B0] rounded-xl text-sm font-bold text-foreground bg-white hover:bg-white/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 transition-all transform active:scale-[0.98] shadow-sm"
                     >
                         <svg className="w-5 h-5" viewBox="0 0 24 24">
                             <path
@@ -181,9 +193,9 @@ function LoginForm() {
                         Google
                     </button>
 
-                    <p className="mt-4 text-center text-sm text-gray-500">
+                    <p className="mt-4 text-center text-sm text-muted-foreground font-medium">
                         New to BRAHMAKOSH?{' '}
-                        <Link href="/register" className="font-bold text-primary hover:text-white transition-colors">
+                        <Link href="/register" className="font-bold text-primary hover:text-foreground transition-colors">
                             Begin your journey
                         </Link>
                     </p>
