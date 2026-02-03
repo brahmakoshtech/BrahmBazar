@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, ShoppingBag, Package, Users, Settings, LogOut, Grid, Image, Ticket, Edit3 } from 'lucide-react';
+import { LayoutDashboard, Package, Grid, ClipboardList, Users, TicketPercent, Image, Video, MessageSquare, Palette, Settings, LogOut } from 'lucide-react';
 
 export default function AdminSidebar() {
     const pathname = usePathname();
@@ -10,12 +10,13 @@ export default function AdminSidebar() {
         { name: 'Dashboard', href: '/admin/dashboard', icon: <LayoutDashboard size={20} /> },
         { name: 'Products', href: '/admin/products', icon: <Package size={20} /> },
         { name: 'Categories', href: '/admin/categories', icon: <Grid size={20} /> },
-        { name: 'Orders', href: '/admin/orders', icon: <ShoppingBag size={20} /> },
+        { name: 'Orders', href: '/admin/orders', icon: <ClipboardList size={20} /> },
         { name: 'Users', href: '/admin/users', icon: <Users size={20} /> },
+        { name: 'Coupons', href: '/admin/coupons', icon: <TicketPercent size={20} /> },
         { name: 'Banners', href: '/admin/banners', icon: <Image size={20} /> },
-        { name: 'Coupons', href: '/admin/coupons', icon: <Ticket size={20} /> },
-        { name: 'Customize Site', href: '/admin/customize', icon: <Edit3 size={20} /> },
-        { name: 'Contact Requests', href: '/admin/contacts', icon: <Users size={20} /> },
+        { name: 'Reels Manager', href: '/admin/reels', icon: <Video size={20} /> },
+        { name: 'Contacts', href: '/admin/contacts', icon: <MessageSquare size={20} /> },
+        { name: 'Customize', href: '/admin/customize', icon: <Palette size={20} /> },
         { name: 'Settings', href: '/admin/settings', icon: <Settings size={20} /> },
     ];
 

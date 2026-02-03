@@ -37,6 +37,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'upload.wikimedia.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'brahmabazar-media.s3.ap-south-1.amazonaws.com',
       }
     ],
   },

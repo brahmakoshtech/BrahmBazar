@@ -11,6 +11,7 @@ import api from '@/services/api';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import ReelsSection from '@/components/ReelsSection';
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -173,6 +174,9 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {/* REELS SECTION */}
+      <ReelsSection />
     </main>
   );
 }
