@@ -67,7 +67,7 @@ export default function Footer() {
                                 <li><a href="#" className="hover:text-primary transition-colors">Authenticity Promise</a></li>
                                 <li><a href="#" className="hover:text-primary transition-colors">Shipping & Returns</a></li>
                                 <li><Link href="/contact" className="hover:text-primary transition-colors">Contact Us</Link></li>
-                                <li><a href="#" className="hover:text-primary transition-colors">FAQ</a></li>
+                                <li><Link href="/faq" className="hover:text-primary transition-colors">FAQ</Link></li>
                             </ul>
                         </div>
                     </div>

@@ -12,25 +12,30 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import ReelsSection from '@/components/ReelsSection';
+import FaqAccordion from '@/components/FaqAccordion';
+import { getFaqs } from '@/services/faqService';
 
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [visibleCount, setVisibleCount] = useState(10);
   const [activeCoupons, setActiveCoupons] = useState([]);
+  const [faqs, setFaqs] = useState([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const [productsRes, couponsRes] = await Promise.all([
+        const [productsRes, couponsRes, faqsRes] = await Promise.all([
           api.get('/api/products'),
-          api.get('/api/coupons/active')
+          api.get('/api/coupons/active'),
+          getFaqs()
         ]);
         const sortedProducts = (productsRes.data || []).sort((a, b) =>
           new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
         );
         setProducts(sortedProducts);
         setActiveCoupons(couponsRes.data);
+        setFaqs(faqsRes);
       } catch (error) {
         console.error('Failed to fetch data:', error);
       } finally {
@@ -172,6 +177,37 @@ export default function Home() {
               </button>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* FAQ SECTION */}
+      <section className="py-24 bg-background relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
+        <div className="container mx-auto px-4 max-w-4xl relative z-10">
+          <div className="text-center mb-16">
+            <span className="text-secondary font-bold tracking-[0.2em] uppercase text-xs md:text-sm mb-3 block">
+              Common Queries
+            </span>
+            <h2 className="text-3xl md:text-4xl font-serif font-medium text-foreground mb-6">
+              Divine <span className="text-primary italic">Answers</span>
+            </h2>
+            <div className="flex gap-2 items-center justify-center opacity-70">
+              <div className="h-px w-12 bg-primary"></div>
+              <span className="text-primary text-xl">❖</span>
+              <div className="h-px w-12 bg-primary"></div>
+            </div>
+          </div>
+
+          <FaqAccordion items={faqs.slice(0, 5)} />
+
+          <div className="mt-12 text-center">
+            <Link
+              href="/faq"
+              className="text-muted-foreground hover:text-primary transition-colors text-sm tracking-widest uppercase border-b border-transparent hover:border-primary pb-1 inline-block"
+            >
+              View All Questions
+            </Link>
+          </div>
         </div>
       </section>
 
