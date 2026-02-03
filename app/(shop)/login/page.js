@@ -190,7 +190,7 @@ function LoginForm() {
                                 fill="#EA4335"
                             />
                         </svg>
-                        Google
+                        Continue with Google
                     </button>
 
                     <p className="mt-4 text-center text-sm text-muted-foreground font-medium">

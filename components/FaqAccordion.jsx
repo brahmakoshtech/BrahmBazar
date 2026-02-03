@@ -19,9 +19,9 @@ export default function FaqAccordion({ items = [] }) {
                 >
                     <button
                         onClick={() => toggleIndex(index)}
-                        className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
+                        className="w-full flex items-center justify-between p-4 md:p-6 text-left focus:outline-none"
                     >
-                        <span className={`text-lg font-serif font-medium transition-colors ${activeIndex === index ? 'text-primary' : 'text-foreground'}`}>
+                        <span className={`text-base md:text-lg font-serif font-medium transition-colors ${activeIndex === index ? 'text-primary' : 'text-foreground'}`}>
                             {item.question}
                         </span>
                         <div className={`p-2 rounded-full transition-colors ${activeIndex === index ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'}`}>
@@ -36,7 +36,7 @@ export default function FaqAccordion({ items = [] }) {
                                 exit={{ height: 0, opacity: 0 }}
                                 transition={{ duration: 0.3, ease: 'easeInOut' }}
                             >
-                                <div className="px-6 pb-6 pt-0 text-muted-foreground text-sm leading-relaxed border-t border-dashed border-primary/10 mt-2">
+                                <div className="px-4 pb-4 md:px-6 md:pb-6 pt-0 text-muted-foreground text-xs md:text-sm leading-relaxed border-t border-dashed border-primary/10 mt-2">
                                     {item.answer}
                                 </div>
                             </motion.div>

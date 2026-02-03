@@ -15,7 +15,8 @@ export default function AdminSidebar() {
         { name: 'Coupons', href: '/admin/coupons', icon: <TicketPercent size={20} /> },
         { name: 'Banners', href: '/admin/banners', icon: <Image size={20} /> },
         { name: 'Reels Manager', href: '/admin/reels', icon: <Video size={20} /> },
-        { name: 'Contacts', href: '/admin/contacts', icon: <MessageSquare size={20} /> },
+        { name: 'FAQs', href: '/admin/faqs', icon: <MessageSquare size={20} /> },
+        { name: 'Contacts', href: '/admin/contacts', icon: <Users size={20} /> },
         { name: 'Customize', href: '/admin/customize', icon: <Palette size={20} /> },
         { name: 'Settings', href: '/admin/settings', icon: <Settings size={20} /> },
     ];

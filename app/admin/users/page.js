@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import api from '@/services/api';
-import { Trash2, User, Shield, ShieldAlert, Check } from 'lucide-react';
+import { Trash2, User, Shield, ShieldAlert, Check, Eye } from 'lucide-react';
 import { useToast } from '@/context/ToastContext';
 import Skeleton from '@/components/ui/Skeleton';
 

@@ -72,15 +72,16 @@ export default function ReelsSection() {
             {/* Decorative Background Elements */}
             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-orange-500/0 via-orange-500/20 to-orange-500/0"></div>
 
-            <div className="container mx-auto px-4 mb-8 text-center relative z-10">
-                <div className="inline-block relative">
-                    <h2 className="text-3xl md:text-4xl font-serif font-black text-[#5A4633] uppercase Tracking-wide mb-2">
-                        Sacred <span className="text-orange-600">Reels</span>
+            <div className="container mx-auto px-4 mb-12 text-center relative z-10">
+                <div className="inline-block relative group cursor-default">
+                    <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold tracking-[0.3em] uppercase text-orange-500 opacity-60">Visual Stories</span>
+                    <h2 className="text-4xl md:text-5xl font-serif font-black text-[#2D241E] uppercase tracking-wider mb-4 relative z-10">
+                        Sacred <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-500 drop-shadow-sm">Reels</span>
                     </h2>
-                    <div className="w-24 h-1 bg-orange-500 mx-auto rounded-full"></div>
+                    <div className="w-32 h-1.5 bg-gradient-to-r from-transparent via-orange-500 to-transparent mx-auto rounded-full opacity-80 group-hover:w-48 transition-all duration-700"></div>
                 </div>
-                <p className="text-sm md:text-base text-[#8C7A6B] mt-3 font-medium max-w-2xl mx-auto">
-                    Immersion in the divine energy of our authentic spiritual tools.
+                <p className="text-sm md:text-base text-[#8C7A6B] mt-6 font-medium max-w-2xl mx-auto leading-relaxed">
+                    Immerse yourself in the divine energy through our curated visual journeys.
                 </p>
             </div>
 
@@ -132,49 +133,64 @@ function ReelCard({ reel }) {
 
     return (
         <div
-            className="flex-shrink-0 w-[200px] h-[350px] md:w-[240px] md:h-[420px] relative rounded-2xl overflow-hidden shadow-xl border border-[#DCC8B0] group bg-black"
+            className="flex-shrink-0 w-[200px] h-[320px] md:w-[220px] md:h-[360px] relative rounded-xl overflow-hidden group transition-all duration-500 hover:scale-105 hover:shadow-[0_20px_50px_rgba(234,88,12,0.3)]"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <video
-                ref={videoRef}
-                src={reel.videoUrl}
-                className="w-full h-full object-cover"
-                loop
-                muted={isMuted}
-                playsInline
-            // Auto-play is handled by ref logic, usually 'muted' allows autoplay
-            />
+            {/* Gradient Border Wrapper */}
+            <div className="absolute inset-0 p-[2px] rounded-xl bg-gradient-to-br from-orange-400 via-transparent to-orange-400 opacity-30 group-hover:opacity-100 transition-opacity duration-500 z-30 pointer-events-none"></div>
 
-            {/* Overlay Gradient */}
-            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent opacity-60 group-hover:opacity-80 transition-opacity"></div>
+            {/* Inner Content */}
+            <div className="relative w-full h-full rounded-[0.7rem] overflow-hidden bg-black">
+                <video
+                    ref={videoRef}
+                    src={reel.videoUrl}
+                    className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
+                    loop
+                    muted={isMuted}
+                    playsInline
+                />
 
-            {/* Title */}
-            {reel.title && (
-                <div className="absolute bottom-4 left-4 right-4 z-20">
-                    <p className="text-white text-sm font-bold line-clamp-2 drop-shadow-md leading-tight">
-                        {reel.title}
-                    </p>
+                {/* Status Badge */}
+                <div className="absolute top-4 left-4 z-20 px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full flex items-center gap-1.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_10px_red]"></div>
+                    <span className="text-[10px] font-bold text-white uppercase tracking-wider">Trending</span>
                 </div>
-            )}
 
-            {/* Controls appearing on Hover */}
-            <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${isHovered ? 'bg-black/20 backdrop-blur-[1px]' : 'opacity-0'}`}>
+                {/* Overlay Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/20 opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+
+                {/* Title */}
+                {reel.title && (
+                    <div className="absolute bottom-0 left-0 right-0 p-6 z-20 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                        <p className="text-white text-lg font-serif font-bold line-clamp-2 drop-shadow-lg leading-tight mb-2">
+                            {reel.title}
+                        </p>
+                        <div className="h-0.5 w-12 bg-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100"></div>
+                    </div>
+                )}
+
+                {/* Center Play Button (Glassmorphism) */}
+                <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 z-20 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
+                    <button
+                        onClick={togglePlay}
+                        className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white flex items-center justify-center hover:bg-orange-600 hover:border-orange-500 hover:scale-110 transition-all duration-300 shadow-[0_0_30px_rgba(0,0,0,0.3)] group/btn"
+                    >
+                        {isPlaying ?
+                            <Pause size={28} fill="currentColor" className="opacity-90 group-hover/btn:opacity-100" /> :
+                            <Play size={28} fill="currentColor" className="ml-1 opacity-90 group-hover/btn:opacity-100" />
+                        }
+                    </button>
+                </div>
+
+                {/* Mute Toggle */}
                 <button
-                    onClick={togglePlay}
-                    className="p-4 rounded-full bg-white/20 backdrop-blur-md text-white hover:bg-orange-500 hover:scale-110 transition-all shadow-lg border border-white/30"
+                    onClick={toggleMute}
+                    className={`absolute top-4 right-4 p-2.5 rounded-full bg-black/20 backdrop-blur-md border border-white/10 text-white/80 hover:text-white hover:bg-black/40 transition-all z-30 hover:scale-110 duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'}`}
                 >
-                    {isPlaying ? <Pause size={24} fill="currentColor" /> : <Play size={24} fill="currentColor" />}
+                    {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
                 </button>
             </div>
-
-            {/* Mute Toggle (Always visible slightly or on hover) */}
-            <button
-                onClick={toggleMute}
-                className="absolute top-3 right-3 p-2 rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors z-20"
-            >
-                {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-            </button>
         </div>
     );
 }

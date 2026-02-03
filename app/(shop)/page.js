@@ -82,13 +82,14 @@ export default function Home() {
             </div>
           ) : (
             <div className="grid grid-cols-2 lg:grid-cols-5 gap-5">
-              {products.slice(0, 5).map((product, idx) => (
+              {products.slice(0, 6).map((product, idx) => (
                 <motion.div
                   key={product._id}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.1, duration: 0.5 }}
                   viewport={{ once: true }}
+                  className={idx === 5 ? 'lg:hidden' : ''}
                 >
                   <ProductCard product={product} activeCoupons={activeCoupons} />
                 </motion.div>
@@ -181,7 +182,7 @@ export default function Home() {
       </section>
 
       {/* FAQ SECTION */}
-      <section className="py-24 bg-background relative overflow-hidden">
+      <section id="faq" className="py-24 bg-background relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
         <div className="container mx-auto px-4 max-w-4xl relative z-10">
           <div className="text-center mb-16">
@@ -198,16 +199,8 @@ export default function Home() {
             </div>
           </div>
 
-          <FaqAccordion items={faqs.slice(0, 5)} />
+          <FaqAccordion items={faqs} />
 
-          <div className="mt-12 text-center">
-            <Link
-              href="/faq"
-              className="text-muted-foreground hover:text-primary transition-colors text-sm tracking-widest uppercase border-b border-transparent hover:border-primary pb-1 inline-block"
-            >
-              View All Questions
-            </Link>
-          </div>
         </div>
       </section>
 

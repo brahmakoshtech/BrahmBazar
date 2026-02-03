@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import api from '@/services/api';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Trash2, ShoppingBag, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ProductCard from '@/components/ProductCard';
@@ -11,6 +12,7 @@ import { useToast } from '@/context/ToastContext';
 import EmptyState from '@/components/ui/EmptyState';
 
 export default function CartPage() {
+    const router = useRouter();
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [total, setTotal] = useState(0);
@@ -285,6 +287,16 @@ export default function CartPage() {
         }
     };
 
+    const handleCheckout = () => {
+        const userInfo = localStorage.getItem('userInfo');
+        if (userInfo) {
+            router.push('/checkout');
+        } else {
+            // Redirect to register if guest
+            router.push('/register?redirect=/checkout');
+        }
+    };
+
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center bg-background">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
@@ -473,12 +485,13 @@ export default function CartPage() {
                                 </div>
                             </div>
 
-                            <Link href="/checkout" className="block w-full">
-                                <button className="w-full bg-foreground text-background py-4 rounded-xl font-bold hover:bg-secondary hover:text-white transition-all shadow-lg flex items-center justify-center gap-2 group transform active:scale-[0.98]">
-                                    Proceed to Checkout
-                                    <ArrowLeft className="rotate-180 group-hover:translate-x-1 transition-transform" size={20} />
-                                </button>
-                            </Link>
+                            <button
+                                onClick={handleCheckout}
+                                className="w-full bg-foreground text-background py-4 rounded-xl font-bold hover:bg-secondary hover:text-white transition-all shadow-lg flex items-center justify-center gap-2 group transform active:scale-[0.98]"
+                            >
+                                Proceed to Checkout
+                                <ArrowLeft className="rotate-180 group-hover:translate-x-1 transition-transform" size={20} />
+                            </button>
 
                             <div className="mt-8 pt-8 border-t border-primary/5">
                                 <p className="text-center text-[10px] text-muted-foreground mb-4 font-bold uppercase tracking-[0.2em]">Secure Payment via</p>

@@ -134,12 +134,7 @@ export default function ShopPage() {
                                 Shop <span className="text-primary italic">Treasures</span>
                             </h1>
                             {/* Compact Mobile Filter Icon */}
-                            <button
-                                onClick={() => setMobileFiltersOpen(true)}
-                                className="lg:hidden p-2.5 bg-muted/50 border border-border/50 rounded-xl text-foreground active:scale-95 transition-all"
-                            >
-                                <Filter size={18} />
-                            </button>
+
                         </div>
                     </div>
 

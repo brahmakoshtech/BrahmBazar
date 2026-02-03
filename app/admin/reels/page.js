@@ -147,14 +147,14 @@ export default function ReelsManager() {
                 ) : reels.length === 0 ? (
                     <p className="text-center text-gray-500 py-10">No reels uploaded yet.</p>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                         {reels.map((reel) => (
-                            <div key={reel._id} className="relative group bg-black rounded-xl overflow-hidden aspect-[9/16] shadow-md border hover:border-orange-500 transition-all">
+                            <div key={reel._id} className="relative group bg-black rounded-lg overflow-hidden aspect-[3/4] shadow-sm border border-gray-100 hover:border-orange-500 transition-all">
                                 <video src={reel.videoUrl} className="w-full h-full object-cover opacity-80" />
 
                                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 to-transparent p-4">
-                                    <p className="text-white font-bold truncate">{reel.title || 'Untitled Reel'}</p>
-                                    <p className="text-xs text-gray-300">{new Date(reel.createdAt).toLocaleDateString()}</p>
+                                    <p className="text-white font-bold truncate text-sm">{reel.title || 'Untitled Reel'}</p>
+                                    <p className="text-[10px] text-gray-300">{new Date(reel.createdAt).toLocaleDateString()}</p>
                                 </div>
 
                                 <div className="absolute top-2 right-2 flex flex-col gap-2">

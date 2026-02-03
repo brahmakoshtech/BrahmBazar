@@ -113,7 +113,7 @@ export default function ProductCard({ product, activeCoupons = [] }) {
             </Link>
 
             {/* Content Details */}
-            <div className="p-4 flex flex-col flex-grow relative">
+            <div className="p-3 md:p-4 flex flex-col flex-grow relative">
 
                 {/* Category & Savings */}
                 <div className="flex justify-between items-center mb-1">
@@ -126,8 +126,8 @@ export default function ProductCard({ product, activeCoupons = [] }) {
                 </div>
 
                 {/* Title */}
-                <Link href={`/product/${product._id}`} className="block mb-2 group-hover:text-primary transition-colors pr-10">
-                    <h3 className="font-serif font-semibold text-foreground text-sm md:text-base leading-tight line-clamp-2 h-10">
+                <Link href={`/product/${product._id}`} className="block mb-1.5 md:mb-2 group-hover:text-primary transition-colors pr-8 md:pr-10">
+                    <h3 className="font-serif font-semibold text-foreground text-xs md:text-base leading-tight line-clamp-2 h-8 md:h-10">
                         {product.title}
                     </h3>
                 </Link>
@@ -160,10 +160,10 @@ export default function ProductCard({ product, activeCoupons = [] }) {
                         }
                     }}
                     disabled={product.stock === 0}
-                    className="absolute bottom-4 right-4 bg-muted hover:bg-primary text-foreground hover:text-white p-3 rounded-full transition-all duration-300 shadow-sm border border-border/50 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group/cart"
+                    className="absolute bottom-3 right-3 md:bottom-4 md:right-4 bg-muted hover:bg-primary text-foreground hover:text-white p-2.5 md:p-3 rounded-full transition-all duration-300 shadow-sm border border-border/50 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group/cart"
                     title="Add to Cart"
                 >
-                    <ShoppingCart size={18} className="transition-transform group-hover/cart:scale-110" />
+                    <ShoppingCart size={16} className="md:w-[18px] md:h-[18px] transition-transform group-hover/cart:scale-110" />
                 </button>
             </div>
         </div >
