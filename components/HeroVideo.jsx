@@ -41,7 +41,7 @@ const HeroVideo = () => {
                     <span className="text-white/90 text-sm md:text-base font-medium tracking-[0.2em] uppercase mb-4 animate-fadeIn">
                         Welcome to BRAHMAKOSH
                     </span>
-                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight drop-shadow-xl max-w-4xl leading-tight">
+                    <h1 className="text-4xl md:text-7xl font-bold text-white mb-8 tracking-tight drop-shadow-xl max-w-4xl leading-tight">
                         {banner.title}
                     </h1>
                     {banner.link && (
@@ -76,7 +76,7 @@ const HeroVideo = () => {
                 <span className="text-white/90 text-sm md:text-base font-medium tracking-[0.2em] uppercase mb-4 animate-fadeIn">
                     Welcome to BRAHMAKOSH
                 </span>
-                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight drop-shadow-xl max-w-4xl leading-tight">
+                <h1 className="text-4xl md:text-7xl font-bold text-white mb-8 tracking-tight drop-shadow-xl max-w-4xl leading-tight">
                     Awaken Your <span className="text-red-500">Divine</span> Potential
                 </h1>
                 <p className="text-gray-200 text-base md:text-lg max-w-2xl mb-10 leading-relaxed hidden md:block">

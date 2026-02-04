@@ -75,13 +75,13 @@ export default function Home() {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-2 lg:grid-cols-5 gap-5">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
               {[...Array(5)].map((_, i) => (
                 <div key={i} className="animate-pulse bg-muted rounded-2xl h-64"></div>
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-5 gap-5">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-4 lg:gap-5">
               {products.slice(0, 6).map((product, idx) => (
                 <motion.div
                   key={product._id}
@@ -89,7 +89,7 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.1, duration: 0.5 }}
                   viewport={{ once: true }}
-                  className={idx === 5 ? 'lg:hidden' : ''}
+                  className={idx === 5 ? 'md:hidden lg:block' : ''}
                 >
                   <ProductCard product={product} activeCoupons={activeCoupons} />
                 </motion.div>
@@ -135,7 +135,7 @@ export default function Home() {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-5 md:gap-6">
               {[...Array(10)].map((_, i) => (
                 <div key={i} className="animate-pulse bg-muted rounded-2xl overflow-hidden border border-border p-4">
                   <div className="bg-gray-200 aspect-[4/5] w-full rounded-xl mb-4"></div>
@@ -145,7 +145,7 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-4 lg:gap-6">
               {products.slice(0, visibleCount).map((product, idx) => (
                 <motion.div
                   key={product._id}

@@ -11,7 +11,7 @@ export default function Footer() {
         <footer className="bg-foreground text-[#E6DCC3]/80 mt-auto border-t border-[#E6DCC3]/10 font-sans relative z-10 transition-colors duration-500 pb-20 md:pb-0">
             {/* Main Footer Content */}
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-20">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
 
                     {/* Column 1: Brand Info */}
                     <div className="space-y-4 md:space-y-6">

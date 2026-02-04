@@ -1,12 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import api from '@/services/api';
 import ProductCard from '@/components/ProductCard';
 import { ChevronDown, Filter, X, Minus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ShopPage() {
+    const searchParams = useSearchParams();
+    const keyword = searchParams.get('keyword') || '';
+
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -39,7 +43,7 @@ export default function ShopPage() {
         const fetchData = async () => {
             try {
                 const [productsRes, categoriesRes] = await Promise.all([
-                    api.get('/api/products'),
+                    api.get('/api/products', { params: { keyword } }),
                     api.get('/api/categories')
                 ]);
                 setProducts(productsRes.data);
@@ -52,7 +56,7 @@ export default function ShopPage() {
             }
         };
         fetchData();
-    }, []);
+    }, [keyword]); // Refetch when keyword changes
 
     // Filter & Sort Logic Effect
     useEffect(() => {
@@ -157,7 +161,7 @@ export default function ShopPage() {
                 </div>
 
                 {/* Mobile Unified Filter Bar - Always Fixed Right Filter */}
-                <div className="lg:hidden flex items-center justify-between gap-2 mb-6 sticky top-[80px] z-30 bg-[#FFF0D2]/95 backdrop-blur-xl py-2 px-3 -mx-4 border-b border-primary/10 shadow-sm overflow-hidden min-h-[52px]">
+                <div className="md:hidden flex items-center justify-between gap-2 mb-6 sticky top-[80px] z-30 bg-[#FFF0D2]/95 backdrop-blur-xl py-2 px-3 -mx-4 border-b border-primary/10 shadow-sm overflow-hidden min-h-[52px]">
                     {/* Categories Scroll Area - Always flex-1 to push icon right */}
                     <div className="flex-1 flex overflow-x-auto items-center gap-1.5 scrollbar-hide py-1">
                         <button
@@ -188,9 +192,9 @@ export default function ShopPage() {
                     </div>
                 </div>
 
-                <div className="flex flex-col lg:flex-row gap-10 items-start mt-0">
+                <div className="flex flex-col md:flex-row gap-10 items-start mt-0">
                     {/* Sidebar - Desktop */}
-                    <aside className="hidden lg:block w-60 shrink-0 sticky top-[165px] h-fit z-20">
+                    <aside className="hidden md:block w-60 shrink-0 sticky top-[165px] h-fit z-20">
                         <div className="max-h-[calc(100vh-14rem)] overflow-y-auto pr-2 scrollbar-hide space-y-4">
 
                             {/* Categories List */}
@@ -291,7 +295,7 @@ export default function ShopPage() {
                     {/* Main Content (Scrollable Products) */}
                     <div className="flex-1 w-full">
                         {loading ? (
-                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                                 {[...Array(6)].map((_, i) => (
                                     <div key={i} className="animate-pulse bg-muted rounded-2xl h-96"></div>
                                 ))}
@@ -299,7 +303,7 @@ export default function ShopPage() {
                         ) : (
                             <>
                                 {filteredProducts.length > 0 ? (
-                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 gap-y-6">
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 gap-y-6">
                                         {filteredProducts.map(product => (
                                             <motion.div
                                                 key={product._id}

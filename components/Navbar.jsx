@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import {
    Search,
@@ -22,8 +22,14 @@ import api from '@/services/api';
 
 import { useContent } from '@/hooks/useContent';
 
+
+
 export default function Navbar() {
    const pathname = usePathname();
+   const router = useRouter();
+   const searchParams = useSearchParams();
+   const [searchQuery, setSearchQuery] = useState(searchParams?.get('keyword') || '');
+
    const [isSticky, setIsSticky] = useState(false);
    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
    const [expandedCategory, setExpandedCategory] = useState(null); // For mobile accordion
@@ -64,6 +70,21 @@ export default function Navbar() {
          document.body.style.overflow = 'unset';
       };
    }, [mobileMenuOpen]);
+
+   const handleSearch = (e) => {
+      e?.preventDefault();
+      if (searchQuery.trim()) {
+         router.push(`/shop?keyword=${encodeURIComponent(searchQuery.trim())}`);
+         setIsMobileSearching(false);
+         setMobileMenuOpen(false);
+      }
+   };
+
+   const handleKeyDown = (e) => {
+      if (e.key === 'Enter') {
+         handleSearch();
+      }
+   };
 
    return (
       <div className="fixed top-0 left-0 w-full z-50">
@@ -141,30 +162,32 @@ export default function Navbar() {
                            <input
                               autoFocus
                               type="text"
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              onKeyDown={handleKeyDown}
                               placeholder="Search authentic spiritual tools..."
-                              onBlur={() => {
-                                 // Simple delay to ensure interactions are smooth
-                                 setTimeout(() => setIsMobileSearching(false), 200);
-                              }}
                               className="w-full pl-4 pr-10 py-2 bg-white/60 border border-primary/30 rounded-full text-[13px] text-foreground outline-none focus:ring-1 focus:ring-primary/40 shadow-inner"
                            />
-                           <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-primary/60">
+                           <button onClick={handleSearch} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-primary/60 hover:text-primary transition-colors">
                               <Search size={16} />
-                           </div>
+                           </button>
                         </div>
                      </div>
                   )}
 
                   {/* CENTER: Premium Modern Search Bar (Desktop) */}
-                  <div className="hidden md:flex flex-1 max-w-xl mx-auto px-6">
+                  <div className="hidden md:flex flex-1 max-w-xl mx-auto px-2 lg:px-6">
                      <div className="relative w-full group">
                         <input
                            type="text"
+                           value={searchQuery}
+                           onChange={(e) => setSearchQuery(e.target.value)}
+                           onKeyDown={handleKeyDown}
                            placeholder="Search for peace, rudraksha, yantras..."
-                           className="w-full pl-5 pr-14 py-3 rounded-full border border-border bg-input text-sm text-foreground placeholder-muted-foreground outline-none focus:border-primary/50 focus:bg-background focus:ring-1 focus:ring-primary/30 transition-all shadow-sm group-hover:border-primary/30"
+                           className="w-full pl-5 pr-12 py-3 rounded-full border border-border bg-input text-sm text-foreground placeholder-muted-foreground outline-none focus:border-primary/50 focus:bg-background focus:ring-1 focus:ring-primary/30 transition-all shadow-sm group-hover:border-primary/30"
                         />
-                        <button className="absolute right-1.5 top-1.5 bottom-1.5 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-full px-5 flex items-center justify-center transition-all duration-300 active:scale-95 border border-primary/10">
-                           <Search size={18} />
+                        <button onClick={handleSearch} className="absolute right-1.5 top-1.5 bottom-1.5 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-full aspect-square flex items-center justify-center transition-all duration-300 active:scale-95 border border-primary/10">
+                           <Search size={20} />
                         </button>
                      </div>
                   </div>
@@ -215,7 +238,7 @@ export default function Navbar() {
             {/* NAVIGATION LINKS (Desktop Only) */}
             <div className="hidden md:block border-t border-border bg-background/80 backdrop-blur-sm">
                <div className="container mx-auto px-4 max-w-7xl">
-                  <nav className="flex justify-center items-center gap-10 py-1.5">
+                  <nav className="flex justify-start md:justify-center items-center gap-4 lg:gap-10 py-1.5 overflow-x-auto scrollbar-hide">
                      <Link
                         href="/"
                         className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary relative group py-1"
