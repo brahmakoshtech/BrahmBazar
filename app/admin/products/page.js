@@ -187,10 +187,10 @@ export default function AdminProducts() {
                 </div>
             ) : (
                 /* GRID VIEW */
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 animate-in slide-in-from-bottom-4 duration-500">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-in slide-in-from-bottom-4 duration-500">
                     {filteredProducts.map((product) => (
                         <div key={product._id} className="group bg-white/60 backdrop-blur-md rounded-3xl border border-primary/10 shadow-lg overflow-hidden hover:bg-white transition-all flex flex-col hover:shadow-2xl hover:shadow-primary/10">
-                            <div className="relative aspect-[4/5] bg-background overflow-hidden shadow-inner">
+                            <div className="relative aspect-video bg-background overflow-hidden shadow-inner">
                                 {product.images && product.images[0] ? (
                                     <img src={product.images[0]} alt={product.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                 ) : (
