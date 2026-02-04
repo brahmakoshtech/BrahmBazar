@@ -6,10 +6,13 @@ export default function Button({
     size = 'md',
     className = '',
     isLoading = false,
+    loading, // Destructure to prevent passing to DOM
     icon,
     disabled,
     ...props
 }) {
+    const isWorker = isLoading || loading;
+
     const baseStyles = "inline-flex items-center justify-center rounded-xl font-bold transition-all duration-300 transform active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2";
 
     const variants = {
@@ -29,10 +32,10 @@ export default function Button({
     return (
         <button
             className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
-            disabled={disabled || isLoading}
+            disabled={disabled || isWorker}
             {...props}
         >
-            {isLoading ? (
+            {isWorker ? (
                 <>
                     <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
                     Loading...
