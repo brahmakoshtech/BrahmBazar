@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function ShopPage() {
     const searchParams = useSearchParams();
     const keyword = searchParams.get('keyword') || '';
+    const initialSort = searchParams.get('sort') || 'newest';
 
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
@@ -21,7 +22,7 @@ export default function ShopPage() {
     const [selectedSubcategory, setSelectedSubcategory] = useState(null);
     const [expandedCategory, setExpandedCategory] = useState(null);
     const [priceRange, setPriceRange] = useState({ min: '', max: '' });
-    const [sortBy, setSortBy] = useState('newest');
+    const [sortBy, setSortBy] = useState(initialSort);
 
     // UI States
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -91,8 +92,15 @@ export default function ShopPage() {
         } else if (sortBy === 'price-high-low') {
             result.sort((a, b) => b.price - a.price);
         } else if (sortBy === 'newest') {
-            // Assuming your product schema has createdAt
             result.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+        } else if (sortBy === 'trending') {
+            // Sort trending items to the top, then by newer ones
+            result.sort((a, b) => {
+                const aTrending = a.isTrending ? 1 : 0;
+                const bTrending = b.isTrending ? 1 : 0;
+                if (bTrending !== aTrending) return bTrending - aTrending;
+                return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+            });
         }
 
         setFilteredProducts(result);
@@ -143,14 +151,15 @@ export default function ShopPage() {
                     </div>
 
                     {/* Sort Dropdown (Desktop only, mobile moves to drawer) */}
-                    <div className="hidden md:flex items-center gap-3 bg-muted/30 px-4 py-2 rounded-full border border-border/50">
-                        <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider whitespace-nowrap">Sort By</span>
+                    <div className="hidden md:flex items-center bg-white/60 backdrop-blur-md px-5 py-2.5 rounded-full border border-primary/10 shadow-sm hover:shadow-md transition-all">
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest whitespace-nowrap mr-3 opacity-70">Sort By</span>
                         <div className="relative">
                             <select
                                 value={sortBy}
                                 onChange={(e) => setSortBy(e.target.value)}
-                                className="appearance-none bg-transparent border-none pr-6 text-sm font-bold focus:outline-none cursor-pointer text-foreground"
+                                className="appearance-none bg-transparent border-none pr-7 text-xs font-bold focus:outline-none cursor-pointer text-foreground uppercase tracking-wider"
                             >
+                                <option value="trending">Trending</option>
                                 <option value="newest">New Arrivals</option>
                                 <option value="price-low-high">Lowest Price</option>
                                 <option value="price-high-low">Highest Price</option>
@@ -371,6 +380,7 @@ export default function ShopPage() {
                                     <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2.5">Sort By</h4>
                                     <div className="space-y-2">
                                         {[
+                                            { label: 'Trending', value: 'trending' },
                                             { label: 'New Arrivals', value: 'newest' },
                                             { label: 'Lowest Price', value: 'price-low-high' },
                                             { label: 'Highest Price', value: 'price-high-low' }

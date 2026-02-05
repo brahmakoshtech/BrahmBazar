@@ -159,6 +159,17 @@ export default function Home() {
               )}
             </div>
           )}
+
+          <div className="mt-12 text-center">
+            <Link
+              href="/shop?sort=trending"
+              className="group relative px-8 py-3 bg-transparent border border-primary/40 rounded-full text-foreground font-serif tracking-wide hover:border-primary hover:bg-primary/5 transition-all duration-300 inline-block"
+            >
+              <span className="flex items-center gap-2">
+                View All Trending <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              </span>
+            </Link>
+          </div>
         </div>
       </section>
 
