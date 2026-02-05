@@ -104,9 +104,18 @@ export default function ProductCard({ product, activeCoupons = [] }) {
                 </div>
 
                 {/* Wishlist Button - Floating Top Right */}
+                {/* Wishlist Button - Floating Top Right */}
                 <button
                     onClick={async (e) => {
                         e.stopPropagation();
+                        e.preventDefault();
+                        const userInfo = localStorage.getItem('userInfo');
+                        if (!userInfo) {
+                            // Redirect to login with return url
+                            const currentPath = window.location.pathname;
+                            window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
+                            return;
+                        }
                         try {
                             await api.post('/api/users/wishlist', { productId: product._id });
                             refreshCounts();
@@ -163,6 +172,13 @@ export default function ProductCard({ product, activeCoupons = [] }) {
                     onClick={async (e) => {
                         e.stopPropagation();
                         e.preventDefault();
+                        const userInfo = localStorage.getItem('userInfo');
+                        if (!userInfo) {
+                            // Redirect to login with return url
+                            const currentPath = window.location.pathname;
+                            window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
+                            return;
+                        }
                         try {
                             await addToCart(product, 1);
                         } catch (error) {

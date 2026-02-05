@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import api from '@/services/api';
 import Link from 'next/link';
-import { Plus, Edit, Trash2, Flame, Sparkles, Filter } from 'lucide-react';
+import { Plus, Edit, Trash2, Flame, Sparkles, Filter, Star } from 'lucide-react';
 
 export default function AdminProducts() {
     const [products, setProducts] = useState([]);
@@ -13,7 +13,7 @@ export default function AdminProducts() {
     // Filter Logic
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("All");
-    const [filterType, setFilterType] = useState('All'); // 'All', 'Trending', 'NewArrival'
+    const [filterType, setFilterType] = useState('All'); // 'All', 'Trending', 'NewArrival', 'Highlighted'
 
     const fetchData = async () => {
         try {
@@ -47,7 +47,6 @@ export default function AdminProducts() {
 
     const toggleTrendingHandler = async (id) => {
         const originalProducts = [...products];
-        // Optimistic update
         setProducts(products.map(p => p._id === id ? { ...p, isTrending: !p.isTrending } : p));
         try {
             await api.put(`/api/products/${id}/trending`);
@@ -59,7 +58,6 @@ export default function AdminProducts() {
 
     const toggleNewArrivalHandler = async (id) => {
         const originalProducts = [...products];
-        // Optimistic update
         setProducts(products.map(p => p._id === id ? { ...p, isNewArrival: !p.isNewArrival } : p));
         try {
             await api.put(`/api/products/${id}/new-arrival`);
@@ -69,16 +67,31 @@ export default function AdminProducts() {
         }
     };
 
+    const toggleHighlightedHandler = async (id) => {
+        const originalProducts = [...products];
+        setProducts(products.map(p => p._id === id ? { ...p, isHighlighted: !p.isHighlighted } : p));
+        try {
+            await api.put(`/api/products/${id}/highlighted`);
+        } catch (err) {
+            setProducts(originalProducts);
+            alert('Failed to update highlighted status');
+        }
+    };
+
     const [viewMode, setViewMode] = useState('list'); // 'list' or 'grid'
 
     // Compute Filtered Products
     const filteredProducts = products.filter(p => {
         const categoryMatch = selectedCategory === "All" || p.category === selectedCategory;
-        const typeMatch = filterType === 'All'
-            ? true
-            : filterType === 'Trending'
-                ? p.isTrending
-                : p.isNewArrival;
+        let typeMatch = true;
+
+        switch (filterType) {
+            case 'Trending': typeMatch = p.isTrending; break;
+            case 'NewArrival': typeMatch = p.isNewArrival; break;
+            case 'Highlighted': typeMatch = p.isHighlighted; break;
+            default: typeMatch = true;
+        }
+
         return categoryMatch && typeMatch;
     });
 
@@ -116,15 +129,21 @@ export default function AdminProducts() {
                         </button>
                         <button
                             onClick={() => setFilterType('Trending')}
-                            className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-1 ${filterType === 'Trending' ? 'bg-orange-500 text-white shadow-md' : 'text-muted-foreground hover:text-orange-500'}`}
+                            className={`px-3 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-1 ${filterType === 'Trending' ? 'bg-orange-500 text-white shadow-md' : 'text-muted-foreground hover:text-orange-500'}`}
                         >
-                            <Flame size={12} /> Trending
+                            <Flame size={12} /> <span className="hidden sm:inline">Trending</span>
                         </button>
                         <button
                             onClick={() => setFilterType('NewArrival')}
-                            className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-1 ${filterType === 'NewArrival' ? 'bg-blue-500 text-white shadow-md' : 'text-muted-foreground hover:text-blue-500'}`}
+                            className={`px-3 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-1 ${filterType === 'NewArrival' ? 'bg-blue-500 text-white shadow-md' : 'text-muted-foreground hover:text-blue-500'}`}
                         >
-                            <Sparkles size={12} /> New
+                            <Sparkles size={12} /> <span className="hidden sm:inline">New</span>
+                        </button>
+                        <button
+                            onClick={() => setFilterType('Highlighted')}
+                            className={`px-3 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-1 ${filterType === 'Highlighted' ? 'bg-purple-500 text-white shadow-md' : 'text-muted-foreground hover:text-purple-500'}`}
+                        >
+                            <Star size={12} /> <span className="hidden sm:inline">Feat.</span>
                         </button>
                     </div>
 
@@ -231,6 +250,13 @@ export default function AdminProducts() {
                                                 >
                                                     <Sparkles size={14} />
                                                 </button>
+                                                <button
+                                                    onClick={() => toggleHighlightedHandler(product._id)}
+                                                    className={`p-2 rounded-full transition-all border ${product.isHighlighted ? 'bg-purple-500 text-white border-purple-500 shadow-purple-500/20 shadow-lg' : 'bg-gray-100 text-gray-400 border-transparent hover:bg-purple-100/50 hover:text-purple-400'}`}
+                                                    title="Toggle Highlighted"
+                                                >
+                                                    <Star size={14} />
+                                                </button>
                                             </div>
                                         </td>
                                         <td className="px-8 py-4 text-sm flex gap-3">
@@ -273,6 +299,7 @@ export default function AdminProducts() {
                                 <div className="absolute top-3 left-3 flex gap-1">
                                     {product.isTrending && <div className="p-1.5 bg-orange-500/90 text-white rounded-full shadow-lg backdrop-blur-sm"><Flame size={12} /></div>}
                                     {product.isNewArrival && <div className="p-1.5 bg-blue-500/90 text-white rounded-full shadow-lg backdrop-blur-sm"><Sparkles size={12} /></div>}
+                                    {product.isHighlighted && <div className="p-1.5 bg-purple-500/90 text-white rounded-full shadow-lg backdrop-blur-sm"><Star size={12} /></div>}
                                 </div>
 
                                 <div className="absolute top-3 right-3 flex flex-col gap-2 translate-x-12 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
@@ -313,6 +340,13 @@ export default function AdminProducts() {
                                             title="Toggle New Arrival"
                                         >
                                             <Sparkles size={12} />
+                                        </button>
+                                        <button
+                                            onClick={() => toggleHighlightedHandler(product._id)}
+                                            className={`p-1.5 rounded-full transition-all border ${product.isHighlighted ? 'bg-purple-500 text-white border-purple-500' : 'bg-gray-100 text-gray-400 border-transparent hover:text-purple-400'}`}
+                                            title="Toggle Highlighted"
+                                        >
+                                            <Star size={12} />
                                         </button>
                                     </div>
                                     <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">{product.stock} Units</span>

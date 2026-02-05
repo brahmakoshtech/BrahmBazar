@@ -49,7 +49,7 @@ export default function WishlistPage() {
     }, []);
 
     const removeFromWishlist = async (productId) => {
-        if (!window.confirm('Remove from wishlist?')) return;
+        // if (!window.confirm('Remove from wishlist?')) return;
         try {
             // Check if backend supports DELETE /api/users/wishlist/:id or similar
             // Usually we might need to send a POST/PUT with 'remove' action or a specific DELETE endpoint.
