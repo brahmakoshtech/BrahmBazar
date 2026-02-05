@@ -6,7 +6,7 @@ import { useToast } from '@/context/ToastContext';
 import Button from '@/components/ui/Button';
 import EmptyState from '@/components/ui/EmptyState';
 import Modal from '@/components/ui/Modal';
-import { Plus, Edit2, Trash2, FolderOpen, Search } from 'lucide-react';
+import { Plus, Edit2, Trash2, FolderOpen, Search, Upload } from 'lucide-react';
 import Skeleton from '@/components/ui/Skeleton';
 
 export default function CategoriesPage() {
@@ -70,11 +70,22 @@ export default function CategoriesPage() {
         e.preventDefault();
         setSubmitting(true);
         try {
+            const data = new FormData();
+            data.append('name', formData.name);
+            data.append('description', formData.description || '');
+            data.append('isActive', formData.isActive);
+            if (formData.image) {
+                data.append('image', formData.image);
+            }
+            if (!editingCategory && formData.subcategories.length > 0) {
+                data.append('subcategories', JSON.stringify(formData.subcategories));
+            }
+
             if (editingCategory) {
-                await api.put(`/api/categories/${editingCategory._id}`, formData);
+                await api.put(`/api/categories/${editingCategory._id}`, data);
                 success('Category updated successfully');
             } else {
-                await api.post('/api/categories', formData);
+                await api.post('/api/categories', data);
                 success('Category created successfully');
             }
             setIsModalOpen(false);
@@ -98,7 +109,13 @@ export default function CategoriesPage() {
         e.preventDefault();
         setSubmitting(true);
         try {
-            await api.post(`/api/categories/${selectedCategoryForSub._id}/subcategories`, subFormData);
+            const data = new FormData();
+            data.append('name', subFormData.name);
+            if (subFormData.image) {
+                data.append('image', subFormData.image);
+            }
+
+            await api.post(`/api/categories/${selectedCategoryForSub._id}/subcategories`, data);
             success('Subcategory added successfully');
 
             // Refresh categories to show new subcategory count or data if we displayed it
@@ -108,9 +125,9 @@ export default function CategoriesPage() {
             // We can either refetch this specific category or find it in the updated categories list
             // For now, let's just close the modal or refresh the list inside.
             // Better UX: update the local list
-            const { data } = await api.get('/api/categories/admin');
-            setCategories(data);
-            const updatedCat = data.find(c => c._id === selectedCategoryForSub._id);
+            const { data: categoriesData } = await api.get('/api/categories/admin');
+            setCategories(categoriesData);
+            const updatedCat = categoriesData.find(c => c._id === selectedCategoryForSub._id);
             setSelectedCategoryForSub(updatedCat);
 
             setSubFormData({ name: '', image: '' });
@@ -269,14 +286,37 @@ export default function CategoriesPage() {
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Artifact Image URL</label>
-                            <input
-                                type="url"
-                                placeholder="https://..."
-                                className="w-full px-5 py-3 rounded-2xl bg-white/50 border border-primary/10 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-foreground placeholder-gray-400 transition-all font-bold text-sm"
-                                value={formData.image}
-                                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                            />
+                            <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Artifact Image</label>
+                            <div className="relative group">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    id="category-image-upload"
+                                    onChange={(e) => e.target.files[0] && setFormData({ ...formData, image: e.target.files[0] })}
+                                />
+                                <label
+                                    htmlFor="category-image-upload"
+                                    className="w-full flex flex-col items-center justify-center gap-2 px-5 py-6 rounded-2xl bg-white/50 border-2 border-dashed border-primary/20 hover:border-primary/50 cursor-pointer transition-all hover:bg-white/80"
+                                >
+                                    {formData.image instanceof File ? (
+                                        <div className="text-center">
+                                            <span className="text-sm font-bold text-primary">{formData.image.name}</span>
+                                            <p className="text-[9px] text-muted-foreground uppercase tracking-widest mt-1">Ready to upload</p>
+                                        </div>
+                                    ) : formData.image ? (
+                                        <div className="flex items-center gap-3">
+                                            <img src={formData.image} alt="Preview" className="w-10 h-10 rounded-lg object-cover" />
+                                            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Change Image</span>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <Upload className="text-primary/50" size={24} />
+                                            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Upload Essence Image</span>
+                                        </>
+                                    )}
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div className="space-y-2">

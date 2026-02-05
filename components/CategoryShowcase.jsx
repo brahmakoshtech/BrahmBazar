@@ -100,6 +100,7 @@ export default function CategoryShowcase() {
                                             src={cat.image || '/images/category-fallback.png'}
                                             alt={cat.name}
                                             fill
+                                            unoptimized={true}
                                             className="object-cover transition-transform duration-700 group-hover:scale-110"
                                             sizes="(max-width: 768px) 180px, 240px"
                                         />

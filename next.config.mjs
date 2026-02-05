@@ -41,6 +41,14 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'brahmabazar-media.s3.ap-south-1.amazonaws.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 's3.ap-south-1.amazonaws.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 's3.amazonaws.com',
       }
     ],
   },
