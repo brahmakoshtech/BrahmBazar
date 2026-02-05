@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Heart, ShoppingCart, Ticket } from 'lucide-react';
+import { Heart, ShoppingCart, Ticket, Flame, Sparkles } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import api from '@/services/api';
 import { useMemo } from 'react';
@@ -74,6 +74,16 @@ export default function ProductCard({ product, activeCoupons = [] }) {
 
                 {/* Status Badges */}
                 <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
+                    {product.isTrending && (
+                        <span className="bg-orange-500/90 text-white backdrop-blur-md text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-widest shadow-md flex items-center gap-1">
+                            <Flame size={10} className="fill-white" /> Trending
+                        </span>
+                    )}
+                    {product.isNewArrival && (
+                        <span className="bg-blue-500/90 text-white backdrop-blur-md text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-widest shadow-md flex items-center gap-1">
+                            <Sparkles size={10} className="fill-white" /> New
+                        </span>
+                    )}
                     {product.stock <= 5 && product.stock > 0 && (
                         <span className="bg-orange-500/90 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-widest shadow-sm">
                             Low Stock

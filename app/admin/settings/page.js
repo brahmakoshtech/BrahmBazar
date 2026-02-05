@@ -11,6 +11,7 @@ export default function AdminSettings() {
     const [activeTab, setActiveTab] = useState('general');
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
+    const [adminUser, setAdminUser] = useState(null);
 
     // Fetch Settings on Mount
     useEffect(() => {
@@ -27,6 +28,16 @@ export default function AdminSettings() {
             fetchSettings();
         }
     }, [activeTab]);
+
+    // Fetch Admin User from LocalStorage
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const userInfo = localStorage.getItem('userInfo');
+            if (userInfo) {
+                setAdminUser(JSON.parse(userInfo));
+            }
+        }
+    }, []);
 
     const handleSave = async () => {
         setLoading(true);
@@ -54,7 +65,6 @@ export default function AdminSettings() {
                     >
                         <Settings size={18} /> General
                     </button>
-                    {/* Other buttons remain same, assume they are handled by parent or just static here for now */}
                     <button
                         onClick={() => setActiveTab('profile')}
                         className={`w-full flex items-center gap-4 px-6 py-4 rounded-[2rem] text-[10px] font-bold uppercase tracking-[0.3em] transition-all border ${activeTab === 'profile' ? 'bg-primary text-white border-transparent shadow-xl shadow-primary/20 scale-105' : 'text-muted-foreground bg-white/40 border-primary/10 hover:bg-white hover:text-foreground'}`}
@@ -119,7 +129,19 @@ export default function AdminSettings() {
                                 <User size={32} className="text-primary" />
                             </div>
                             <h3 className="text-xl font-serif font-bold text-foreground">Identity Shrine</h3>
-                            <p className="text-muted-foreground mt-2 font-medium">Personal manifestations coming in next cycle.</p>
+                            {adminUser ? (
+                                <div className="mt-6 space-y-2">
+                                    <div className="inline-block px-6 py-2 bg-primary/5 rounded-full border border-primary/10">
+                                        <p className="text-lg font-bold text-foreground tracking-wide">{adminUser.name || 'Admin User'}</p>
+                                    </div>
+                                    <p className="text-muted-foreground font-medium text-sm">{adminUser.email}</p>
+                                    <p className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] pt-2">
+                                        {adminUser.role === 'admin' ? 'Head Priest' : adminUser.role}
+                                    </p>
+                                </div>
+                            ) : (
+                                <p className="text-muted-foreground mt-2 font-medium">Personal manifestations coming in next cycle.</p>
+                            )}
                         </div>
                     )}
                     {activeTab === 'security' && (

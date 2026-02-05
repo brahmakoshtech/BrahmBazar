@@ -17,6 +17,8 @@ import { getFaqs } from '@/services/faqService';
 
 export default function Home() {
   const [products, setProducts] = useState([]);
+  const [newArrivals, setNewArrivals] = useState([]);
+  const [trendingProducts, setTrendingProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [visibleCount, setVisibleCount] = useState(10);
   const [activeCoupons, setActiveCoupons] = useState([]);
@@ -25,15 +27,19 @@ export default function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const [productsRes, couponsRes, faqsRes] = await Promise.all([
+        const [productsRes, couponsRes, faqsRes, newArrivalsRes, trendingRes] = await Promise.all([
           api.get('/api/products'),
           api.get('/api/coupons/active'),
-          getFaqs()
+          getFaqs(),
+          api.get('/api/products/new-arrival'),
+          api.get('/api/products/trending')
         ]);
         const sortedProducts = (productsRes.data || []).sort((a, b) =>
           new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
         );
         setProducts(sortedProducts);
+        setNewArrivals(newArrivalsRes.data || []);
+        setTrendingProducts(trendingRes.data || []);
         setActiveCoupons(couponsRes.data);
         setFaqs(faqsRes);
       } catch (error) {
@@ -82,18 +88,20 @@ export default function Home() {
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-4 lg:gap-5">
-              {products.slice(0, 6).map((product, idx) => (
+              {newArrivals.slice(0, 5).map((product, idx) => (
                 <motion.div
                   key={product._id}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.1, duration: 0.5 }}
                   viewport={{ once: true }}
-                  className={idx === 5 ? 'md:hidden lg:block' : ''}
                 >
                   <ProductCard product={product} activeCoupons={activeCoupons} />
                 </motion.div>
               ))}
+              {newArrivals.length === 0 && (
+                <div className="col-span-full text-center text-muted-foreground py-10">No new arrivals at the moment.</div>
+              )}
             </div>
           )}
 
@@ -107,6 +115,50 @@ export default function Home() {
               </span>
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* 3.2 Trending Section */}
+      <section className="py-16 bg-secondary/5 relative border-t border-primary/5">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="text-center mb-12">
+            <span className="text-secondary font-bold tracking-[0.2em] uppercase text-xs md:text-sm mb-3 block">
+              Curated Favorites
+            </span>
+            <h2 className="text-3xl md:text-4xl font-serif font-medium text-foreground mb-6">
+              Trending <span className="text-primary italic">Now</span>
+            </h2>
+            <div className="flex gap-2 items-center justify-center opacity-70">
+              <div className="h-px w-12 bg-primary"></div>
+              <span className="text-primary text-xl">❖</span>
+              <div className="h-px w-12 bg-primary"></div>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="animate-pulse bg-muted rounded-2xl h-64"></div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-4 lg:gap-5">
+              {trendingProducts.slice(0, 5).map((product, idx) => (
+                <motion.div
+                  key={product._id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1, duration: 0.5 }}
+                  viewport={{ once: true }}
+                >
+                  <ProductCard product={product} activeCoupons={activeCoupons} />
+                </motion.div>
+              ))}
+              {trendingProducts.length === 0 && (
+                <div className="col-span-full text-center text-muted-foreground py-10">Check back later for trending items.</div>
+              )}
+            </div>
+          )}
         </div>
       </section>
 

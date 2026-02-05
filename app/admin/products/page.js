@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import api from '@/services/api';
 import Link from 'next/link';
-import { Plus, Edit, Trash2 } from 'lucide-react';
+import { Plus, Edit, Trash2, Flame, Sparkles, Filter } from 'lucide-react';
 
 export default function AdminProducts() {
     const [products, setProducts] = useState([]);
@@ -13,6 +13,7 @@ export default function AdminProducts() {
     // Filter Logic
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("All");
+    const [filterType, setFilterType] = useState('All'); // 'All', 'Trending', 'NewArrival'
 
     const fetchData = async () => {
         try {
@@ -44,12 +45,42 @@ export default function AdminProducts() {
         }
     };
 
+    const toggleTrendingHandler = async (id) => {
+        const originalProducts = [...products];
+        // Optimistic update
+        setProducts(products.map(p => p._id === id ? { ...p, isTrending: !p.isTrending } : p));
+        try {
+            await api.put(`/api/products/${id}/trending`);
+        } catch (err) {
+            setProducts(originalProducts);
+            alert('Failed to update trending status');
+        }
+    };
+
+    const toggleNewArrivalHandler = async (id) => {
+        const originalProducts = [...products];
+        // Optimistic update
+        setProducts(products.map(p => p._id === id ? { ...p, isNewArrival: !p.isNewArrival } : p));
+        try {
+            await api.put(`/api/products/${id}/new-arrival`);
+        } catch (err) {
+            setProducts(originalProducts);
+            alert('Failed to update new arrival status');
+        }
+    };
+
     const [viewMode, setViewMode] = useState('list'); // 'list' or 'grid'
 
     // Compute Filtered Products
-    const filteredProducts = selectedCategory === "All"
-        ? products
-        : products.filter(p => p.category === selectedCategory);
+    const filteredProducts = products.filter(p => {
+        const categoryMatch = selectedCategory === "All" || p.category === selectedCategory;
+        const typeMatch = filterType === 'All'
+            ? true
+            : filterType === 'Trending'
+                ? p.isTrending
+                : p.isNewArrival;
+        return categoryMatch && typeMatch;
+    });
 
     if (loading) return (
         <div className="p-8 space-y-6 animate-pulse">
@@ -68,13 +99,35 @@ export default function AdminProducts() {
 
     return (
         <div className="p-4 md:p-8">
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-10">
+            <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 mb-10">
                 <div>
                     <h1 className="text-3xl font-serif font-bold text-foreground">Products Database</h1>
                     <p className="text-muted-foreground mt-2 font-medium">Manage your sacred inventory with devotion.</p>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4">
+                    {/* Type Filters */}
+                    <div className="flex bg-white/50 backdrop-blur-sm rounded-full p-1.5 border border-primary/10 shadow-sm">
+                        <button
+                            onClick={() => setFilterType('All')}
+                            className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${filterType === 'All' ? 'bg-foreground text-background shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
+                        >
+                            All
+                        </button>
+                        <button
+                            onClick={() => setFilterType('Trending')}
+                            className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-1 ${filterType === 'Trending' ? 'bg-orange-500 text-white shadow-md' : 'text-muted-foreground hover:text-orange-500'}`}
+                        >
+                            <Flame size={12} /> Trending
+                        </button>
+                        <button
+                            onClick={() => setFilterType('NewArrival')}
+                            className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-1 ${filterType === 'NewArrival' ? 'bg-blue-500 text-white shadow-md' : 'text-muted-foreground hover:text-blue-500'}`}
+                        >
+                            <Sparkles size={12} /> New
+                        </button>
+                    </div>
+
                     {/* Category Filter */}
                     <div className="relative">
                         <select
@@ -129,8 +182,7 @@ export default function AdminProducts() {
                                     <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Visual</th>
                                     <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Product Name</th>
                                     <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Offering</th>
-                                    <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Spectrum</th>
-                                    <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Essence</th>
+                                    <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Status</th>
                                     <th className="px-8 py-5 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Actions</th>
                                 </tr>
                             </thead>
@@ -149,17 +201,37 @@ export default function AdminProducts() {
                                         </td>
                                         <td className="px-8 py-4 text-sm text-foreground font-bold leading-tight">
                                             {product.title}
-                                        </td>
-                                        <td className="px-8 py-4 text-sm text-primary font-serif font-bold italic">
-                                            ₹{product.price?.toLocaleString('en-IN')}
+                                            <div className="flex gap-2 mt-1">
+                                                <span className="bg-secondary/10 text-secondary px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest border border-secondary/20">
+                                                    {product.category}
+                                                </span>
+                                            </div>
                                         </td>
                                         <td className="px-8 py-4">
-                                            <span className="bg-secondary/10 text-secondary px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border border-secondary/20">
-                                                {product.category}
+                                            <span className="text-primary font-serif font-bold italic block">
+                                                ₹{product.price?.toLocaleString('en-IN')}
+                                            </span>
+                                            <span className="text-[10px] text-muted-foreground font-bold">
+                                                {product.stock} Units
                                             </span>
                                         </td>
-                                        <td className="px-8 py-4 text-xs font-bold text-muted-foreground">
-                                            {product.stock} Units
+                                        <td className="px-8 py-4">
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={() => toggleTrendingHandler(product._id)}
+                                                    className={`p-2 rounded-full transition-all border ${product.isTrending ? 'bg-orange-500 text-white border-orange-500 shadow-orange-500/20 shadow-lg' : 'bg-gray-100 text-gray-400 border-transparent hover:bg-orange-100/50 hover:text-orange-400'}`}
+                                                    title="Toggle Trending"
+                                                >
+                                                    <Flame size={14} />
+                                                </button>
+                                                <button
+                                                    onClick={() => toggleNewArrivalHandler(product._id)}
+                                                    className={`p-2 rounded-full transition-all border ${product.isNewArrival ? 'bg-blue-500 text-white border-blue-500 shadow-blue-500/20 shadow-lg' : 'bg-gray-100 text-gray-400 border-transparent hover:bg-blue-100/50 hover:text-blue-400'}`}
+                                                    title="Toggle New Arrival"
+                                                >
+                                                    <Sparkles size={14} />
+                                                </button>
+                                            </div>
                                         </td>
                                         <td className="px-8 py-4 text-sm flex gap-3">
                                             <Link href={`/admin/products/${product._id}/edit`} className="p-2.5 bg-foreground/5 rounded-full text-muted-foreground hover:text-white hover:bg-foreground transition-all">
@@ -177,7 +249,7 @@ export default function AdminProducts() {
                                 {filteredProducts.length === 0 && (
                                     <tr>
                                         <td colSpan="6" className="px-6 py-12 text-center text-gray-500">
-                                            No products found in this category.
+                                            No products found matching your filters.
                                         </td>
                                     </tr>
                                 )}
@@ -196,6 +268,13 @@ export default function AdminProducts() {
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs uppercase font-bold tracking-widest">No Image</div>
                                 )}
+
+                                {/* Status Badges */}
+                                <div className="absolute top-3 left-3 flex gap-1">
+                                    {product.isTrending && <div className="p-1.5 bg-orange-500/90 text-white rounded-full shadow-lg backdrop-blur-sm"><Flame size={12} /></div>}
+                                    {product.isNewArrival && <div className="p-1.5 bg-blue-500/90 text-white rounded-full shadow-lg backdrop-blur-sm"><Sparkles size={12} /></div>}
+                                </div>
+
                                 <div className="absolute top-3 right-3 flex flex-col gap-2 translate-x-12 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
                                     <Link href={`/admin/products/${product._id}/edit`} className="p-3 bg-white/95 backdrop-blur rounded-full text-foreground hover:bg-foreground hover:text-background transition-all shadow-xl">
                                         <Edit size={16} />
@@ -220,8 +299,23 @@ export default function AdminProducts() {
                                 </div>
                                 <h3 className="text-foreground font-serif font-bold text-sm leading-tight mb-4 line-clamp-2 h-10">{product.title}</h3>
                                 <div className="mt-auto pt-4 border-t border-primary/10 flex justify-between items-center">
-                                    <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Units: {product.stock}</span>
-                                    <div className={`w-2 h-2 rounded-full ${product.stock > 0 ? 'bg-green-500' : 'bg-red-500'}`} />
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => toggleTrendingHandler(product._id)}
+                                            className={`p-1.5 rounded-full transition-all border ${product.isTrending ? 'bg-orange-500 text-white border-orange-500' : 'bg-gray-100 text-gray-400 border-transparent hover:text-orange-400'}`}
+                                            title="Toggle Trending"
+                                        >
+                                            <Flame size={12} />
+                                        </button>
+                                        <button
+                                            onClick={() => toggleNewArrivalHandler(product._id)}
+                                            className={`p-1.5 rounded-full transition-all border ${product.isNewArrival ? 'bg-blue-500 text-white border-blue-500' : 'bg-gray-100 text-gray-400 border-transparent hover:text-blue-400'}`}
+                                            title="Toggle New Arrival"
+                                        >
+                                            <Sparkles size={12} />
+                                        </button>
+                                    </div>
+                                    <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">{product.stock} Units</span>
                                 </div>
                             </div>
                         </div>
