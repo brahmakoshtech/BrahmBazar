@@ -14,6 +14,7 @@ import { ArrowRight } from 'lucide-react';
 import ReelsSection from '@/components/ReelsSection';
 import FaqAccordion from '@/components/FaqAccordion';
 import { getFaqs } from '@/services/faqService';
+// Force deployment update
 
 export default function Home() {
   const [products, setProducts] = useState([]);
