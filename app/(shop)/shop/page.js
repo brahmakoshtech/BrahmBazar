@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import api from '@/services/api';
 import ProductCard from '@/components/ProductCard';
 import { ChevronDown, Filter, X, Minus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function ShopPage() {
+function ShopContent() {
     const searchParams = useSearchParams();
     const keyword = searchParams.get('keyword') || '';
     const initialSort = searchParams.get('sort') || 'newest';
@@ -446,5 +446,13 @@ export default function ShopPage() {
                 )}
             </AnimatePresence >
         </div >
+    );
+}
+
+export default function ShopPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-primary"></div></div>}>
+            <ShopContent />
+        </Suspense>
     );
 }

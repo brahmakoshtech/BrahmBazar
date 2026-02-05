@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect, use, useMemo } from 'react';
+import { useState, useEffect, use, useMemo, Suspense } from 'react';
 import api from '@/services/api';
 import ProductCard from '@/components/ProductCard';
 import { useSearchParams } from 'next/navigation';
 import { Filter, ChevronDown, X, Minus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function CategoryPage({ params }) {
+function CategoryContent({ params }) {
     const { slug } = use(params);
     const [allProducts, setAllProducts] = useState([]); // Store all fetched products
     const [filteredProducts, setFilteredProducts] = useState([]); // Store filtered result
@@ -507,5 +507,13 @@ export default function CategoryPage({ params }) {
                 )}
             </AnimatePresence>
         </main>
+    );
+}
+
+export default function CategoryPage({ params }) {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-black text-primary">Loading...</div>}>
+            <CategoryContent params={params} />
+        </Suspense>
     );
 }
