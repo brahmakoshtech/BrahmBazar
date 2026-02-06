@@ -36,11 +36,13 @@ export default function Navbar() {
    const [categories, setCategories] = useState([]);
    const { cartCount, wishlistCount } = useCart();
    const [isMobileSearching, setIsMobileSearching] = useState(false);
+   const [mounted, setMounted] = useState(false);
 
    // Fetch Navbar content
    const { getContent, loading } = useContent('navbar');
 
    useEffect(() => {
+      setMounted(true);
       const handleScroll = () => {
          setIsSticky(window.scrollY > 100);
       };
@@ -207,7 +209,7 @@ export default function Navbar() {
                      <Link href="/wishlist" className="hidden md:flex flex-col items-center group relative text-muted-foreground hover:text-primary transition-colors">
                         <div className="relative p-1">
                            <Heart size={22} className="group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
-                           {wishlistCount > 0 && (
+                           {mounted && wishlistCount > 0 && (
                               <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold h-4 w-4 flex items-center justify-center rounded-full animate-in fade-in zoom-in">{wishlistCount}</span>
                            )}
                         </div>
@@ -225,7 +227,7 @@ export default function Navbar() {
                         <Link href="/cart" className="flex flex-col items-center group relative text-foreground transition-colors">
                            <div className="relative p-1.5 bg-muted rounded-full group-hover:bg-primary/20 transition-colors duration-300 border border-border group-hover:border-primary/30">
                               <ShoppingCart size={18} className="text-foreground group-hover:text-primary transition-colors duration-300" strokeWidth={1.5} />
-                              {cartCount > 0 && (
+                              {mounted && cartCount > 0 && (
                                  <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold h-4 w-4 flex items-center justify-center rounded-full shadow-md animate-in fade-in zoom-in">{cartCount}</span>
                               )}
                            </div>

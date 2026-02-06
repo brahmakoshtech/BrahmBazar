@@ -58,10 +58,10 @@ export default function Home() {
     <main className="min-h-screen bg-background overflow-hidden relative">
       {/* 1. Hero Section */}
       <HeroSection />
-      <FeaturedSection activeCoupons={activeCoupons} />
-
       {/* 2. Trust Strip */}
       <TrustStrip />
+
+      <FeaturedSection activeCoupons={activeCoupons} />
 
       {/* 3. Category Showcase */}
       <CategoryShowcase />
