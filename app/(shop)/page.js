@@ -66,7 +66,62 @@ export default function Home() {
       {/* 3. Category Showcase */}
       <CategoryShowcase />
 
-      {/* 3.1 New Arrivals Section */}
+      {/* 3.1 Trending Section */}
+      <section className="py-16 bg-secondary/5 relative border-t border-primary/5">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="text-center mb-12">
+            <span className="text-secondary font-bold tracking-[0.2em] uppercase text-xs md:text-sm mb-3 block">
+              Curated Favorites
+            </span>
+            <h2 className="text-3xl md:text-4xl font-serif font-medium text-foreground mb-6">
+              Trending <span className="text-primary italic">Now</span>
+            </h2>
+            <div className="flex gap-2 items-center justify-center opacity-70">
+              <div className="h-px w-12 bg-primary"></div>
+              <span className="text-primary text-xl">❖</span>
+              <div className="h-px w-12 bg-primary"></div>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="animate-pulse bg-muted rounded-2xl h-64"></div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-4 lg:gap-5">
+              {trendingProducts.slice(0, 5).map((product, idx) => (
+                <motion.div
+                  key={product._id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1, duration: 0.5 }}
+                  viewport={{ once: true }}
+                >
+                  <ProductCard product={product} activeCoupons={activeCoupons} />
+                </motion.div>
+              ))}
+              {trendingProducts.length === 0 && (
+                <div className="col-span-full text-center text-muted-foreground py-10">Check back later for trending items.</div>
+              )}
+            </div>
+          )}
+
+          <div className="mt-12 text-center">
+            <Link
+              href="/shop?sort=trending"
+              className="group relative px-8 py-3 bg-transparent border border-primary/40 rounded-full text-foreground font-serif tracking-wide hover:border-primary hover:bg-primary/5 transition-all duration-300 inline-block"
+            >
+              <span className="flex items-center gap-2">
+                View All Trending <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 3.2 New Arrivals Section */}
       <section className="py-16 bg-background relative border-t border-primary/5">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center mb-12">
@@ -121,60 +176,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3.2 Trending Section */}
-      <section className="py-16 bg-secondary/5 relative border-t border-primary/5">
-        <div className="container mx-auto px-4 max-w-7xl">
-          <div className="text-center mb-12">
-            <span className="text-secondary font-bold tracking-[0.2em] uppercase text-xs md:text-sm mb-3 block">
-              Curated Favorites
-            </span>
-            <h2 className="text-3xl md:text-4xl font-serif font-medium text-foreground mb-6">
-              Trending <span className="text-primary italic">Now</span>
-            </h2>
-            <div className="flex gap-2 items-center justify-center opacity-70">
-              <div className="h-px w-12 bg-primary"></div>
-              <span className="text-primary text-xl">❖</span>
-              <div className="h-px w-12 bg-primary"></div>
-            </div>
-          </div>
 
-          {loading ? (
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="animate-pulse bg-muted rounded-2xl h-64"></div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-4 lg:gap-5">
-              {trendingProducts.slice(0, 5).map((product, idx) => (
-                <motion.div
-                  key={product._id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.1, duration: 0.5 }}
-                  viewport={{ once: true }}
-                >
-                  <ProductCard product={product} activeCoupons={activeCoupons} />
-                </motion.div>
-              ))}
-              {trendingProducts.length === 0 && (
-                <div className="col-span-full text-center text-muted-foreground py-10">Check back later for trending items.</div>
-              )}
-            </div>
-          )}
-
-          <div className="mt-12 text-center">
-            <Link
-              href="/shop?sort=trending"
-              className="group relative px-8 py-3 bg-transparent border border-primary/40 rounded-full text-foreground font-serif tracking-wide hover:border-primary hover:bg-primary/5 transition-all duration-300 inline-block"
-            >
-              <span className="flex items-center gap-2">
-                View All Trending <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-              </span>
-            </Link>
-          </div>
-        </div>
-      </section>
 
       {/* 3.5 Secondary Banner Section */}
       <SecondaryBanners />
