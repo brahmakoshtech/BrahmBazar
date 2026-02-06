@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Package, Grid, ClipboardList, Users, TicketPercent, Image, Video, MessageSquare, Palette, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, Grid, ClipboardList, Users, TicketPercent, Image, Video, MessageSquare, Palette, Settings, LogOut, Leaf } from 'lucide-react';
 
 export default function AdminSidebar() {
     const pathname = usePathname();
@@ -14,6 +14,7 @@ export default function AdminSidebar() {
         { name: 'Users', href: '/admin/users', icon: <Users size={20} /> },
         { name: 'Coupons', href: '/admin/coupons', icon: <TicketPercent size={20} /> },
         { name: 'Banners', href: '/admin/banners', icon: <Image size={20} /> },
+        { name: 'Remedies', href: '/admin/remedies', icon: <Leaf size={20} /> },
         { name: 'Reels Manager', href: '/admin/reels', icon: <Video size={20} /> },
         { name: 'FAQs', href: '/admin/faqs', icon: <MessageSquare size={20} /> },
         { name: 'Contacts', href: '/admin/contacts', icon: <Users size={20} /> },
@@ -38,6 +39,34 @@ export default function AdminSidebar() {
             {/* Navigation */}
             <nav className="flex-1 py-6 space-y-1 px-3">
                 {links.map((link) => {
+                    if (link.submenu) {
+                        const isParentActive = link.submenu.some(sub => pathname.startsWith(sub.href));
+                        return (
+                            <div key={link.name} className="flex flex-col gap-1 mb-1">
+                                <div className={`flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${isParentActive ? 'text-primary' : 'text-[#E6DCC3]/60'}`}>
+                                    <span className={isParentActive ? 'text-primary' : 'text-primary/70'}>{link.icon}</span>
+                                    {link.name}
+                                </div>
+                                <div className="pl-4 flex flex-col gap-1">
+                                    {link.submenu.map(sub => {
+                                        const isSubActive = pathname === sub.href;
+                                        return (
+                                            <Link
+                                                key={sub.name}
+                                                href={sub.href}
+                                                className={`flex items-center gap-3 px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${isSubActive
+                                                    ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                                                    : 'text-[#E6DCC3]/60 hover:bg-white/5 hover:text-white'
+                                                    }`}
+                                            >
+                                                {sub.name}
+                                            </Link>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        );
+                    }
                     const isActive = pathname.startsWith(link.href);
                     return (
                         <Link
