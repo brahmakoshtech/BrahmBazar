@@ -191,6 +191,14 @@ export default function ProductDetailsPage({ params }) {
     };
 
     const addToCart = async (redirect = false) => {
+        // Check authentication
+        const userInfo = localStorage.getItem('userInfo');
+        if (!userInfo) {
+            const currentPath = window.location.pathname;
+            router.push(`/login?redirect=${encodeURIComponent(currentPath)}`);
+            return;
+        }
+
         setAdding(true);
         try {
             await api.post('/api/cart', { productId: product._id, quantity });

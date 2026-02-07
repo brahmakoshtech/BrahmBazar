@@ -75,7 +75,7 @@ export default function ProductCard({ product, activeCoupons = [] }) {
                 {/* Status Badges */}
                 <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
                     {product.isTrending && (
-                        <span className="bg-orange-500/90 text-white backdrop-blur-md text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-widest shadow-md flex items-center gap-1">
+                        <span className="bg-orange-500/90 text-white backdrop-blur-md text-[8px] md:text-[9px] font-bold px-1.5 py-0.5 md:px-2 md:py-1 rounded-md uppercase tracking-widest shadow-md flex items-center gap-1">
                             <Flame size={10} className="fill-white" /> Trending
                         </span>
                     )}
@@ -123,10 +123,10 @@ export default function ProductCard({ product, activeCoupons = [] }) {
                             console.error('Wishlist error', error);
                         }
                     }}
-                    className="absolute top-3 right-3 z-20 bg-white/80 backdrop-blur-md p-2 rounded-full text-foreground/70 hover:text-red-500 hover:bg-white transition-all transform hover:scale-110 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 duration-300 shadow-sm"
+                    className="absolute top-3 right-3 z-20 bg-white/80 backdrop-blur-md p-1.5 md:p-2 rounded-full text-foreground/70 hover:text-red-500 hover:bg-white transition-all transform hover:scale-110 opacity-100 md:opacity-0 md:group-hover:opacity-100 translate-x-0 md:translate-x-2 md:group-hover:translate-x-0 duration-300 shadow-sm"
                     title="Add to Wishlist"
                 >
-                    <Heart size={16} />
+                    <Heart className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 </button>
 
             </Link>
