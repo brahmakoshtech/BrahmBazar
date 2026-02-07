@@ -82,6 +82,11 @@ export default function BannersPage() {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            if (file.size > 5 * 1024 * 1024) {
+                toastError("Required 5MB or less to upload");
+                e.target.value = null;
+                return;
+            }
             setSelectedFile(file);
             setPreviewUrl(URL.createObjectURL(file));
         }

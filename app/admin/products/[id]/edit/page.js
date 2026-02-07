@@ -58,6 +58,15 @@ export default function EditProductPage({ params }) {
     };
 
     const handleFileChange = (e) => {
+        const selectedFiles = Array.from(e.target.files);
+        const oversizedFiles = selectedFiles.filter(file => file.size > 5 * 1024 * 1024);
+
+        if (oversizedFiles.length > 0) {
+            alert("Required 5MB or less to upload");
+            e.target.value = null;
+            return;
+        }
+
         setFiles(e.target.files);
     };
 

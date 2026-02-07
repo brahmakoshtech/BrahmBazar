@@ -30,8 +30,9 @@ export default function ReelsManager() {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            if (file.size > 20 * 1024 * 1024) {
-                toast.error('File too large > 20MB');
+            if (file.size > 5 * 1024 * 1024) {
+                toast.error('Required 5MB or less to upload');
+                e.target.value = null;
                 return;
             }
             if (!file.type.startsWith('video/')) {
@@ -110,7 +111,7 @@ export default function ReelsManager() {
                         />
                     </div>
                     <div className="flex-1 w-full relative">
-                        <label className="block text-sm font-bold text-gray-600 mb-1">Video File (MP4/WebM, Max 20MB)</label>
+                        <label className="block text-sm font-bold text-gray-600 mb-1">Video File (MP4/WebM, Max 5MB)</label>
                         <input
                             type="file"
                             accept="video/mp4,video/webm"

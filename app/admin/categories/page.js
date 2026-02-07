@@ -293,7 +293,17 @@ export default function CategoriesPage() {
                                     accept="image/*"
                                     className="hidden"
                                     id="category-image-upload"
-                                    onChange={(e) => e.target.files[0] && setFormData({ ...formData, image: e.target.files[0] })}
+                                    onChange={(e) => {
+                                        const file = e.target.files[0];
+                                        if (file) {
+                                            if (file.size > 5 * 1024 * 1024) {
+                                                toastError("Required 5MB or less to upload");
+                                                e.target.value = null;
+                                                return;
+                                            }
+                                            setFormData({ ...formData, image: file });
+                                        }
+                                    }}
                                 />
                                 <label
                                     htmlFor="category-image-upload"
@@ -448,9 +458,8 @@ export default function CategoriesPage() {
                         {!showAddSubForm ? (
                             <Button
                                 type="button"
-                                variant="outline"
                                 onClick={() => setShowAddSubForm(true)}
-                                className="w-full flex items-center justify-center gap-3 border-dashed border-primary/20 hover:border-primary hover:text-primary transition-all text-muted-foreground py-6 rounded-[2rem] font-bold text-[10px] uppercase tracking-widest"
+                                className="w-full flex items-center justify-center gap-3 border border-dashed border-primary text-primary bg-primary/5 hover:bg-primary/10 transition-all py-6 rounded-[2rem] font-bold text-[10px] uppercase tracking-widest"
                             >
                                 <Plus size={16} /> Establish New Branch
                             </Button>
