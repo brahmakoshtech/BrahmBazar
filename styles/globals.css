@@ -111,3 +111,22 @@ h6 {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  #invoice-print,
+  #invoice-print * {
+    visibility: visible !important;
+  }
+
+  #invoice-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: white;
+  }
+}

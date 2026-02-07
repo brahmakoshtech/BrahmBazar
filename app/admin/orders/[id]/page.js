@@ -254,80 +254,185 @@ export default function OrderDetailsPage({ params }) {
                 </div>
 
                 {/* Invoice Section */}
-                <div className="bg-white p-8 rounded-2xl shadow-lg border border-primary/10 lg:col-span-3 space-y-6 print:shadow-none print:border-none print:w-full">
-                    <div className="flex justify-between items-start border-b border-primary/10 pb-6 print:border-black">
-                        <div>
-                            <h2 className="text-2xl font-serif font-bold text-foreground">INVOICE</h2>
-                            <p className="text-muted-foreground text-xs uppercase tracking-widest mt-1">Order #{order._id}</p>
+                {/* Invoice Section - Amazon Style */}
+                <div id="invoice-print" className="bg-white p-8 rounded-2xl shadow-lg border border-primary/10 lg:col-span-3 space-y-6 print:shadow-none print:border-none print:w-full print:p-0 font-sans text-black">
+                    {/* Header: Company Info & Title */}
+                    <div className="flex justify-between items-start border-b-2 border-black pb-4 mb-6">
+                        <div className="flex flex-col gap-1">
+                            {/* Logo Placeholder or Text */}
+                            <div className="flex items-center gap-2 mb-2">
+                                {/* Ideally use Image component but plain img is safer for print */}
+                                <img src="/images/Brahmokosh.png" alt="Logo" className="h-10 object-contain" />
+                                <span className="text-xl font-bold uppercase tracking-wider">Brahmakosh</span>
+                            </div>
+                            <p className="text-xs font-bold">Sold By:</p>
+                            <p className="text-sm font-semibold">Brahmakosh Pvt Ltd.</p>
+                            {/* Placeholder for Company Address if missing */}
+                            <p className="text-xs">123, Spiritual Path, Varanasi, India</p>
+                            <p className="text-xs">GSTIN: *******</p>
+                            <p className="text-xs">PAN: *******</p>
                         </div>
                         <div className="text-right">
+                            <h2 className="text-2xl font-bold uppercase mb-2">Tax Invoice</h2>
+                            <div className="text-sm space-y-1">
+                                <p><span className="font-bold">Original for Recipient</span></p>
+                                <p>Invoice #: <span className="font-medium">{order.invoiceNumber ? order.invoiceNumber : "*******"}</span></p>
+                                <p>Order ID: <span className="font-medium">{order._id}</span></p>
+                                <p>Date: <span className="font-medium">{new Date(order.createdAt).toLocaleDateString('en-IN')}</span></p>
+                            </div>
+                            {/* Print Button (Hidden in Print) */}
                             <button
                                 onClick={() => window.print()}
-                                className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all print:hidden"
+                                className="mt-4 flex items-center justify-end gap-2 text-blue-600 hover:text-blue-800 text-xs font-bold uppercase tracking-widest print:hidden ml-auto"
                             >
-                                <Printer size={16} /> Print Invoice
+                                <Printer size={16} /> Print
                             </button>
-                            <p className="text-sm font-bold mt-2 text-foreground/80 print:block hidden">Date: {new Date(order.createdAt).toLocaleDateString()}</p>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-8 text-sm">
+                    {/* Bill To / Ship To Grid */}
+                    <div className="grid grid-cols-2 gap-8 mb-6 border-b border-gray-300 pb-6">
                         <div>
-                            <h3 className="font-bold text-xs uppercase tracking-widest text-muted-foreground mb-2">Billed To</h3>
-                            <p className="font-bold text-foreground text-base">{order.user?.name || 'Guest'}</p>
-                            <p className="text-muted-foreground">{order.user?.email}</p>
-                            <p className="text-muted-foreground">{order.shippingAddress?.phone}</p>
+                            <h3 className="font-bold text-sm uppercase mb-2 text-gray-700">Billing Address</h3>
+                            <div className="text-sm space-y-0.5">
+                                <p className="font-bold">{order.user?.name || "*******"}</p>
+                                {/* Fallback to shipping address content if billing separate logic doesn't exist, or ******* */}
+                                <p>{order.shippingAddress?.address || "*******"}</p>
+                                <p>{order.shippingAddress?.city || "*******"}, {order.shippingAddress?.postalCode || "*******"}</p>
+                                <p>{order.shippingAddress?.country || "*******"}</p>
+                                <p>Phone: {order.shippingAddress?.phone || "*******"}</p>
+                            </div>
                         </div>
                         <div className="text-right">
-                            <h3 className="font-bold text-xs uppercase tracking-widest text-muted-foreground mb-2">Shipped To</h3>
-                            <p className="text-foreground">{order.shippingAddress?.fullName}</p>
-                            <p className="text-muted-foreground">{order.shippingAddress?.address}</p>
-                            <p className="text-muted-foreground">
-                                {order.shippingAddress?.city}, {order.shippingAddress?.postalCode}
-                            </p>
-                            <p className="text-muted-foreground">{order.shippingAddress?.country}</p>
+                            <h3 className="font-bold text-sm uppercase mb-2 text-gray-700">Shipping Address</h3>
+                            <div className="text-sm space-y-0.5">
+                                <p className="font-bold">{order.shippingAddress?.fullName || order.user?.name || "*******"}</p>
+                                <p>{order.shippingAddress?.address || "*******"}</p>
+                                {/* Line 2 Placeholder check */}
+                                <p>{order.shippingAddress?.addressLine2 || "*******"}</p>
+                                <p>{order.shippingAddress?.city || "*******"}, {order.shippingAddress?.postalCode || "*******"}</p>
+                                <p>{order.shippingAddress?.country || "*******"}</p>
+                                <p>Phone: {order.shippingAddress?.phone || "*******"}</p>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="mt-8">
-                        <table className="w-full text-sm text-left">
-                            <thead className="bg-primary/5 text-xs uppercase text-muted-foreground font-bold tracking-widest">
+                    {/* Items Table - Amazon Formatting */}
+                    <div className="mb-6">
+                        <table className="w-full text-sm border-collapse border border-gray-300">
+                            <thead className="bg-gray-100 text-xs uppercase font-bold text-gray-700">
                                 <tr>
-                                    <th className="px-4 py-3 rounded-l-lg">Item</th>
-                                    <th className="px-4 py-3 text-center">Qty</th>
-                                    <th className="px-4 py-3 text-right">Price</th>
-                                    <th className="px-4 py-3 text-right rounded-r-lg">Total</th>
+                                    <th className="border border-gray-300 p-2 text-left w-10">#</th>
+                                    <th className="border border-gray-300 p-2 text-left">Description</th>
+                                    <th className="border border-gray-300 p-2 text-center w-20">HSN</th>
+                                    <th className="border border-gray-300 p-2 text-center w-16">Qty</th>
+                                    <th className="border border-gray-300 p-2 text-right w-24">Unit Price</th>
+                                    <th className="border border-gray-300 p-2 text-right w-20">Tax Rate</th>
+                                    <th className="border border-gray-300 p-2 text-right w-24">Tax Type</th>
+                                    <th className="border border-gray-300 p-2 text-right w-24">Tax Amount</th>
+                                    <th className="border border-gray-300 p-2 text-right w-28">Total</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-primary/5">
-                                {order.products.map((item, idx) => (
-                                    <tr key={idx}>
-                                        <td className="px-4 py-3 font-medium text-foreground">{item.title}</td>
-                                        <td className="px-4 py-3 text-center text-muted-foreground">{item.quantity}</td>
-                                        <td className="px-4 py-3 text-right text-muted-foreground">₹{item.price?.toLocaleString()}</td>
-                                        <td className="px-4 py-3 text-right font-bold text-foreground">₹{(item.price * item.quantity)?.toLocaleString()}</td>
-                                    </tr>
-                                ))}
+                            <tbody className="text-xs">
+                                {(() => {
+                                    // REVERSE CALCULATE TAX for the entire order
+                                    // Schema doesn't have taxAmount, so we derive it:
+                                    // Tax = Final - Total + Discount (assuming Free Shipping as per user)
+                                    // Note: order.totalAmount is the sum of item prices (Subtotal)
+
+                                    const subtotal = order.totalAmount || 0;
+                                    const discount = order.discountAmount || 0;
+                                    const final = order.finalAmount || 0;
+                                    const totalTax = Math.max(0, final - subtotal + discount);
+
+                                    return order.products.map((item, idx) => {
+                                        // Per Item Calculation
+                                        const itemBaseTotal = item.price * item.quantity;
+                                        // Distribute tax proportionally based on item's share of subtotal
+                                        const itemTax = subtotal > 0 ? (itemBaseTotal / subtotal) * totalTax : 0;
+                                        const rowTotal = itemBaseTotal + itemTax;
+
+                                        return (
+                                            <tr key={idx}>
+                                                <td className="border border-gray-300 p-2 text-center">{idx + 1}</td>
+                                                <td className="border border-gray-300 p-2 font-medium">
+                                                    {item.title}
+                                                    <div className="text-[10px] text-gray-500 italic mt-0.5">
+                                                        SKU: {item.sku || "*******"}
+                                                    </div>
+                                                </td>
+                                                <td className="border border-gray-300 p-2 text-center">{item.hsn || "*******"}</td>
+                                                <td className="border border-gray-300 p-2 text-center font-bold">{item.quantity}</td>
+                                                <td className="border border-gray-300 p-2 text-right">₹{item.price?.toLocaleString()}</td>
+
+                                                {/* Tax Columns */}
+                                                <td className="border border-gray-300 p-2 text-right">
+                                                    {totalTax > 0 ? "18%" : "*******"}
+                                                </td>
+                                                <td className="border border-gray-300 p-2 text-right">IGST</td>
+                                                <td className="border border-gray-300 p-2 text-right">
+                                                    {totalTax > 0 ? `₹${Math.round(itemTax).toLocaleString()}` : "*******"}
+                                                </td>
+                                                <td className="border border-gray-300 p-2 text-right font-bold">
+                                                    {totalTax > 0 ? `₹${Math.round(rowTotal).toLocaleString()}` : `₹${itemBaseTotal.toLocaleString()}`}
+                                                </td>
+                                            </tr>
+                                        );
+                                    });
+                                })()}
                             </tbody>
                         </table>
                     </div>
 
-                    <div className="flex justify-end pt-4 border-t border-primary/10 print:border-black">
-                        <div className="w-full md:w-1/3 space-y-2">
-                            <div className="flex justify-between text-sm text-muted-foreground">
-                                <span>Subtotal</span>
-                                <span>₹{(order.finalAmount - (order.taxAmount || 0) + (order.discountAmount || 0))?.toLocaleString()}</span>
-                            </div>
+                    {/* Totals Section */}
+                    {(() => {
+                        const subtotal = order.totalAmount || 0;
+                        const discount = order.discountAmount || 0;
+                        const final = order.finalAmount || 0;
+                        const totalTax = Math.max(0, final - subtotal + discount);
 
-                            {/* Simple Logic for now based on what we have */}
-                            <div className="flex justify-between text-sm text-muted-foreground">
-                                <span>Total</span>
-                                <span className="font-bold text-foreground text-lg">₹{order.finalAmount?.toLocaleString()}</span>
+                        return (
+                            <div className="flex justify-end mb-12">
+                                <div className="w-1/3 border border-gray-300 rounded-sm">
+                                    <div className="flex justify-between p-2 border-b border-gray-300 text-sm">
+                                        <span>Subtotal:</span>
+                                        <span>₹{subtotal.toLocaleString()}</span>
+                                    </div>
+                                    <div className="flex justify-between p-2 border-b border-gray-300 text-sm bg-gray-50">
+                                        <span>GST ({totalTax > 0 ? "18%" : "*******"}):</span>
+                                        <span>{totalTax > 0 ? `₹${totalTax.toLocaleString()}` : "*******"}</span>
+                                    </div>
+                                    <div className="flex justify-between p-2 border-b border-gray-300 text-sm">
+                                        <span>Shipping:</span>
+                                        <span>Free</span>
+                                    </div>
+                                    <div className="flex justify-between p-2 text-base font-bold bg-gray-100">
+                                        <span>Grand Total:</span>
+                                        <span>₹{final.toLocaleString()}</span>
+                                    </div>
+                                    <div className="text-xs text-right p-2 text-gray-500 italic">
+                                        Amount in words: *******
+                                    </div>
+                                </div>
                             </div>
-                            <div className="flex justify-between text-xs text-muted-foreground mt-4 pt-4 border-t border-dashed border-primary/20">
-                                <span className="uppercase tracking-widest">Payment Status</span>
-                                <span className={`font-bold ${order.paymentStatus === 'Paid' ? 'text-green-600' : 'text-red-500'}`}>{order.paymentStatus}</span>
-                            </div>
+                        );
+                    })()}
+
+                    {/* Footer / Signature */}
+                    <div className="flex justify-between items-end mt-auto pt-8 border-t-2 border-black">
+                        <div className="text-xs text-gray-500 max-w-md">
+                            <p className="font-bold mb-1">Terms & Conditions:</p>
+                            <ul className="list-disc list-inside space-y-0.5">
+                                <li>Goods once sold will not be taken back.</li>
+                                <li>Subject to Varanasi jurisdiction only.</li>
+                                <li>This is a computer generated invoice.</li>
+                            </ul>
+                        </div>
+                        <div className="text-center">
+                            <p className="text-sm font-bold mb-8">For Brahmakosh Pvt Ltd.</p>
+                            {/* Signature Placeholder */}
+                            <div className="text-lg font-bold tracking-widest my-2">*******</div>
+                            <p className="text-xs uppercase border-t border-gray-400 pt-1 mt-1">Authorized Signatory</p>
                         </div>
                     </div>
                 </div>

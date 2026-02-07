@@ -59,7 +59,9 @@ export default function AdminLayout({ children }) {
 
     return (
         <div className="flex min-h-screen bg-transparent font-sans text-foreground">
-            <AdminSidebar />
+            <div className="no-print">
+                <AdminSidebar />
+            </div>
             <div className="flex-1 ml-64 min-h-screen">
                 <main className="p-8 md:p-12 max-w-7xl mx-auto">
                     {children}
