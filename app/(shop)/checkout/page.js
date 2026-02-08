@@ -737,7 +737,7 @@ export default function CheckoutPage() {
                             </div>
 
                             <div className="space-y-3">
-                                <label className={`relative flex items-center p-4 border rounded-xl cursor-pointer transition-all duration-300 group ${formData.paymentMethod === 'COD' ? 'border-primary bg-primary/5' : 'border-primary/10 hover:border-primary/30 hover:bg-white/40'}`}>
+                                {/* <label className={`relative flex items-center p-4 border rounded-xl cursor-pointer transition-all duration-300 group ${formData.paymentMethod === 'COD' ? 'border-primary bg-primary/5' : 'border-primary/10 hover:border-primary/30 hover:bg-white/40'}`}>
                                     <input
                                         type="radio"
                                         name="paymentMethod"
@@ -745,13 +745,13 @@ export default function CheckoutPage() {
                                         checked={formData.paymentMethod === 'COD'}
                                         onChange={handleInputChange}
                                         className="w-4 h-4 accent-primary"
-                                    />
+                                    /> 
                                     <div className="ml-4 flex-1">
                                         <span className={`block font-bold text-base ${formData.paymentMethod === 'COD' ? 'text-secondary' : 'text-foreground'}`}>Cash on Delivery</span>
                                         <span className="block text-xs text-muted-foreground mt-0.5">Pay when your sacred order arrives.</span>
                                     </div>
                                     <Truck size={20} className={`${formData.paymentMethod === 'COD' ? 'text-secondary' : 'text-muted-foreground opacity-40'}`} />
-                                </label>
+                                </label> */}
 
                                 <label className={`relative flex items-center p-4 border rounded-xl cursor-pointer transition-all duration-300 group ${formData.paymentMethod === 'Card' ? 'border-primary bg-primary/5' : 'border-primary/10 hover:border-primary/30 hover:bg-white/40'}`}>
                                     <input
