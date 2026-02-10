@@ -1,4 +1,5 @@
 'use client';
+// Force rebuild detection
 import { useEffect, useState } from 'react';
 import api from '@/services/api';
 import Link from 'next/link';

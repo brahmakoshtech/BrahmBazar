@@ -51,6 +51,10 @@ export default function SecondaryBanners() {
     return (
         <section className="py-12 bg-background container mx-auto px-4 max-w-7xl">
             <AnimatePresence mode='wait'>
+                {/* 
+                  Reverted to original fixed height container logic.
+                  Using h-[300px] md:h-[400px] as per previous design.
+                */}
                 <motion.div
                     key={banner._id}
                     initial={{ opacity: 0 }}
@@ -61,11 +65,14 @@ export default function SecondaryBanners() {
                 >
                     <Link href={banner.link || '#'}>
                         <div className="w-full h-full relative">
+                            {/* Reverted to standard img with object-cover */}
                             <img
                                 src={banner.image}
                                 alt={banner.title}
-                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
                             />
+
+                            {/* Overlay Gradient & Content */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6 md:p-12">
                                 <motion.div
                                     initial={{ y: 20, opacity: 0 }}
@@ -84,9 +91,9 @@ export default function SecondaryBanners() {
                                             {banner.description}
                                         </p>
                                     )}
-                                    <button className="text-white border-b border-secondary pb-1 text-xs md:text-sm font-bold uppercase tracking-wider hover:text-secondary hover:border-white transition-colors">
+                                    <span className="text-white border-b border-secondary pb-1 text-xs md:text-sm font-bold uppercase tracking-wider hover:text-secondary hover:border-white transition-colors">
                                         Explore Collection
-                                    </button>
+                                    </span>
                                 </motion.div>
                             </div>
                         </div>

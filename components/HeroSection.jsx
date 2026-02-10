@@ -84,6 +84,7 @@ export default function HeroSection() {
 
     return (
         <section className="relative h-[85vh] w-full overflow-hidden bg-foreground text-white">
+            {/* Reverted to original fixed height h-[85vh] */}
             <AnimatePresence mode='wait'>
                 <motion.div
                     key={loading ? 'loading' : slides[current]._id}
@@ -93,16 +94,12 @@ export default function HeroSection() {
                     transition={{ duration: 1 }}
                     className="absolute inset-0"
                 >
-                    {/* Background Image */}
+                    {/* Background Image - w-full h-full object-cover ensures no blank space */}
                     <div className="relative w-full h-full">
-                        {/* If using remote images (Cloudinary/Unsplash), width/height must be set or fill used correctly with domains config. 
-                            Since we use 'fill', it works generally but requires domain in next.config or unoptimized. 
-                            For safety with external URLs (like banner.image), we use standard img tag or unoptimized Image if needed.
-                            Let's use standard img for flexibility with external URLs without config changes right now. */}
                         <img
                             src={slides[current].image}
                             alt={slides[current].title}
-                            className="w-full h-full object-cover opacity-80"
+                            className="w-full h-full object-cover object-center opacity-80"
                         />
                     </div>
 
