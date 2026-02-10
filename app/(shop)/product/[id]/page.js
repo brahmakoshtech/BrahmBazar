@@ -216,6 +216,23 @@ export default function ProductDetailsPage({ params }) {
         }
     };
 
+    const toggleWishlist = async () => {
+        const userInfo = localStorage.getItem('userInfo');
+        if (!userInfo) {
+            const currentPath = window.location.pathname;
+            router.push(`/login?redirect=${encodeURIComponent(currentPath)}`);
+            return;
+        }
+
+        try {
+            await api.post('/api/users/wishlist', { productId: product._id });
+            success('Product added to wishlist');
+        } catch (err) {
+            console.error('Wishlist error', err);
+            error('Failed to update wishlist');
+        }
+    };
+
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center bg-black">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 container max-w-7xl mx-auto px-4 py-20">
@@ -322,7 +339,7 @@ export default function ProductDetailsPage({ params }) {
                             )}
 
                             {/* CTAs */}
-                            <div className="flex flex-col sm:flex-row gap-4">
+                            <div className="flex flex-col sm:flex-row gap-4 items-center">
                                 <Button
                                     variant="outline"
                                     onClick={() => addToCart(false)}
@@ -341,6 +358,13 @@ export default function ProductDetailsPage({ params }) {
                                 >
                                     Buy Now
                                 </Button>
+                                <button
+                                    onClick={toggleWishlist}
+                                    className="p-4 rounded-full border border-border hover:border-red-500 hover:text-red-500 transition-all active:scale-95 group"
+                                    title="Add to Wishlist"
+                                >
+                                    <Heart size={24} className="group-hover:fill-red-500 transition-colors" />
+                                </button>
                             </div>
                         </div>
 

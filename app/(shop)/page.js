@@ -15,9 +15,13 @@ import ReelsSection from '@/components/ReelsSection';
 import FaqAccordion from '@/components/FaqAccordion';
 import { getFaqs } from '@/services/faqService';
 import FeaturedSection from '@/components/FeaturedSection';
-// Force deployment update
+import ForYouSection from '@/components/ForYouSection';
+import { useShopView } from '@/context/ShopViewContext';
+
+// ... (existing imports)
 
 export default function Home() {
+  const { view } = useShopView();
   const [products, setProducts] = useState([]);
   const [newArrivals, setNewArrivals] = useState([]);
   const [trendingProducts, setTrendingProducts] = useState([]);
@@ -25,8 +29,10 @@ export default function Home() {
   const [visibleCount, setVisibleCount] = useState(10);
   const [activeCoupons, setActiveCoupons] = useState([]);
   const [faqs, setFaqs] = useState([]);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const fetchProducts = async () => {
       try {
         const [productsRes, couponsRes, faqsRes, newArrivalsRes, trendingRes] = await Promise.all([
@@ -53,6 +59,10 @@ export default function Home() {
 
     fetchProducts();
   }, []);
+
+  if (mounted && view === 'for_you') {
+    return <ForYouSection />;
+  }
 
   return (
     <main className="min-h-screen bg-background overflow-hidden relative">

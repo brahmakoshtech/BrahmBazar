@@ -25,7 +25,7 @@
   /* White cards */
 
   --font-inter: var(--font-inter);
-  --font-playfair: var(--font-playfair);
+  --font-lora: var(--font-lora);
 }
 
 @theme inline {
@@ -41,7 +41,7 @@
   --color-card: var(--card);
 
   --font-sans: var(--font-inter);
-  --font-serif: var(--font-playfair);
+  --font-serif: var(--font-lora);
 
   --animate-fade-in: fadeIn 0.5s ease-out forwards;
   --animate-slide-up: slideUp 0.5s ease-out forwards;
@@ -97,7 +97,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-playfair), serif;
+  font-family: var(--font-lora), serif;
 }
 
 /* Custom Utilities */

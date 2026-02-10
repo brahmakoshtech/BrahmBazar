@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import api from '@/services/api';
 import Modal from '@/components/ui/Modal';
-import { Plus, Trash, Image as ImageIcon, Check, X, Search, ChevronDown } from 'lucide-react';
+import { Plus, Trash, Image as ImageIcon, Check, X, Search, ChevronDown, Pencil } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 // Custom Dropdown Component with Premium Theme
@@ -71,9 +71,10 @@ export default function AdminRemediesPage() {
     const [activeTab, setActiveTab] = useState('shop');
     const [loading, setLoading] = useState(true);
 
-    // View Mode: 'remedies' or 'products'
+    // View Mode: 'remedies', 'products', 'banners'
     const [viewMode, setViewMode] = useState('remedies');
     const [products, setProducts] = useState([]);
+    const [banners, setBanners] = useState([]);
 
     // Filter States for Remedies
     const [filterSection, setFilterSection] = useState('all');
@@ -87,6 +88,7 @@ export default function AdminRemediesPage() {
     // Modals
     const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
     const [isRemedyModalOpen, setIsRemedyModalOpen] = useState(false);
+    const [isBannerModalOpen, setIsBannerModalOpen] = useState(false);
 
     // Form Data
     const [newType, setNewType] = useState('');
@@ -98,8 +100,18 @@ export default function AdminRemediesPage() {
         category: '',
         subcategory: '',
         image: '',
+        categoryId: '',
+        image: '',
         section: 'must_have'
     });
+    const [bannerForm, setBannerForm] = useState({
+        title: '',
+        description: '',
+        isActive: true,
+        image: '',
+        order: 0
+    });
+    const [editingBannerId, setEditingBannerId] = useState(null);
 
     // Fetch Initial Data
     useEffect(() => {
@@ -107,11 +119,13 @@ export default function AdminRemediesPage() {
         fetchCategories(); // Fetch categories globally as they are needed for filters
     }, []);
 
-    // Fetch Remedies when tab changes or filterSection changes (only if in remedies mode)
+    // Fetch Remedies or Banners or Products depending on ViewMode
     useEffect(() => {
-        // Fetch remedies whenever tab changes to ensure we have the list for comparison in Product Mode
-        fetchRemedies();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        if (viewMode === 'remedies') {
+            fetchRemedies();
+        } else if (viewMode === 'banners') {
+            fetchBanners();
+        }
     }, [activeTab, filterSection, viewMode]);
 
     // ...
@@ -182,6 +196,19 @@ export default function AdminRemediesPage() {
         }
     };
 
+    const fetchBanners = async () => {
+        setLoading(true);
+        try {
+            const { data } = await api.get(`/api/admin/remedies/banners?type=${activeTab}`);
+            setBanners(data);
+        } catch (error) {
+            console.error(error);
+            toast.error('Failed to load banners');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleAddType = async (e) => {
         e.preventDefault();
         try {
@@ -206,7 +233,11 @@ export default function AdminRemediesPage() {
         }
     };
 
+
+
+    // ... existing handleAddRemedy ...
     const handleAddRemedy = async (e) => {
+        // ... (existing code remains same) ...
         e.preventDefault();
         try {
             const data = new FormData();
@@ -253,6 +284,89 @@ export default function AdminRemediesPage() {
         }
     };
 
+    const handleSaveBanner = async (e) => {
+        e.preventDefault();
+        try {
+            const data = new FormData();
+            data.append('title', bannerForm.title);
+            data.append('description', bannerForm.description);
+            data.append('isActive', bannerForm.isActive);
+            data.append('order', bannerForm.order);
+            data.append('type', activeTab); // Support type-specific banners
+
+            if (selectedFile) {
+                data.append('image', selectedFile);
+            } else if (bannerForm.image) {
+                data.append('image', bannerForm.image);
+            }
+
+            if (editingBannerId) {
+                await api.put(`/api/admin/remedies/banners/${editingBannerId}`, data, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                toast.success('Banner updated');
+            } else {
+                await api.post('/api/admin/remedies/banners', data, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                toast.success('Banner created');
+            }
+
+            setIsBannerModalOpen(false);
+            setBannerForm({ title: '', description: '', isActive: true, image: '', order: 0 });
+            setEditingBannerId(null);
+            setSelectedFile(null);
+            setPreviewUrl('');
+            // fetchBanners(); // Handled by useEffect if necessary, but manual refresh is safer here since viewMode might not change
+            fetchBanners();
+        } catch (error) {
+            console.error(error);
+            toast.error(editingBannerId ? 'Failed to update banner' : 'Failed to create banner');
+        }
+    };
+
+    const handleEditBanner = (banner) => {
+        setBannerForm({
+            title: banner.title || '',
+            description: banner.description || '',
+            isActive: banner.isActive,
+            image: banner.image || '',
+            order: banner.order || 0
+        });
+        setPreviewUrl(banner.image || '');
+        setEditingBannerId(banner._id);
+        setIsBannerModalOpen(true);
+    };
+
+    const deleteBanner = async (id) => {
+        if (!window.confirm("Delete this banner?")) return;
+        try {
+            await api.delete(`/api/admin/remedies/banners/${id}`);
+            toast.success("Banner deleted");
+            fetchBanners();
+        } catch (error) {
+            toast.error("Failed to delete banner");
+        }
+    };
+
+    const toggleBanner = async (id) => {
+        try {
+            await api.put(`/api/admin/remedies/banners/${id}/toggle`);
+            toast.success("Banner status updated");
+            fetchBanners();
+        } catch (error) {
+            toast.error("Failed to update banner");
+        }
+    };
+
+
+
+
+
+
+
+
+
     const handleDeleteRemedy = async (id) => {
         if (!window.confirm('Are you sure? This will also remove the synced Product.')) return;
         try {
@@ -293,19 +407,34 @@ export default function AdminRemediesPage() {
                     <h1 className="text-3xl font-serif font-bold text-foreground">Remedies Management</h1>
                     <p className="text-muted-foreground mt-1 text-sm">Manage dynamic remedy types and sync products automatically.</p>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex gap-2">
+                    {/* Removed Top Level Banner Button */}
                     <button
                         onClick={() => setIsTypeModalOpen(true)}
                         className="px-6 py-2.5 rounded-full border border-primary/20 text-primary font-bold text-xs uppercase tracking-widest hover:bg-primary/5 transition-all"
                     >
                         + Add Type
                     </button>
-                    <button
-                        onClick={() => setIsRemedyModalOpen(true)}
-                        className="px-6 py-2.5 rounded-full bg-primary text-white font-bold text-xs uppercase tracking-widest hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
-                    >
-                        + Add Remedy
-                    </button>
+                    {viewMode === 'banners' ? (
+                        <button
+                            onClick={() => {
+                                setEditingBannerId(null);
+                                setBannerForm({ title: '', description: '', isActive: true, image: '', order: 0 });
+                                setPreviewUrl('');
+                                setIsBannerModalOpen(true);
+                            }}
+                            className="px-6 py-2.5 rounded-full bg-primary text-white font-bold text-xs uppercase tracking-widest hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
+                        >
+                            + Add Banner
+                        </button>
+                    ) : (
+                        <button
+                            onClick={() => setIsRemedyModalOpen(true)}
+                            className="px-6 py-2.5 rounded-full bg-primary text-white font-bold text-xs uppercase tracking-widest hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
+                        >
+                            + Add Remedy
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -316,7 +445,7 @@ export default function AdminRemediesPage() {
                         key={type._id || type.slug}
                         onClick={() => {
                             setActiveTab(type.slug);
-                            if (viewMode === 'products') setViewMode('remedies'); // Switch back to remedies if tab clicked
+                            // Keep current viewMode (remedies or banners) but refresh data via useEffect
                         }}
                         className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${activeTab === type.slug
                             ? 'bg-foreground text-white shadow-md'
@@ -332,146 +461,123 @@ export default function AdminRemediesPage() {
             <div className="flex flex-wrap items-center gap-6 bg-white/40 p-4 rounded-2xl border border-primary/5 relative z-10">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground whitespace-nowrap">Filter By:</span>
 
+                {/* View Switcher In Filter Row */}
+                <div className="flex bg-white rounded-xl border border-primary/10 p-1">
+                    <button
+                        onClick={() => setViewMode('remedies')}
+                        className={`px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${viewMode === 'remedies' || viewMode === 'products' ? 'bg-primary text-white shadow-sm' : 'text-muted-foreground hover:bg-gray-50'}`}
+                    >
+                        Remedies
+                    </button>
+                    <button
+                        onClick={() => setViewMode('banners')}
+                        className={`px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${viewMode === 'banners' ? 'bg-primary text-white shadow-sm' : 'text-muted-foreground hover:bg-gray-50'}`}
+                    >
+                        Banners
+                    </button>
+                </div>
+
                 {/* 1. All Sections Filter (Remedies Mode Key) */}
-                <CustomSelect
-                    value={filterSection}
-                    onChange={(val) => {
-                        setFilterSection(val);
-                        setViewMode('remedies');
-                    }}
-                    options={sectionOptions}
-                    placeholder="All Sections"
-                    className="z-50"
-                />
-
-                <div className="h-6 w-px bg-primary/10"></div>
-
-                {/* 2. All Products Button */}
-                <button
-                    onClick={() => setViewMode('products')}
-                    className={`text-xs font-bold uppercase tracking-widest transition-colors ${viewMode === 'products' ? 'text-primary underline decoration-2 underline-offset-4' : 'text-muted-foreground hover:text-primary'
-                        }`}
-                >
-                    All Products
-                </button>
-
-                {/* Products Mode Filters */}
-                {viewMode === 'products' && (
+                {(viewMode === 'remedies' || viewMode === 'products') && (
                     <>
-                        {/* 3. Category Filter */}
                         <CustomSelect
-                            value={selectedCategory}
+                            value={filterSection}
                             onChange={(val) => {
-                                setSelectedCategory(val);
-                                setSelectedSubcategory('');
+                                setFilterSection(val);
+                                setViewMode('remedies');
                             }}
-                            options={categoryOptions}
-                            placeholder="Category"
-                            className="z-40"
+                            options={sectionOptions}
+                            placeholder="All Sections"
+                            className="z-50"
                         />
 
-                        {/* 4. SubCategory Filter */}
-                        <CustomSelect
-                            value={selectedSubcategory}
-                            onChange={(val) => setSelectedSubcategory(val)}
-                            options={subCategoryOptions}
-                            placeholder="SubCategory"
-                            disabled={!selectedCategory}
-                            className="z-30"
-                        />
+                        <div className="h-6 w-px bg-primary/10"></div>
 
-                        {/* 5. Search Box */}
-                        <div className="relative flex-1 min-w-[200px]">
-                            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                            <input
-                                type="text"
-                                placeholder="Search products..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-9 pr-4 py-2 rounded-full bg-white/50 border border-primary/10 text-xs focus:outline-none focus:border-primary/30 text-foreground"
-                            />
-                        </div>
+                        {/* 2. All Products Button */}
+                        <button
+                            onClick={() => setViewMode('products')}
+                            className={`text-xs font-bold uppercase tracking-widest transition-colors ${viewMode === 'products' ? 'text-primary underline decoration-2 underline-offset-4' : 'text-muted-foreground hover:text-primary'
+                                }`}
+                        >
+                            All Products
+                        </button>
+
+                        {/* Products Mode Filters */}
+                        {viewMode === 'products' && (
+                            <>
+                                {/* 3. Category Filter */}
+                                <CustomSelect
+                                    value={selectedCategory}
+                                    onChange={(val) => {
+                                        setSelectedCategory(val);
+                                        setSelectedSubcategory('');
+                                    }}
+                                    options={categoryOptions}
+                                    placeholder="Category"
+                                    className="z-40"
+                                />
+
+                                {/* 4. SubCategory Filter */}
+                                <CustomSelect
+                                    value={selectedSubcategory}
+                                    onChange={(val) => setSelectedSubcategory(val)}
+                                    options={subCategoryOptions}
+                                    placeholder="SubCategory"
+                                    disabled={!selectedCategory}
+                                    className="z-30"
+                                />
+
+                                {/* 5. Search Box */}
+                                <div className="relative flex-1 min-w-[200px]">
+                                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                                    <input
+                                        type="text"
+                                        placeholder="Search products..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="w-full pl-9 pr-4 py-2 rounded-full bg-white/50 border border-primary/10 text-xs focus:outline-none focus:border-primary/30 text-foreground"
+                                    />
+                                </div>
+                            </>
+                        )}
                     </>
                 )}
             </div>
 
+
+            {/* View Mode: Banners Header */}
+            {
+                viewMode === 'banners' && (
+                    <div className="flex items-center gap-4 mb-4">
+                        <h2 className="text-xl font-serif font-bold">Manage Banners</h2>
+                        <span className="text-sm text-muted-foreground">Ordering is based on creation time (newest first) or manual update.</span>
+                    </div>
+                )
+            }
+
+
+
             {/* List Content */}
-            {loading ? (
-                <div className="text-center py-20 text-muted-foreground text-xs uppercase tracking-widest">Loading...</div>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-0">
-                    {/* View Mode: Remedies */}
-                    {viewMode === 'remedies' && remedies.map((remedy) => (
-                        <div key={remedy._id} className="bg-white/60 backdrop-blur-md rounded-3xl p-5 border border-primary/10 shadow-sm hover:shadow-lg transition-all group relative">
-                            <div className="absolute top-4 right-4 z-10">
-                                <span className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest ${remedy.section === 'must_have' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'
-                                    }`}>
-                                    {remedy.section.replace(/_/g, ' ')}
-                                </span>
-                            </div>
-
-                            <div className="h-48 w-full bg-gray-100 rounded-2xl overflow-hidden mb-4 relative">
-                                {remedy.product?.images?.[0] ? (
-                                    <img
-                                        src={remedy.product.images[0]}
-                                        alt={remedy.product.title}
-                                        className="w-full h-full object-cover"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-gray-300">
-                                        <ImageIcon size={32} />
-                                    </div>
-                                )}
-                            </div>
-
-                            <h3 className="font-serif font-bold text-lg text-foreground mb-1">{remedy.product?.title}</h3>
-                            <p className="text-xs text-muted-foreground line-clamp-2 mb-4">{remedy.product?.description}</p>
-
-                            <div className="flex items-center justify-between mt-auto">
-                                <span className="font-mono font-bold text-primary">
-                                    {remedy.product?.price ? `₹${remedy.product.price}` : 'Free / Quote'}
-                                </span>
-                                <button
-                                    onClick={() => handleDeleteRemedy(remedy._id)}
-                                    className="p-2 rounded-full hover:bg-red-50 text-red-400 hover:text-red-600 transition-colors"
-                                >
-                                    <Trash size={16} />
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-
-                    {/* View Mode: Products */}
-                    {viewMode === 'products' && products.map((product) => {
-                        // Check if this product is already in the current remedies list
-                        const existingRemedy = remedies.find(r => r.product?._id === product._id);
-
-                        return (
-                            <div
-                                key={product._id}
-                                className={`bg-white/60 backdrop-blur-md rounded-3xl p-5 border shadow-sm hover:shadow-lg transition-all group relative ${existingRemedy
-                                    ? existingRemedy.section === 'must_have' ? 'border-red-200 ring-1 ring-red-100' : 'border-green-200 ring-1 ring-green-100'
-                                    : 'border-primary/10'
-                                    }`}
-                            >
-                                <div className="absolute top-4 right-4 z-10 flex flex-col gap-1 items-end">
-                                    <span className="px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest bg-blue-100 text-blue-600">
-                                        {product.category || 'Product'}
+            {
+                loading ? (
+                    <div className="text-center py-20 text-muted-foreground text-xs uppercase tracking-widest">Loading...</div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-0">
+                        {/* View Mode: Remedies */}
+                        {viewMode === 'remedies' && remedies.map((remedy) => (
+                            <div key={remedy._id} className="bg-white/60 backdrop-blur-md rounded-3xl p-5 border border-primary/10 shadow-sm hover:shadow-lg transition-all group relative">
+                                <div className="absolute top-4 right-4 z-10">
+                                    <span className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest ${remedy.section === 'must_have' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'
+                                        }`}>
+                                        {remedy.section.replace(/_/g, ' ')}
                                     </span>
-                                    {existingRemedy && (
-                                        <span className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest flex items-center gap-1 ${existingRemedy.section === 'must_have' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'
-                                            }`}>
-                                            <Check size={10} strokeWidth={4} />
-                                            {existingRemedy.section === 'must_have' ? 'Must Have' : 'Good To Have'}
-                                        </span>
-                                    )}
                                 </div>
 
                                 <div className="h-48 w-full bg-gray-100 rounded-2xl overflow-hidden mb-4 relative">
-                                    {product.images?.[0] ? (
+                                    {remedy.product?.images?.[0] ? (
                                         <img
-                                            src={product.images[0]}
-                                            alt={product.title}
+                                            src={remedy.product.images[0]}
+                                            alt={remedy.product.title}
                                             className="w-full h-full object-cover"
                                         />
                                     ) : (
@@ -481,80 +587,186 @@ export default function AdminRemediesPage() {
                                     )}
                                 </div>
 
-                                <h3 className="font-serif font-bold text-lg text-foreground mb-1">{product.title}</h3>
-                                <p className="text-xs text-muted-foreground line-clamp-2 mb-4">{product.description}</p>
+                                <h3 className="font-serif font-bold text-lg text-foreground mb-1">{remedy.product?.title}</h3>
+                                <p className="text-xs text-muted-foreground line-clamp-2 mb-4">{remedy.product?.description}</p>
 
-                                <div className="flex items-center justify-between mt-auto pt-4 border-t border-primary/5">
+                                <div className="flex items-center justify-between mt-auto">
                                     <span className="font-mono font-bold text-primary">
-                                        {product.price ? `₹${product.price}` : 'Free'}
+                                        {remedy.product?.price ? `₹${remedy.product.price}` : 'Free / Quote'}
                                     </span>
+                                    <button
+                                        onClick={() => handleDeleteRemedy(remedy._id)}
+                                        className="p-2 rounded-full hover:bg-red-50 text-red-400 hover:text-red-600 transition-colors"
+                                    >
+                                        <Trash size={16} />
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
 
-                                    <div className="flex gap-2">
-                                        {!existingRemedy ? (
-                                            <>
-                                                {(filterSection === 'all' || filterSection === 'must_have') && (
-                                                    <button
-                                                        onClick={async () => {
-                                                            try {
-                                                                await api.post('/api/admin/remedies/add-from-product', {
-                                                                    productId: product._id,
-                                                                    type: activeTab,
-                                                                    tag: 'must_have'
-                                                                });
-                                                                toast.success('Added to Must Have');
-                                                                fetchRemedies(); // Refresh to show added status
-                                                            } catch (err) {
-                                                                toast.error(err.response?.data?.message || 'Failed to add');
-                                                            }
-                                                        }}
-                                                        className="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 text-[9px] font-bold uppercase tracking-widest hover:bg-red-100 transition-colors"
-                                                    >
-                                                        + Must Have
-                                                    </button>
-                                                )}
-                                                {(filterSection === 'all' || filterSection === 'good_to_have') && (
-                                                    <button
-                                                        onClick={async () => {
-                                                            try {
-                                                                await api.post('/api/admin/remedies/add-from-product', {
-                                                                    productId: product._id,
-                                                                    type: activeTab,
-                                                                    tag: 'good_to_have'
-                                                                });
-                                                                toast.success('Added to Good To Have');
-                                                                fetchRemedies(); // Refresh to show added status
-                                                            } catch (err) {
-                                                                toast.error(err.response?.data?.message || 'Failed to add');
-                                                            }
-                                                        }}
-                                                        className="px-3 py-1.5 rounded-lg bg-green-50 text-green-600 text-[9px] font-bold uppercase tracking-widest hover:bg-green-100 transition-colors"
-                                                    >
-                                                        + Good To Have
-                                                    </button>
-                                                )}
-                                            </>
-                                        ) : (
-                                            <span className={`text-[10px] font-bold uppercase tracking-widest py-1.5 ${existingRemedy.section === 'must_have' ? 'text-red-400' : 'text-green-400'
+                        {/* View Mode: Products */}
+                        {viewMode === 'products' && products.map((product) => {
+                            // Check if this product is already in the current remedies list
+                            const existingRemedy = remedies.find(r => r.product?._id === product._id);
+
+                            return (
+                                <div
+                                    key={product._id}
+                                    className={`bg-white/60 backdrop-blur-md rounded-3xl p-5 border shadow-sm hover:shadow-lg transition-all group relative ${existingRemedy
+                                        ? existingRemedy.section === 'must_have' ? 'border-red-200 ring-1 ring-red-100' : 'border-green-200 ring-1 ring-green-100'
+                                        : 'border-primary/10'
+                                        }`}
+                                >
+                                    <div className="absolute top-4 right-4 z-10 flex flex-col gap-1 items-end">
+                                        <span className="px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest bg-blue-100 text-blue-600">
+                                            {product.category || 'Product'}
+                                        </span>
+                                        {existingRemedy && (
+                                            <span className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest flex items-center gap-1 ${existingRemedy.section === 'must_have' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'
                                                 }`}>
-                                                Added ({existingRemedy.section === 'must_have' ? 'Must' : 'Good'})
+                                                <Check size={10} strokeWidth={4} />
+                                                {existingRemedy.section === 'must_have' ? 'Must Have' : 'Good To Have'}
                                             </span>
                                         )}
                                     </div>
+
+                                    <div className="h-48 w-full bg-gray-100 rounded-2xl overflow-hidden mb-4 relative">
+                                        {product.images?.[0] ? (
+                                            <img
+                                                src={product.images[0]}
+                                                alt={product.title}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                                <ImageIcon size={32} />
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <h3 className="font-serif font-bold text-lg text-foreground mb-1">{product.title}</h3>
+                                    <p className="text-xs text-muted-foreground line-clamp-2 mb-4">{product.description}</p>
+
+                                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-primary/5">
+                                        <span className="font-mono font-bold text-primary">
+                                            {product.price ? `₹${product.price}` : 'Free'}
+                                        </span>
+
+                                        <div className="flex gap-2">
+                                            {!existingRemedy ? (
+                                                <>
+                                                    {(filterSection === 'all' || filterSection === 'must_have') && (
+                                                        <button
+                                                            onClick={async () => {
+                                                                try {
+                                                                    await api.post('/api/admin/remedies/add-from-product', {
+                                                                        productId: product._id,
+                                                                        type: activeTab,
+                                                                        tag: 'must_have'
+                                                                    });
+                                                                    toast.success('Added to Must Have');
+                                                                    fetchRemedies(); // Refresh to show added status
+                                                                } catch (err) {
+                                                                    toast.error(err.response?.data?.message || 'Failed to add');
+                                                                }
+                                                            }}
+                                                            className="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 text-[9px] font-bold uppercase tracking-widest hover:bg-red-100 transition-colors"
+                                                        >
+                                                            + Must Have
+                                                        </button>
+                                                    )}
+                                                    {(filterSection === 'all' || filterSection === 'good_to_have') && (
+                                                        <button
+                                                            onClick={async () => {
+                                                                try {
+                                                                    await api.post('/api/admin/remedies/add-from-product', {
+                                                                        productId: product._id,
+                                                                        type: activeTab,
+                                                                        tag: 'good_to_have'
+                                                                    });
+                                                                    toast.success('Added to Good To Have');
+                                                                    fetchRemedies(); // Refresh to show added status
+                                                                } catch (err) {
+                                                                    toast.error(err.response?.data?.message || 'Failed to add');
+                                                                }
+                                                            }}
+                                                            className="px-3 py-1.5 rounded-lg bg-green-50 text-green-600 text-[9px] font-bold uppercase tracking-widest hover:bg-green-100 transition-colors"
+                                                        >
+                                                            + Good To Have
+                                                        </button>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <span className={`text-[10px] font-bold uppercase tracking-widest py-1.5 ${existingRemedy.section === 'must_have' ? 'text-red-400' : 'text-green-400'
+                                                    }`}>
+                                                    Added ({existingRemedy.section === 'must_have' ? 'Must' : 'Good'})
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })
+                        }
+
+                        {
+                            ((viewMode === 'remedies' && remedies.length === 0) || (viewMode === 'products' && products.length === 0)) && (
+                                <div className="col-span-full py-20 text-center">
+                                    <p className="text-muted-foreground text-sm">No items found.</p>
+                                </div>
+                            )
+                        }
+                    </div >
+                )
+            }
+
+            {/* Banners List */}
+            {
+                viewMode === 'banners' && !loading && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {banners.map((banner) => (
+                            <div key={banner._id} className={`bg-white/60 backdrop-blur-md rounded-3xl p-5 border shadow-sm transition-all group relative overflow-hidden ${!banner.isActive ? 'opacity-60 grayscale-[0.5]' : 'border-primary/10'}`}>
+                                <div className="h-40 w-full bg-gray-100 rounded-2xl overflow-hidden mb-4 relative">
+                                    <img
+                                        src={banner.image}
+                                        alt={banner.title}
+                                        className="w-full h-full object-cover"
+                                    />
+                                    <div className="absolute top-2 right-2 flex gap-2">
+                                        <button
+                                            onClick={() => toggleBanner(banner._id)}
+                                            className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest ${banner.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}
+                                        >
+                                            {banner.isActive ? 'Active' : 'Inactive'}
+                                        </button>
+                                    </div>
+                                </div>
+                                <h3 className="font-serif font-bold text-lg text-foreground mb-1">{banner.title}</h3>
+                                <p className="text-xs text-muted-foreground line-clamp-2 mb-4">{banner.description}</p>
+
+                                <div className="flex justify-end pt-2 border-t border-primary/5 gap-2">
+                                    <button
+                                        onClick={() => handleEditBanner(banner)}
+                                        className="p-2 rounded-full hover:bg-primary/5 text-primary/70 hover:text-primary transition-colors"
+                                    >
+                                        <Pencil size={16} />
+                                    </button>
+                                    <button
+                                        onClick={() => deleteBanner(banner._id)}
+                                        className="p-2 rounded-full hover:bg-red-50 text-red-400 hover:text-red-600 transition-colors"
+                                    >
+                                        <Trash size={16} />
+                                    </button>
                                 </div>
                             </div>
-                        );
-                    })
-                    }
-
-                    {
-                        ((viewMode === 'remedies' && remedies.length === 0) || (viewMode === 'products' && products.length === 0)) && (
-                            <div className="col-span-full py-20 text-center">
-                                <p className="text-muted-foreground text-sm">No items found.</p>
+                        ))}
+                        {banners.length === 0 && (
+                            <div className="col-span-full py-20 text-center text-muted-foreground">
+                                No banners found. Add one to get started.
                             </div>
-                        )
-                    }
-                </div >
-            )
+                        )}
+                    </div>
+                )
             }
 
             {/* Add Type Modal */}
@@ -751,6 +963,87 @@ export default function AdminRemediesPage() {
                     <p className="text-[10px] text-center text-muted-foreground mt-2">
                         This will automatically create a synced product.
                     </p>
+                </form>
+            </Modal>
+
+            {/* Add Banner Modal */}
+            <Modal isOpen={isBannerModalOpen} onClose={() => setIsBannerModalOpen(false)} title={editingBannerId ? "Edit Banner" : "New Banner"}>
+                <form onSubmit={handleSaveBanner} className="space-y-4">
+                    <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Title</label>
+                        <input
+                            type="text"
+                            className="w-full p-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:border-primary text-sm"
+                            value={bannerForm.title}
+                            onChange={(e) => setBannerForm({ ...bannerForm, title: e.target.value })}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Description</label>
+                        <textarea
+                            rows="2"
+                            className="w-full p-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:border-primary text-sm"
+                            value={bannerForm.description}
+                            onChange={(e) => setBannerForm({ ...bannerForm, description: e.target.value })}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Order</label>
+                        <input
+                            type="number"
+                            className="w-full p-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:border-primary text-sm"
+                            value={bannerForm.order}
+                            onChange={(e) => setBannerForm({ ...bannerForm, order: e.target.value })}
+                            placeholder="Display order (0 = first)"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Image</label>
+                        <div className="flex items-center gap-4">
+                            {previewUrl && (
+                                <div className="w-16 h-16 rounded-xl overflow-hidden border border-primary/20 shadow-sm relative group">
+                                    <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                                    <button
+                                        type="button"
+                                        onClick={() => { setSelectedFile(null); setPreviewUrl(''); }}
+                                        className="absolute inset-0 bg-black/40 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+                                    >
+                                        <X size={16} />
+                                    </button>
+                                </div>
+                            )}
+                            <label className="flex-1 cursor-pointer">
+                                <div className="w-full p-3 rounded-xl bg-gray-50 border border-dashed border-primary/30 hover:bg-primary/5 hover:border-primary transition-all flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                                    <ImageIcon size={16} />
+                                    <span className="font-medium text-xs uppercase tracking-widest">
+                                        {selectedFile ? 'Change Image' : 'Select Image'}
+                                    </span>
+                                </div>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
+                                    className="hidden"
+                                />
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label className="flex items-center gap-2 cursor-pointer mt-4">
+                            <input
+                                type="checkbox"
+                                checked={bannerForm.isActive}
+                                onChange={(e) => setBannerForm({ ...bannerForm, isActive: e.target.checked })}
+                                className="accent-primary w-4 h-4"
+                            />
+                            <span className="text-sm font-medium">Active</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" className="w-full py-3 bg-primary text-white rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-primary/90 mt-2">
+                        {editingBannerId ? 'Update Banner' : 'Create Banner'}
+                    </button>
                 </form>
             </Modal>
         </div >

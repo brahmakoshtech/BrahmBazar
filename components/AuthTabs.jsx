@@ -303,10 +303,10 @@ export default function AuthTabs({ initialTab = 'login' }) {
                     </button>
                     <button
                         type="button"
-                        onClick={() => router.push(redirect)}
+                        onClick={() => router.push('/')}
                         className="flex-1 py-3 px-4 rounded-xl border border-[#DCC8B0] text-[#5A4A42] text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-[#FAF9F6] bg-white transition-all duration-300 shadow-sm text-center"
                     >
-                        Back
+                        Later
                     </button>
                 </div>
             </div>

@@ -132,49 +132,47 @@ export default function ProductCard({ product, activeCoupons = [] }) {
             </Link>
 
             {/* Content Details */}
-            <div className="p-3 md:p-3 lg:p-4 flex flex-col flex-grow relative">
-
+            <div className="p-2.5 md:p-3 lg:p-4 flex flex-col flex-grow relative">
                 {/* Category & Savings */}
                 <div className="flex justify-between items-center mb-1">
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">{product.category}</span>
+                    <span className="text-[8px] md:text-[10px] font-black text-muted-foreground/60 uppercase tracking-[0.2em]">{product.category}</span>
                     {bestCoupon && product.stock > 0 && (
-                        <span className="text-[10px] font-medium text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
-                            Save ₹{Math.round(bestCoupon.savings)}
+                        <span className="text-[8px] md:text-[10px] font-bold text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full border border-green-100 uppercase tracking-tighter">
+                            -₹{Math.round(bestCoupon.savings)}
                         </span>
                     )}
                 </div>
 
                 {/* Title */}
-                <Link href={`/product/${product._id}`} className="block mb-1.5 md:mb-1.5 lg:mb-2 group-hover:text-primary transition-colors pr-8 md:pr-10">
-                    <h3 className="font-serif font-semibold text-foreground text-xs md:text-sm lg:text-base leading-tight line-clamp-2 h-8 md:h-9 lg:h-10">
+                <Link href={`/product/${product._id}`} className="block mb-1 group-hover:text-primary transition-colors pr-6 md:pr-10">
+                    <h3 className="font-serif font-bold text-[#5A4033] text-[13px] md:text-base lg:text-lg leading-[1.2] line-clamp-2 h-[2.4em]">
                         {product.title}
                     </h3>
                 </Link>
 
                 {/* Price Section */}
-                <div className="mt-auto flex items-baseline gap-2">
+                <div className="mt-auto flex items-center gap-2 pt-1">
                     {bestCoupon && bestCoupon.savings > 0 ? (
                         <>
-                            <span className="text-base md:text-lg font-bold text-primary">
+                            <span className="text-sm md:text-xl font-bold text-primary">
                                 ₹{(Math.max(0, (product.price || 0) - bestCoupon.savings)).toLocaleString('en-IN')}
                             </span>
-                            <span className="text-[10px] md:text-xs text-muted-foreground line-through decoration-red-500/40">
+                            <span className="text-[10px] md:text-sm text-[#8C7A6B] line-through opacity-50">
                                 ₹{product.price?.toLocaleString('en-IN')}
                             </span>
                         </>
                     ) : (
-                        <span className="text-base md:text-lg font-bold text-primary">₹{product.price?.toLocaleString('en-IN')}</span>
+                        <span className="text-base md:text-xl font-bold text-primary">₹{product.price?.toLocaleString('en-IN')}</span>
                     )}
                 </div>
 
-                {/* Add to Cart - Fixed Position in Content Area */}
+                {/* Add to Cart - More Compact on Mobile */}
                 <button
                     onClick={async (e) => {
                         e.stopPropagation();
                         e.preventDefault();
                         const userInfo = localStorage.getItem('userInfo');
                         if (!userInfo) {
-                            // Redirect to login with return url
                             const currentPath = window.location.pathname;
                             window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
                             return;
@@ -186,10 +184,10 @@ export default function ProductCard({ product, activeCoupons = [] }) {
                         }
                     }}
                     disabled={product.stock === 0}
-                    className="absolute bottom-3 right-3 md:bottom-2 md:right-2 lg:bottom-4 lg:right-4 bg-muted hover:bg-primary text-foreground hover:text-white p-2.5 md:p-2 lg:p-3 rounded-full transition-all duration-300 shadow-sm border border-border/50 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group/cart"
+                    className="absolute bottom-2.5 right-2 bg-primary/10 hover:bg-primary text-primary hover:text-white p-1.5 md:p-2.5 rounded-full transition-all duration-500 shadow-sm border border-primary/20 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed group/cart"
                     title="Add to Cart"
                 >
-                    <ShoppingCart size={16} className="md:w-[16px] md:h-[16px] lg:w-[18px] lg:h-[18px] transition-transform group-hover/cart:scale-110" />
+                    <ShoppingCart size={14} className="md:w-[18px] md:h-[18px] transition-transform group-hover/cart:rotate-12" />
                 </button>
             </div>
         </div >
