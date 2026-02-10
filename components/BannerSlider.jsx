@@ -24,15 +24,15 @@ export default function BannerSlider({ banners }) {
     };
 
     return (
-        <div className="rounded-2xl overflow-hidden shadow-lg border border-primary/10 relative mb-12">
-            <Slider {...settings}>
+        <div className="rounded-3xl overflow-hidden relative">
+            <Slider {...settings} className="!mb-0">
                 {banners.map((banner) => (
-                    <div key={banner._id} className="relative aspect-[21/9] w-full bg-black/5 outline-none">
-                        <div className="relative w-full h-full">
+                    <div key={banner._id} className="relative w-full bg-black/5 outline-none">
+                        <div className="relative w-full">
                             <img
                                 src={banner.image}
                                 alt={banner.title || 'Banner'}
-                                className="w-full h-full object-cover"
+                                className="w-full h-[180px] md:h-[350px] object-cover block bg-muted"
                             />
                             {/* Overlay Gradient */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>

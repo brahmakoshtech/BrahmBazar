@@ -5,6 +5,7 @@ import api from '@/services/api';
 import ProductCard from '@/components/ProductCard';
 import BannerSlider from '@/components/BannerSlider';
 import { motion } from 'framer-motion';
+import { Sparkles, ShieldCheck } from 'lucide-react';
 
 const SUBTITLES = {
     shop: {
@@ -106,14 +107,14 @@ export default function ForYouSection() {
     }
 
     return (
-        <main className="min-h-screen bg-transparent pb-20 pt-6">
+        <main className="min-h-screen bg-transparent pb-20 pt-10 md:pt-6">
             <div className="container mx-auto px-4 max-w-7xl">
                 <div className="text-center mb-10 px-4">
-                    <h1 className="text-[22px] md:text-5xl font-serif font-bold text-[#5A4033] leading-tight tracking-tight">
-                        Your <span className="text-primary italic">Personalized</span> Selection
+                    <h1 className="text-3xl md:text-5xl font-serif font-bold text-[#5A4033] leading-tight tracking-tight mb-4">
+                        Your <span className="text-primary italic">Personalized</span> Collections
                     </h1>
-                    <div className="w-12 h-[1px] bg-primary/30 mx-auto mt-3 mb-3"></div>
-                    <p className="text-[13px] md:text-base text-[#8C7A6B] max-w-lg mx-auto leading-relaxed font-medium">
+                    <div className="w-12 h-[1px] bg-primary/30 mx-auto mb-4"></div>
+                    <p className="text-sm md:text-base text-[#8C7A6B] max-w-lg mx-auto leading-relaxed font-medium">
                         Curated remedies specifically selected for your spiritual journey.
                     </p>
                 </div>
@@ -146,14 +147,14 @@ export default function ForYouSection() {
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5 }}
-                            className="space-y-16"
+                            className="flex flex-col gap-0"
                         >
                             {layoutData && layoutData.map((section, idx) => {
                                 // 1. BANNER SLIDER
                                 if (section.type === 'banner_slider') {
                                     if (!section.data || section.data.length === 0) return null;
                                     return (
-                                        <div key={section.id || idx} className="my-8 rounded-3xl overflow-hidden shadow-sm">
+                                        <div key={section.id || idx} className="mt-2 mb-1">
                                             <BannerSlider banners={section.data} />
                                         </div>
                                     );
@@ -166,11 +167,6 @@ export default function ForYouSection() {
                                     const isMustHave = section.type === 'must_have';
                                     const sectionTitle = isMustHave ? 'Must Have' : 'Good To Have';
 
-                                    // Theme logic - Inspired by warm brown/greens of the image
-                                    const colorClass = isMustHave ? 'text-[#C62828]' : 'text-[#5A4033]';
-                                    const dotClass = isMustHave ? 'bg-red-500' : 'bg-[#C8E6C9]';
-                                    const borderClass = isMustHave ? 'bg-red-100' : 'bg-[#FDF2E3]';
-
                                     // Subtitle Logic
                                     const tabLower = activeTab ? activeTab.toLowerCase() : 'default';
                                     const subMsg = isMustHave
@@ -178,14 +174,36 @@ export default function ForYouSection() {
                                         : (SUBTITLES[tabLower]?.good || SUBTITLES.default.good);
 
                                     return (
-                                        <section key={section.id || idx} className="relative">
-                                            <div className="mb-10 text-center">
-                                                <h3 className={`text-[20px] md:text-3xl font-serif font-bold ${colorClass} mb-2`}>
-                                                    {section.title || sectionTitle}
-                                                </h3>
-                                                <div className="w-16 h-[1.5px] bg-[#DCC8B0]/40 mx-auto mb-4"></div>
-                                                <p className="text-[12px] md:text-sm text-[#8C7A6B] font-medium max-w-xs mx-auto leading-relaxed">
+                                        <section key={section.id || idx} className="relative pb-6 pt-4">
+                                            <div className="mb-10 flex flex-col items-center text-center">
+
+                                                {/* Decorative Icon Badge */}
+                                                <div className={`
+                                                    mb-4 p-3 rounded-full border shadow-sm
+                                                    ${isMustHave
+                                                        ? 'bg-red-50 border-red-100 text-[#9F1239]'
+                                                        : 'bg-emerald-50 border-emerald-100 text-emerald-700'}
+                                                `}>
+                                                    {isMustHave
+                                                        ? <ShieldCheck size={24} strokeWidth={1.5} />
+                                                        : <Sparkles size={24} strokeWidth={1.5} />
+                                                    }
+                                                </div>
+
+                                                {/* Title with decorative lines */}
+                                                <div className="flex items-center gap-4 mb-3">
+                                                    <div className={`hidden md:block h-[1px] w-12 ${isMustHave ? 'bg-gradient-to-r from-transparent to-red-200' : 'bg-gradient-to-r from-transparent to-emerald-200'}`}></div>
+                                                    <h3 className={`text-2xl md:text-3xl font-serif font-medium tracking-wide ${isMustHave ? 'text-[#9F1239]' : 'text-[#2E7D32]'}`}>
+                                                        {section.title || sectionTitle}
+                                                    </h3>
+                                                    <div className={`hidden md:block h-[1px] w-12 ${isMustHave ? 'bg-gradient-to-l from-transparent to-red-200' : 'bg-gradient-to-l from-transparent to-emerald-200'}`}></div>
+                                                </div>
+
+                                                {/* Subtitle */}
+                                                <p className="text-sm text-muted-foreground font-medium max-w-md mx-auto leading-relaxed italic relative px-6">
+                                                    <span className="hidden md:inline absolute left-0 top-0 text-2xl opacity-20 font-serif">"</span>
                                                     {subMsg}
+                                                    <span className="hidden md:inline absolute right-0 top-0 text-2xl opacity-20 font-serif">"</span>
                                                 </p>
                                             </div>
 

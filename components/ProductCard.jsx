@@ -59,7 +59,7 @@ export default function ProductCard({ product, activeCoupons = [] }) {
     if (!product) return null;
 
     return (
-        <div className="group bg-card rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 relative flex flex-col h-full border border-border/50">
+        <div className="group bg-card rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 relative flex flex-col h-full border border-border/50">
 
             {/* Image Container - Square Aspect Ratio for balanced look */}
             <Link href={`/product/${product._id}`} className="block relative aspect-square overflow-hidden bg-muted">
