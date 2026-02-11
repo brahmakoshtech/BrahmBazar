@@ -57,14 +57,14 @@ export default function AccountPage() {
     if (!user) return null; // Redirecting
 
     return (
-        <div className="min-h-screen bg-transparent py-4 md:py-10 px-4 md:px-8 font-sans text-foreground selection:bg-primary/20">
+        <div className="min-h-screen bg-transparent pt-10 md:pt-28 pb-20 md:py-10 px-4 md:px-8 font-sans text-foreground selection:bg-primary/20">
             <div className="max-w-7xl mx-auto">
-                <div className="flex flex-row justify-between items-center mb-6 md:mb-10 gap-4 border-b border-primary/5 pb-6">
+                <div className="flex flex-row justify-between items-center mb-0 md:mb-10 gap-4 border-b border-primary/5 pb-2">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-primary/10 rounded-xl md:hidden">
-                            <User size={20} className="text-primary" />
+                            <User size={18} className="text-primary" />
                         </div>
-                        <h1 className="text-xl md:text-3xl font-serif font-black text-foreground tracking-tight">Account <span className="text-primary italic">Portal</span></h1>
+                        <h1 className="text-lg md:text-3xl font-serif font-black text-foreground tracking-tight">Account <span className="text-primary italic">Portal</span></h1>
                     </div>
 
                     <button
@@ -79,28 +79,28 @@ export default function AccountPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-10">
                     {/* User Profile Card - Compact & Modern */}
                     <div className="lg:col-span-1">
-                        <div className="bg-white/40 backdrop-blur-xl rounded-[2rem] shadow-2xl shadow-primary/5 border border-white/40 p-6 sticky top-24 overflow-hidden relative group">
+                        <div className="bg-white/40 backdrop-blur-xl rounded-2xl md:rounded-[2rem] shadow-2xl shadow-primary/5 border border-white/40 p-4 md:p-6 sticky top-24 overflow-hidden relative group">
                             {/* Subtle Background Pattern */}
                             <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors duration-700" />
 
-                            <div className="flex flex-row lg:flex-col items-center gap-4 lg:gap-0 lg:text-center mb-6 relative z-10">
-                                <div className="bg-primary/5 p-3 lg:p-4 rounded-2xl mb-0 lg:mb-4 border border-primary/10 shadow-inner group-hover:scale-105 transition-transform duration-500">
-                                    <User size={28} className="text-primary" strokeWidth={1.5} />
+                            <div className="flex flex-row lg:flex-col items-center gap-3 md:gap-4 lg:gap-0 lg:text-center mb-4 md:mb-6 relative z-10">
+                                <div className="bg-primary/5 p-2.5 md:p-3 lg:p-4 rounded-xl md:rounded-2xl mb-0 lg:mb-4 border border-primary/10 shadow-inner group-hover:scale-105 transition-transform duration-500">
+                                    <User size={20} className="text-primary md:w-7 md:h-7" strokeWidth={1.5} />
                                 </div>
                                 <div className="flex flex-col lg:items-center">
-                                    <h2 className="text-lg lg:text-xl font-serif font-black text-foreground line-clamp-1">{user.name}</h2>
-                                    <p className="text-muted-foreground text-[10px] lg:text-[11px] font-bold uppercase tracking-widest mt-1 opacity-70">{user.email}</p>
+                                    <h2 className="text-sm md:text-base lg:text-xl font-serif font-black text-foreground line-clamp-1">{user.name}</h2>
+                                    <p className="text-muted-foreground text-[8px] md:text-[9px] lg:text-[11px] font-bold uppercase tracking-widest mt-0.5 md:mt-1 opacity-70">{user.email}</p>
                                 </div>
                             </div>
 
-                            <div className="border-t border-primary/5 pt-5 space-y-4 relative z-10">
+                            <div className="border-t border-primary/5 pt-3 md:pt-5 space-y-2 md:space-y-4 relative z-10">
                                 <div className="flex justify-between lg:flex-col lg:gap-1">
-                                    <p className="text-[8px] text-muted-foreground uppercase tracking-[0.2em] font-black opacity-50">Member Since</p>
-                                    <p className="text-xs font-bold text-foreground/80">{new Date(user.createdAt || Date.now()).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}</p>
+                                    <p className="text-[7px] md:text-[8px] text-muted-foreground uppercase tracking-[0.2em] font-black opacity-50">Member Since</p>
+                                    <p className="text-[10px] md:text-xs font-bold text-foreground/80">{new Date(user.createdAt || Date.now()).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}</p>
                                 </div>
                                 <div className="flex justify-between items-center lg:flex-col lg:items-start lg:gap-2">
-                                    <p className="text-[8px] text-muted-foreground uppercase tracking-[0.2em] font-black opacity-50">Status</p>
-                                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest bg-primary/10 text-primary border border-primary/10">
+                                    <p className="text-[7px] md:text-[8px] text-muted-foreground uppercase tracking-[0.2em] font-black opacity-50">Status</p>
+                                    <span className="flex items-center gap-1.5 px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[7px] md:text-[8px] font-black uppercase tracking-widest bg-primary/10 text-primary border border-primary/10">
                                         <div className="w-1 h-1 rounded-full bg-primary animate-pulse" />
                                         Verified
                                     </span>
@@ -110,8 +110,8 @@ export default function AccountPage() {
                     </div>
 
                     <div className="lg:col-span-3 space-y-5">
-                        <h2 className="text-lg md:text-xl font-serif font-black text-foreground flex items-center gap-2 mb-2">
-                            <Package className="text-primary" size={20} />
+                        <h2 className="text-base md:text-xl font-serif font-black text-foreground flex items-center gap-2 mb-2">
+                            <Package className="text-primary w-4 h-4 md:w-5 md:h-5" />
                             <span>Order <span className="text-primary italic">Journey</span></span>
                         </h2>
 
@@ -129,7 +129,7 @@ export default function AccountPage() {
                         ) : (
                             <div className="grid grid-cols-1 gap-4 md:gap-6">
                                 {orders.map(order => (
-                                    <div key={order._id} className="bg-white/40 backdrop-blur-md rounded-[1.5rem] md:rounded-[2rem] shadow-sm border border-white/40 overflow-hidden hover:bg-white/60 transition-all group">
+                                    <div key={order._id} className="bg-white/40 backdrop-blur-md rounded-2xl md:rounded-[2rem] shadow-sm border border-white/40 overflow-hidden hover:bg-white/60 transition-all group">
 
                                         {/* Compact Order Header */}
                                         <div className="bg-primary/5 px-4 md:px-6 py-3 flex flex-row justify-between items-center gap-2 border-b border-primary/5">
@@ -155,44 +155,48 @@ export default function AccountPage() {
                                         </div>
 
                                         {/* Compact Order Items */}
-                                        <div className="p-4 md:p-6 pb-2 md:pb-3">
-                                            <div className="space-y-4">
+                                        <div className="p-3 md:p-6 pb-2 md:pb-3">
+                                            <div className="space-y-2 md:space-y-4">
                                                 {order.products?.map((item, idx) => (
-                                                    <div key={idx} className="flex items-start gap-3 md:gap-4">
-                                                        <div className="h-12 w-12 md:h-16 md:w-16 flex-shrink-0 overflow-hidden rounded-xl border border-primary/5 bg-white p-1">
+                                                    <div key={idx} className="flex items-center gap-3 md:gap-4">
+                                                        <div className="h-10 w-10 md:h-16 md:w-16 flex-shrink-0 overflow-hidden rounded-lg md:rounded-xl border border-primary/5 bg-white p-0.5 md:p-1">
                                                             <img
                                                                 src={item.image}
                                                                 alt={item.title}
-                                                                className="h-full w-full object-cover rounded-lg"
+                                                                className="h-full w-full object-cover rounded-md md:rounded-lg"
                                                             />
                                                         </div>
                                                         <div className="flex-1 min-w-0">
-                                                            <h3 className="text-[11px] md:text-sm font-black text-foreground leading-tight line-clamp-1 group-hover:text-primary transition-colors">{item.title}</h3>
-                                                            <div className="flex items-center gap-2 mt-1">
-                                                                <p className="text-[8px] md:text-[9px] font-black text-muted-foreground uppercase tracking-widest">Qty: {item.quantity}</p>
-                                                                <span className="w-1 h-1 rounded-full bg-primary/20" />
-                                                                <p className="text-[10px] md:text-xs font-black text-primary">₹{item.price?.toLocaleString('en-IN')}</p>
+                                                            <h3 className="text-[10px] md:text-sm font-black text-foreground leading-tight line-clamp-1 group-hover:text-primary transition-colors">{item.title}</h3>
+                                                            <div className="flex items-center gap-2 mt-0.5 md:mt-1">
+                                                                <p className="text-[7px] md:text-[9px] font-black text-muted-foreground uppercase tracking-widest">Qty: {item.quantity}</p>
+                                                                <span className="w-0.5 h-0.5 md:w-1 md:h-1 rounded-full bg-primary/20" />
+                                                                <p className="text-[9px] md:text-xs font-black text-primary">₹{item.price?.toLocaleString('en-IN')}</p>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 ))}
                                             </div>
 
-                                            <div className="border-t border-primary/5 mt-4 pt-4 flex justify-between items-center mb-4">
+                                            <div className="border-t border-primary/5 mt-2 md:mt-4 pt-2 md:pt-4 flex justify-between items-center mb-2 md:mb-4">
                                                 <div className="hidden md:block">
                                                     <p className="text-[8px] text-muted-foreground uppercase tracking-[0.2em] font-black mb-0.5">Shipping Status</p>
                                                     <p className="text-[10px] font-bold text-foreground/70 italic">Processing for sacred delivery.</p>
                                                 </div>
-                                                <div className="text-right w-full md:w-auto">
-                                                    <p className="text-[8px] text-muted-foreground uppercase tracking-[0.2em] font-black mb-0.5 opacity-50">Total Payable</p>
-                                                    <p className="font-serif font-black text-lg md:text-xl text-primary">₹{order.totalAmount?.toLocaleString('en-IN')}</p>
+                                                <div className="flex justify-between items-center w-full md:w-auto">
+                                                    <p className="md:hidden text-[8px] text-muted-foreground uppercase tracking-[0.2em] font-black opacity-50">Total</p>
+
+                                                    <div className="text-right">
+                                                        <p className="md:hidden hidden text-[8px] text-muted-foreground uppercase tracking-[0.2em] font-black mb-0.5 opacity-50">Total Payable</p>
+                                                        <p className="font-serif font-black text-sm md:text-xl text-primary">₹{order.totalAmount?.toLocaleString('en-IN')}</p>
+                                                    </div>
                                                 </div>
                                             </div>
 
-                                            <div className="flex md:justify-end pb-2">
+                                            <div className="flex md:justify-end pb-1 md:pb-2">
                                                 <Link
                                                     href={`/order-success/${order._id}`}
-                                                    className="w-full md:w-auto px-5 py-2.5 rounded-full bg-foreground text-background text-[9px] md:text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2 group/btn shadow-md active:scale-95"
+                                                    className="w-full md:w-auto px-4 py-1.5 md:py-2.5 rounded-full bg-foreground text-background text-[8px] md:text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2 group/btn shadow-md active:scale-95"
                                                 >
                                                     Track Order
                                                     <span className="group-hover/btn:translate-x-1 transition-transform">&rarr;</span>

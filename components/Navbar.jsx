@@ -153,7 +153,7 @@ export default function Navbar() {
                               <span className="text-foreground">KOSH</span>
                            </span>
                            {!isMobileSearching && (
-                              <span className="text-[6px] md:text-[7px] lg:text-[8px] text-muted-foreground tracking-[0.2em] font-bold uppercase mt-1 text-center w-full hidden md:block">
+                              <span className="text-[6px] md:text-[7px] lg:text-[8px] text-muted-foreground tracking-[0.2em] font-bold uppercase mt-0 text-center w-full">
                                  #NO.1 SPIRITUAL STORE
                               </span>
                            )}
@@ -289,8 +289,9 @@ export default function Navbar() {
                   </div>
                </div>
 
-               {/* 2.2 MOBILE SECONDARY ROW: View Switcher */}
-               {!isMobileSearching && (
+
+               {/* 2.2 MOBILE SECONDARY ROW: View Switcher - Home Only */}
+               {!isMobileSearching && pathname === '/' && (
                   <div className="md:hidden flex justify-center pb-2.5 px-4 animate-in fade-in slide-in-from-top duration-500">
                      <div className="bg-white/80 backdrop-blur-sm p-1 rounded-full flex relative items-center border border-[#DCC8B0]/50 shadow-sm w-full max-w-[280px] justify-between h-9">
                         {/* Animated Background Pill */}
@@ -417,35 +418,41 @@ export default function Navbar() {
                   <ul className="flex flex-col gap-0.5 px-3">
                      {categories.map((cat) => (
                         <li key={cat._id}>
-                           <div className={`rounded-full transition-all duration-300 group ${expandedCategory === cat._id ? 'bg-primary text-white shadow-md' : 'hover:bg-primary/20 bg-white/40'}`}>
-                              <div className="flex items-center justify-between py-1 px-4 cursor-pointer">
+                           <div className={`transition-all duration-300 group ${expandedCategory === cat._id ? 'bg-transparent text-foreground shadow-none rounded-2xl' : 'hover:bg-primary/20 bg-white/40 rounded-full'}`}>
+                              <div className="flex items-center justify-between py-2 px-5 cursor-pointer">
                                  <Link
                                     href={`/category/${cat.slug}`}
-                                    className="flex items-center gap-2.5 font-bold tracking-tight transition-all flex-1"
+                                    className="flex items-center gap-3 font-bold tracking-tight transition-all flex-1"
                                     onClick={() => setMobileMenuOpen(false)}
                                  >
-                                    <div className={`w-1 h-1 rounded-full transition-all duration-300 ${expandedCategory === cat._id ? 'bg-white scale-150' : 'bg-primary group-hover:bg-primary'}`} />
-                                    <span className="text-[12px]">{cat.name}</span>
+                                    <div className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${expandedCategory === cat._id ? 'bg-primary scale-125' : 'bg-primary group-hover:bg-primary'}`} />
+                                    <span className="text-[13px]">{cat.name}</span>
                                  </Link>
                                  {cat.subcategories && cat.subcategories.length > 0 && (
                                     <button
-                                       onClick={() => setExpandedCategory(expandedCategory === cat._id ? null : cat._id)}
-                                       className={`p-1.5 rounded-full transition-all ${expandedCategory === cat._id ? 'bg-white/20' : 'text-muted-foreground hover:bg-white'}`}
+                                       onClick={(e) => {
+                                          e.stopPropagation(); // Prevent Link navigation if clicking arrow, though current structure suggests the whole row triggers link if clicking text.
+                                          // Actually, the Link is separate from the button. The wrapper div doesn't have onClick.
+                                          // But let's attach the expand handler to the button or make the whole row clickable for expand if it has subcats?
+                                          // The previous code had the button separate.
+                                          setExpandedCategory(expandedCategory === cat._id ? null : cat._id);
+                                       }}
+                                       className={`p-1 rounded-full transition-all ${expandedCategory === cat._id ? 'bg-black/5' : 'text-muted-foreground hover:bg-white'}`}
                                     >
-                                       <ChevronDown size={14} className={`transition-transform duration-500 ${expandedCategory === cat._id ? 'rotate-180' : ''}`} />
+                                       <ChevronDown size={16} className={`transition-transform duration-500 ${expandedCategory === cat._id ? 'rotate-180' : ''}`} />
                                     </button>
                                  )}
                               </div>
 
                               {/* Mobile Subcategories Accordion - Compact */}
                               {cat.subcategories && cat.subcategories.length > 0 && (
-                                 <div className={`overflow-hidden transition-all duration-500 ease-in-out ${expandedCategory === cat._id ? 'max-h-96 opacity-100 pb-2' : 'max-h-0 opacity-0'}`}>
-                                    <ul className="ml-10 space-y-0.5 border-l border-white/10">
+                                 <div className={`overflow-hidden transition-all duration-500 ease-in-out ${expandedCategory === cat._id ? 'max-h-96 opacity-100 pb-3' : 'max-h-0 opacity-0'}`}>
+                                    <ul className="flex flex-col gap-1 px-4">
                                        {cat.subcategories.map((sub, idx) => (
                                           <li key={idx}>
                                              <Link
                                                 href={`/category/${cat.slug}?subcategory=${sub.slug}`}
-                                                className={`block text-[11px] font-medium transition-all py-1 px-4 rounded-full ${expandedCategory === cat._id ? 'text-white/80 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-primary hover:bg-white'}`}
+                                                className={`block text-[12px] font-medium transition-all py-2 px-4 rounded-lg border border-transparent ${expandedCategory === cat._id ? 'text-foreground bg-black/5 hover:bg-black/10' : 'text-muted-foreground'}`}
                                                 onClick={() => setMobileMenuOpen(false)}
                                              >
                                                 {sub.name}

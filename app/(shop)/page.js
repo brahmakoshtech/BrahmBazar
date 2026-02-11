@@ -77,13 +77,13 @@ export default function Home() {
       <CategoryShowcase />
 
       {/* 3.1 Trending Section */}
-      <section className="py-16 bg-secondary/5 relative border-t border-primary/5">
+      <section className="py-8 md:py-16 bg-secondary/5 relative border-t border-primary/5">
         <div className="container mx-auto px-4 max-w-7xl">
-          <div className="text-center mb-12">
-            <span className="text-secondary font-bold tracking-[0.2em] uppercase text-xs md:text-sm mb-3 block">
+          <div className="text-center mb-6 md:mb-12">
+            <span className="text-secondary font-bold tracking-[0.2em] uppercase text-xs md:text-sm mb-1.5 md:mb-3 block">
               Curated Favorites
             </span>
-            <h2 className="text-3xl md:text-4xl font-serif font-medium text-foreground mb-6">
+            <h2 className="text-3xl md:text-4xl font-serif font-medium text-foreground mb-2 md:mb-6">
               Trending <span className="text-primary italic">Now</span>
             </h2>
             <div className="flex gap-2 items-center justify-center opacity-70">
@@ -118,10 +118,10 @@ export default function Home() {
             </div>
           )}
 
-          <div className="mt-12 text-center">
+          <div className="mt-8 md:mt-12 text-center">
             <Link
               href="/shop?sort=trending"
-              className="group relative px-8 py-3 bg-transparent border border-primary/40 rounded-full text-foreground font-serif tracking-wide hover:border-primary hover:bg-primary/5 transition-all duration-300 inline-block"
+              className="group relative px-6 py-2 md:px-8 md:py-3 bg-transparent border border-primary/40 rounded-full text-sm md:text-base text-foreground font-serif tracking-wide hover:border-primary hover:bg-primary/5 transition-all duration-300 inline-block"
             >
               <span className="flex items-center gap-2">
                 View All Trending <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
@@ -132,13 +132,13 @@ export default function Home() {
       </section>
 
       {/* 3.2 New Arrivals Section */}
-      <section className="py-16 bg-background relative border-t border-primary/5">
+      <section className="py-8 md:py-16 bg-background relative border-t border-primary/5">
         <div className="container mx-auto px-4 max-w-7xl">
-          <div className="text-center mb-12">
-            <span className="text-secondary font-bold tracking-[0.2em] uppercase text-xs md:text-sm mb-3 block">
+          <div className="text-center mb-6 md:mb-12">
+            <span className="text-secondary font-bold tracking-[0.2em] uppercase text-xs md:text-sm mb-1.5 md:mb-3 block">
               Latest Treasures
             </span>
-            <h2 className="text-3xl md:text-4xl font-serif font-medium text-foreground mb-6">
+            <h2 className="text-3xl md:text-4xl font-serif font-medium text-foreground mb-2 md:mb-6">
               New <span className="text-primary italic">Arrivals</span>
             </h2>
             <div className="flex gap-2 items-center justify-center opacity-70">
@@ -173,10 +173,10 @@ export default function Home() {
             </div>
           )}
 
-          <div className="mt-12 text-center">
+          <div className="mt-8 md:mt-12 text-center">
             <Link
               href="/shop"
-              className="group relative px-8 py-3 bg-transparent border border-primary/40 rounded-full text-foreground font-serif tracking-wide hover:border-primary hover:bg-primary/5 transition-all duration-300 inline-block"
+              className="group relative px-6 py-2 md:px-8 md:py-3 bg-transparent border border-primary/40 rounded-full text-sm md:text-base text-foreground font-serif tracking-wide hover:border-primary hover:bg-primary/5 transition-all duration-300 inline-block"
             >
               <span className="flex items-center gap-2">
                 See All Collection <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
@@ -195,17 +195,17 @@ export default function Home() {
       <BrandStory />
 
       {/* 5. Featured Products Section */}
-      <section id="featured-products" className="py-24 bg-secondary/5 relative">
+      <section id="featured-products" className="pt-8 pb-3 md:py-24 bg-secondary/5 relative">
         <div className="absolute inset-0 bg-radial-gradient from-primary/5 to-transparent opacity-50"></div>
         <div className="container mx-auto px-4 max-w-7xl relative z-10">
 
           {/* Section Header */}
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-16 gap-4">
             <div className="max-w-xl">
-              <span className="text-secondary font-bold tracking-[0.2em] uppercase text-xs md:text-sm mb-2 block">
+              <span className="text-secondary font-bold tracking-[0.2em] uppercase text-[10px] md:text-sm mb-2 block">
                 Sacred Tools for Your Journey
               </span>
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground leading-tight">
+              <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground leading-tight">
                 Experience the <span className="text-primary italic">Energy</span>
               </h2>
             </div>
@@ -247,12 +247,12 @@ export default function Home() {
           )}
 
           {products.length > visibleCount && (
-            <div className="mt-16 text-center">
+            <div className="mt-8 md:mt-16 text-center">
               <button
                 onClick={() => setVisibleCount(prev => prev + 5)}
-                className="bg-primary text-black px-10 py-4 rounded-full font-bold text-lg hover:bg-white transition-all duration-500 shadow-[0_0_20px_rgba(212,175,55,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] inline-flex items-center gap-2 transform hover:-translate-y-1"
+                className="bg-primary text-black px-6 py-3 md:px-10 md:py-4 rounded-full font-bold text-sm md:text-lg hover:bg-white transition-all duration-500 shadow-[0_0_20px_rgba(212,175,55,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] inline-flex items-center gap-2 transform hover:-translate-y-1"
               >
-                Show More <ArrowRight size={20} />
+                Show More <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
               </button>
             </div>
           )}
@@ -260,10 +260,10 @@ export default function Home() {
       </section>
 
       {/* FAQ SECTION */}
-      <section id="faq" className="py-24 bg-background relative overflow-hidden">
+      <section id="faq" className="pt-3 pb-8 md:py-24 bg-background relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
         <div className="container mx-auto px-4 max-w-4xl relative z-10">
-          <div className="text-center mb-16">
+          <div className="text-center mb-6 md:mb-16">
             <span className="text-secondary font-bold tracking-[0.2em] uppercase text-xs md:text-sm mb-3 block">
               Common Queries
             </span>

@@ -53,7 +53,7 @@ export default function CategoryShowcase() {
     if (categories.length === 0) return null;
 
     return (
-        <section className="py-24 relative overflow-hidden">
+        <section className="py-10 md:py-24 relative overflow-hidden">
             {/* Soft Radial Gradient Background for Depth */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/5 via-background to-background pointer-events-none" />
 
@@ -63,12 +63,12 @@ export default function CategoryShowcase() {
 
             <div className="container mx-auto px-4 max-w-7xl relative z-10">
 
-                {/* Glassy Panel Container */}
-                <div className="relative backdrop-blur-md bg-white/40 dark:bg-black/20 rounded-[2.5rem] border border-primary/10 p-8 md:p-14 shadow-2xl shadow-primary/5">
+                {/* Container without background */}
+                <div className="relative p-0 md:p-8">
 
                     {/* Section Header */}
-                    <div className="flex flex-col items-center mb-12 text-center">
-                        <span className="text-secondary font-bold tracking-[0.4em] uppercase text-[10px] md:text-xs mb-4 block">
+                    <div className="flex flex-col items-center mb-8 md:mb-12 text-center">
+                        <span className="text-secondary font-bold tracking-[0.4em] uppercase text-[10px] md:text-xs mb-3 md:mb-4 block">
                             Divinely Curated
                         </span>
                         <h2 className="text-3xl md:text-5xl font-serif font-medium text-foreground mb-4">

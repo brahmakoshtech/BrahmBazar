@@ -49,15 +49,15 @@ export default function BrandStory() {
                         className="w-full lg:w-1/2 space-y-8"
                     >
                         <div className="space-y-4">
-                            <span className="text-primary font-bold tracking-[0.2em] uppercase text-sm">
+                            <span className="text-primary font-bold tracking-[0.2em] uppercase text-[10px] md:text-sm">
                                 {!loading && getContent('story_label', 'The Sacred Origin')}
                             </span>
-                            <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground leading-tight">
+                            <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground leading-tight">
                                 {!loading && getContent('story_title', 'Timeless Faith. Energized by Devotion.')}
                             </h2>
                         </div>
 
-                        <div className="space-y-6 text-muted-foreground text-lg font-light leading-relaxed">
+                        <div className="space-y-6 text-muted-foreground text-base md:text-lg font-light leading-relaxed">
                             <p>
                                 {!loading && getContent('story_text_1', 'The journey of the soul requires powerful allies. At BRAHMAKOSH, we do not merely trade in objects; we are custodians of ancient energy. Each Rudraksha, Gemstone, and Yantra is chosen for its vibrational purity.')}
                             </p>
@@ -68,25 +68,25 @@ export default function BrandStory() {
 
                         <div className="grid grid-cols-2 gap-8 pt-4">
                             <div>
-                                <h4 className="text-foreground font-serif text-2xl font-bold mb-2">
+                                <h4 className="text-foreground font-serif text-xl md:text-2xl font-bold mb-2">
                                     {!loading && getContent('story_stat_1_val', '12+ Years')}
                                 </h4>
-                                <p className="text-muted-foreground text-sm">
+                                <p className="text-muted-foreground text-xs md:text-sm">
                                     {!loading && getContent('story_stat_1_lbl', 'Serving the Dharma')}
                                 </p>
                             </div>
                             <div>
-                                <h4 className="text-foreground font-serif text-2xl font-bold mb-2">
+                                <h4 className="text-foreground font-serif text-xl md:text-2xl font-bold mb-2">
                                     {!loading && getContent('story_stat_2_val', '50,000+')}
                                 </h4>
-                                <p className="text-muted-foreground text-sm">
+                                <p className="text-muted-foreground text-xs md:text-sm">
                                     {!loading && getContent('story_stat_2_lbl', 'Seekers Empowered')}
                                 </p>
                             </div>
                         </div>
 
                         <div className="pt-4">
-                            <Button variant="primary" className="px-8 py-4 text-lg">Read Our Story</Button>
+                            <Button variant="primary" className="px-6 py-2 text-sm md:px-8 md:py-4 md:text-lg">Read Our Story</Button>
                         </div>
                     </motion.div>
                 </div>

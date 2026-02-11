@@ -31,13 +31,13 @@ export default function FeaturedSection({ activeCoupons }) {
     if (products.length === 0) return null;
 
     return (
-        <section className="py-16 md:py-24 bg-gradient-to-b from-background to-secondary/5 relative overflow-hidden">
+        <section className="py-8 md:py-24 bg-gradient-to-b from-background to-secondary/5 relative overflow-hidden">
             {/* Background Decoration */}
             <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
             <div className="absolute -left-20 top-40 w-64 h-64 bg-primary/5 rounded-full blur-3xl p-10"></div>
 
             <div className="container mx-auto px-4 max-w-7xl relative z-10">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                <div className="flex flex-col md:flex-row justify-between items-end mb-6 md:mb-12 gap-6">
                     <div className="max-w-xl">
                         <div className="flex items-center gap-2 mb-3">
                             <Sparkles size={16} className="text-primary animate-pulse" />

@@ -211,17 +211,17 @@ function CategoryContent({ params }) {
     return (
         <main className="min-h-screen bg-transparent text-foreground">
             {/* Dynamic Split Banner Header (Existing) */}
-            <div className="relative w-full min-h-[50vh] flex flex-col md:flex-row mb-12 border-b border-[#DCC8B0]/30 shadow-sm">
-                <div className="w-full md:w-1/2 bg-foreground flex flex-col justify-center p-8 md:p-16 relative z-10 text-[#FFF0D2]">
+            <div className="relative w-full min-h-[35vh] md:min-h-[50vh] flex flex-col md:flex-row mb-8 md:mb-12 border-b border-[#DCC8B0]/30 shadow-sm">
+                <div className="w-full md:w-1/2 bg-foreground flex flex-col justify-center p-6 md:p-16 relative z-10 text-[#FFF0D2]">
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
-                    <span className="text-primary font-bold tracking-[0.2em] uppercase mb-4 text-sm animate-fade-in-up">Sacred Collection</span>
-                    <h1 className="text-5xl md:text-7xl font-serif font-bold text-white mb-4 md:mb-6 leading-tight animate-fade-in-up delay-100">
+                    <span className="text-primary font-bold tracking-[0.2em] uppercase mb-2 md:mb-4 text-[10px] md:text-sm animate-fade-in-up">Sacred Collection</span>
+                    <h1 className="text-3xl md:text-7xl font-serif font-bold text-white mb-2 md:mb-6 leading-tight animate-fade-in-up delay-100">
                         {slug ? slug.charAt(0).toUpperCase() + slug.slice(1) : 'Collection'}
                     </h1>
-                    <p className="text-gray-400 text-lg max-w-md font-light leading-relaxed animate-fade-in-up delay-200">
+                    <p className="text-gray-400 text-sm md:text-lg max-w-md font-light leading-relaxed animate-fade-in-up delay-200">
                         Discover the divine energy of our authentic {slug} collection. curated for your spiritual journey.
                     </p>
-                    <div className="mt-8 flex gap-2 animate-fade-in-up delay-300">
+                    <div className="mt-4 md:mt-8 flex gap-2 animate-fade-in-up delay-300">
                         <div className="h-1 w-12 bg-primary rounded-full"></div>
                         <div className="h-1 w-4 bg-white/20 rounded-full"></div>
                         <div className="h-1 w-4 bg-white/20 rounded-full"></div>
@@ -229,39 +229,39 @@ function CategoryContent({ params }) {
                 </div>
 
                 {/* Banner Right Side (Existing) */}
-                <div className="w-full md:w-1/2 bg-[#2D241E] relative overflow-hidden flex items-center justify-center p-4 min-h-[300px] md:min-h-0">
+                <div className="w-full md:w-1/2 bg-[#2D241E] relative overflow-hidden flex items-center justify-center p-4 min-h-[35vh] md:min-h-0">
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent opacity-50"></div>
                     {bannerLoading ? (
-                        <div className="grid grid-cols-2 gap-4 w-full h-full max-w-2xl">
-                            <div className="bg-neutral-800 animate-pulse rounded-2xl h-64"></div>
-                            <div className="bg-neutral-800 animate-pulse rounded-2xl h-64 mt-8"></div>
-                            <div className="bg-neutral-800 animate-pulse rounded-2xl h-64 -mt-8"></div>
-                            <div className="bg-neutral-800 animate-pulse rounded-2xl h-64"></div>
+                        <div className="grid grid-cols-2 gap-3 md:gap-4 w-full h-full max-w-2xl">
+                            <div className="bg-neutral-800 animate-pulse rounded-2xl h-32 md:h-64"></div>
+                            <div className="bg-neutral-800 animate-pulse rounded-2xl h-32 md:h-64 mt-4 md:mt-8"></div>
+                            <div className="bg-neutral-800 animate-pulse rounded-2xl h-32 md:h-64 -mt-4 md:-mt-8"></div>
+                            <div className="bg-neutral-800 animate-pulse rounded-2xl h-32 md:h-64"></div>
                         </div>
                     ) : banners.length > 0 ? (
-                        <div className="grid grid-cols-2 gap-4 w-full max-w-2xl transform rotate-1 hover:rotate-0 transition-transform duration-1000">
+                        <div className="grid grid-cols-2 gap-3 md:gap-4 w-full max-w-2xl transform rotate-1 hover:rotate-0 transition-transform duration-1000">
                             {banners.map((banner, index) => (
-                                <div key={banner._id} className={`relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 group ${index % 2 === 0 ? 'mt-8' : '-mt-8'} hover:z-10 transition-all duration-500 hover:scale-105`} style={{ height: '300px' }}>
+                                <div key={banner._id} className={`relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 group ${index % 2 === 0 ? 'mt-4 md:mt-8' : '-mt-4 md:-mt-8'} hover:z-10 transition-all duration-500 hover:scale-105 h-[140px] md:h-[300px]`}>
                                     <img src={banner.image} alt={banner.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                        <p className="text-white text-xs font-bold uppercase tracking-widest">{banner.title}</p>
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-3 md:p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                        <p className="text-white text-[10px] md:text-xs font-bold uppercase tracking-widest">{banner.title}</p>
                                     </div>
                                 </div>
                             ))}
                             {/* Fill grid if only 1 banner */}
                             {banners.length === 1 && (
-                                <div className="bg-neutral-900/50 rounded-2xl border border-white/5 flex items-center justify-center -mt-8">
-                                    <span className="text-4xl">🕉️</span>
+                                <div className="bg-neutral-900/50 rounded-2xl border border-white/5 flex items-center justify-center -mt-4 md:-mt-8 h-[140px] md:h-[300px]">
+                                    <span className="text-3xl md:text-4xl">🕉️</span>
                                 </div>
                             )}
                         </div>
                     ) : (
-                        <div className="grid grid-cols-2 gap-4 w-full max-w-2xl opacity-50 transition-all duration-1000">
-                            <div className="bg-neutral-800 rounded-2xl h-64 mt-8 bg-gradient-to-br from-primary/20 to-neutral-900 flex items-center justify-center border border-white/5">
-                                <span className="text-4xl opacity-50">🕉️</span>
+                        <div className="grid grid-cols-2 gap-3 md:gap-4 w-full max-w-2xl opacity-50 transition-all duration-1000">
+                            <div className="bg-neutral-800 rounded-2xl h-32 md:h-64 mt-4 md:mt-8 bg-gradient-to-br from-primary/20 to-neutral-900 flex items-center justify-center border border-white/5">
+                                <span className="text-3xl md:text-4xl opacity-50">🕉️</span>
                             </div>
-                            <div className="bg-neutral-800 rounded-2xl h-64 -mt-8 bg-gradient-to-br from-secondary/20 to-neutral-900 flex items-center justify-center border border-white/5">
-                                <span className="text-4xl opacity-50">📿</span>
+                            <div className="bg-neutral-800 rounded-2xl h-32 md:h-64 -mt-4 md:-mt-8 bg-gradient-to-br from-secondary/20 to-neutral-900 flex items-center justify-center border border-white/5">
+                                <span className="text-3xl md:text-4xl opacity-50">📿</span>
                             </div>
                         </div>
                     )}

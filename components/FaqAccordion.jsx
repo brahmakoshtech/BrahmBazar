@@ -19,27 +19,29 @@ export default function FaqAccordion({ items = [] }) {
                 >
                     <button
                         onClick={() => toggleIndex(index)}
-                        className="w-full flex items-center justify-between p-4 md:p-6 text-left focus:outline-none"
+                        className="w-full flex items-center justify-between p-3 md:p-6 text-left focus:outline-none gap-3"
                     >
-                        <span className={`text-base md:text-lg font-serif font-medium transition-colors ${activeIndex === index ? 'text-primary' : 'text-foreground'}`}>
+                        <span className={`text-sm md:text-lg font-serif font-medium transition-colors ${activeIndex === index ? 'text-primary' : 'text-foreground'}`}>
                             {item.question}
                         </span>
-                        <div className={`p-2 rounded-full transition-colors ${activeIndex === index ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'}`}>
-                            {activeIndex === index ? <Minus size={18} /> : <Plus size={18} />}
+                        <div className={`p-1.5 md:p-2 rounded-full transition-colors shrink-0 ${activeIndex === index ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'}`}>
+                            {activeIndex === index ? <Minus size={16} className="md:w-[18px] md:h-[18px]" /> : <Plus size={16} className="md:w-[18px] md:h-[18px]" />}
                         </div>
                     </button>
                     <AnimatePresence>
                         {activeIndex === index && (
-                            <motion.div
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: 'auto', opacity: 1 }}
-                                exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.3, ease: 'easeInOut' }}
-                            >
-                                <div className="px-4 pb-4 md:px-6 md:pb-6 pt-0 text-muted-foreground text-xs md:text-sm leading-relaxed border-t border-dashed border-primary/10 mt-2">
-                                    {item.answer}
-                                </div>
-                            </motion.div>
+                            <div className="overflow-hidden">
+                                <motion.div
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: 'auto', opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                >
+                                    <div className="px-3 pb-3 md:px-6 md:pb-6 pt-0 text-muted-foreground text-xs md:text-sm leading-relaxed border-t border-dashed border-primary/10 mt-1 md:mt-2">
+                                        {item.answer}
+                                    </div>
+                                </motion.div>
+                            </div>
                         )}
                     </AnimatePresence>
                 </div>

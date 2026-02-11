@@ -105,35 +105,43 @@ export default function WishlistPage() {
                 <h1 className="text-2xl md:text-3xl font-serif font-bold text-foreground mb-8 flex items-center gap-3">
                     <Heart className="text-secondary" /> My Wishlist
                 </h1>
-                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
                     {wishlistItems.map((product) => (
-                        <div key={product._id} className="bg-white/60 backdrop-blur-md rounded-2xl shadow-lg border border-primary/10 overflow-hidden hover:bg-white transition-all group">
+                        <div key={product._id} className="bg-white/60 backdrop-blur-md rounded-xl md:rounded-2xl shadow-sm border border-primary/10 overflow-hidden hover:bg-white transition-all group relative flex flex-col">
                             <div className="aspect-[4/5] overflow-hidden relative">
-                                <img
-                                    src={product.images?.[0]}
-                                    alt={product.title}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                                />
+                                <Link href={`/product/${product._id}`}>
+                                    <img
+                                        src={product.images?.[0]}
+                                        alt={product.title}
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                    />
+                                </Link>
                                 <button
-                                    onClick={() => removeFromWishlist(product._id)}
-                                    className="absolute top-2 right-2 bg-white/80 backdrop-blur p-2 rounded-full text-muted-foreground hover:text-red-500 hover:bg-white transition-all shadow-sm"
+                                    onClick={(e) => { e.preventDefault(); removeFromWishlist(product._id); }}
+                                    className="absolute top-2 right-2 bg-white/80 backdrop-blur p-1.5 md:p-2 rounded-full text-muted-foreground hover:text-red-500 hover:bg-white transition-all shadow-sm z-10"
                                 >
-                                    <Trash2 size={16} />
+                                    <Trash2 size={14} className="md:w-4 md:h-4" />
                                 </button>
                             </div>
-                            <div className="p-4 md:p-6">
-                                <Link href={`/product/${product._id}`}>
-                                    <h3 className="font-serif font-bold text-sm md:text-base text-foreground mb-2 hover:text-primary transition-colors line-clamp-2 leading-tight h-10 md:h-12">
+
+                            <div className="p-2 md:p-5 flex flex-col flex-grow">
+                                <Link href={`/product/${product._id}`} className="block mb-1">
+                                    <h3 className="font-serif font-bold text-[10px] md:text-base text-foreground hover:text-primary transition-colors line-clamp-2 leading-tight min-h-[2.5em]">
                                         {product.title}
                                     </h3>
                                 </Link>
-                                <p className="text-primary font-bold mb-4 text-base md:text-lg italic">₹{product.price?.toLocaleString('en-IN')}</p>
-                                <button
-                                    onClick={() => moveToCart(product)}
-                                    className="w-full flex items-center justify-center gap-2 bg-foreground text-background py-3 rounded-full hover:bg-secondary hover:text-white transition-all font-bold text-xs uppercase tracking-widest"
-                                >
-                                    <ShoppingCart size={14} /> Add to Cart
-                                </button>
+
+                                <div className="mt-auto pt-1 md:pt-2">
+                                    <p className="text-primary font-bold mb-2 md:mb-3 text-xs md:text-lg italic">₹{product.price?.toLocaleString('en-IN')}</p>
+
+                                    <button
+                                        onClick={() => moveToCart(product)}
+                                        className="w-full flex items-center justify-center gap-1 bg-foreground text-background py-1.5 md:py-3 rounded-full hover:bg-secondary hover:text-white transition-all font-bold text-[9px] md:text-xs uppercase tracking-widest shadow-md"
+                                    >
+                                        <ShoppingCart size={10} className="md:w-[14px] md:h-[14px]" />
+                                        <span>Add to Cart</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ))}

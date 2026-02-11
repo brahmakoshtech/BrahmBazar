@@ -107,20 +107,20 @@ export default function ForYouSection() {
     }
 
     return (
-        <main className="min-h-screen bg-transparent pb-20 pt-10 md:pt-6">
+        <main className="min-h-screen bg-transparent pb-20 pt-[40px] md:pt-28">
             <div className="container mx-auto px-4 max-w-7xl">
-                <div className="text-center mb-10 px-4">
-                    <h1 className="text-3xl md:text-5xl font-serif font-bold text-[#5A4033] leading-tight tracking-tight mb-4">
+                <div className="text-center mb-1 md:mb-10 px-0">
+                    <h1 className="text-xl xs:text-xl md:text-5xl font-serif font-bold text-[#5A4033] leading-none tracking-tight mb-0.5 md:mb-4 whitespace-nowrap">
                         Your <span className="text-primary italic">Personalized</span> Collections
                     </h1>
-                    <div className="w-12 h-[1px] bg-primary/30 mx-auto mb-4"></div>
-                    <p className="text-sm md:text-base text-[#8C7A6B] max-w-lg mx-auto leading-relaxed font-medium">
+                    <div className="w-12 h-[1px] bg-primary/30 mx-auto mb-1 md:mb-4"></div>
+                    <p className="text-[10px] xs:text-xs md:text-base text-[#8C7A6B] max-w-lg mx-auto leading-relaxed font-medium px-4">
                         Curated remedies specifically selected for your spiritual journey.
                     </p>
                 </div>
 
                 {/* TAB NAVIGATION: Inspired by the pill-style in reference image */}
-                <div className="flex items-center justify-start md:justify-center gap-2.5 overflow-x-auto scrollbar-hide -mx-4 px-6 md:mx-0 md:px-0 mb-14 pb-2">
+                <div className="flex items-center justify-start md:justify-center gap-2.5 overflow-x-auto scrollbar-hide -mx-4 px-6 md:mx-0 md:px-0 mb-6 md:mb-14 pb-2">
                     {types.map((type) => (
                         <button
                             key={type._id || type.slug}
@@ -174,33 +174,30 @@ export default function ForYouSection() {
                                         : (SUBTITLES[tabLower]?.good || SUBTITLES.default.good);
 
                                     return (
-                                        <section key={section.id || idx} className="relative pb-6 pt-4">
-                                            <div className="mb-10 flex flex-col items-center text-center">
+                                        <section key={section.id || idx} className="relative pb-4 pt-0 md:pt-4">
+                                            <div className="mb-2 flex flex-col items-center text-center">
 
-                                                {/* Decorative Icon Badge */}
-                                                <div className={`
-                                                    mb-4 p-3 rounded-full border shadow-sm
-                                                    ${isMustHave
-                                                        ? 'bg-red-50 border-red-100 text-[#9F1239]'
-                                                        : 'bg-emerald-50 border-emerald-100 text-emerald-700'}
-                                                `}>
-                                                    {isMustHave
-                                                        ? <ShieldCheck size={24} strokeWidth={1.5} />
-                                                        : <Sparkles size={24} strokeWidth={1.5} />
-                                                    }
-                                                </div>
+                                                <div className="flex items-center justify-center gap-2 mb-0.5">
+                                                    {/* Icon Inline */}
+                                                    <div className={`
+                                                        p-1.5 rounded-full border shadow-sm flex items-center justify-center
+                                                        ${isMustHave
+                                                            ? 'bg-red-50 border-red-100 text-[#9F1239]'
+                                                            : 'bg-emerald-50 border-emerald-100 text-emerald-700'}
+                                                    `}>
+                                                        {isMustHave
+                                                            ? <ShieldCheck size={14} strokeWidth={1.5} />
+                                                            : <Sparkles size={14} strokeWidth={1.5} />
+                                                        }
+                                                    </div>
 
-                                                {/* Title with decorative lines */}
-                                                <div className="flex items-center gap-4 mb-3">
-                                                    <div className={`hidden md:block h-[1px] w-12 ${isMustHave ? 'bg-gradient-to-r from-transparent to-red-200' : 'bg-gradient-to-r from-transparent to-emerald-200'}`}></div>
-                                                    <h3 className={`text-2xl md:text-3xl font-serif font-medium tracking-wide ${isMustHave ? 'text-[#9F1239]' : 'text-[#2E7D32]'}`}>
+                                                    <h3 className={`text-lg md:text-3xl font-serif font-bold tracking-wide ${isMustHave ? 'text-[#9F1239]' : 'text-[#2E7D32]'}`}>
                                                         {section.title || sectionTitle}
                                                     </h3>
-                                                    <div className={`hidden md:block h-[1px] w-12 ${isMustHave ? 'bg-gradient-to-l from-transparent to-red-200' : 'bg-gradient-to-l from-transparent to-emerald-200'}`}></div>
                                                 </div>
 
                                                 {/* Subtitle */}
-                                                <p className="text-sm text-muted-foreground font-medium max-w-md mx-auto leading-relaxed italic relative px-6">
+                                                <p className="text-[10px] md:text-sm text-muted-foreground font-medium max-w-md mx-auto leading-relaxed italic relative px-6">
                                                     <span className="hidden md:inline absolute left-0 top-0 text-2xl opacity-20 font-serif">"</span>
                                                     {subMsg}
                                                     <span className="hidden md:inline absolute right-0 top-0 text-2xl opacity-20 font-serif">"</span>
