@@ -333,7 +333,7 @@ export default function Navbar() {
             {/* NAVIGATION LINKS (Desktop Only) */}
             <div className="hidden md:block border-t border-border bg-background/80 backdrop-blur-sm">
                <div className="container mx-auto px-4 max-w-7xl">
-                  <nav className="flex justify-start md:justify-center items-center gap-4 lg:gap-10 py-1.5 overflow-x-auto scrollbar-hide">
+                  <nav className="flex justify-start lg:justify-center items-center gap-4 lg:gap-10 py-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap">
                      <Link
                         href="/"
                         className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary relative group py-1"

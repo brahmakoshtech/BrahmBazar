@@ -11,7 +11,7 @@ export default function ShopLayout({ children }) {
                 <Suspense fallback={null}>
                     <Navbar />
                 </Suspense>
-                <main className="flex-grow pb-10 pt-[95px] md:pt-44">
+                <main className="flex-grow pb-10 pt-[85px] md:pt-[140px]">
                     {children}
                 </main>
                 <Footer />

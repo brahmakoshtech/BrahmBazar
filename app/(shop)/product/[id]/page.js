@@ -247,30 +247,30 @@ export default function ProductDetailsPage({ params }) {
         </div>
     );
     return (
-        <div className="min-h-screen bg-transparent text-foreground py-8">
+        <div className="min-h-screen bg-transparent text-foreground py-4 md:py-8">
             <div className="container max-w-7xl mx-auto px-4">
-                <Link href="/" className="inline-flex items-center text-muted-foreground hover:text-primary mb-6 transition-colors group">
-                    <ArrowLeft size={18} className="mr-2 group-hover:-translate-x-1 transition-transform" /> Back to Home
+                <Link href="/" className="hidden md:inline-flex items-center text-muted-foreground hover:text-primary mb-2 md:mb-6 transition-colors group text-sm">
+                    <ArrowLeft size={16} className="mr-2 group-hover:-translate-x-1 transition-transform" /> Back to Home
                 </Link>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-16">
                     {/* Product Images */}
-                    <div className="space-y-4">
-                        <div className="aspect-square bg-white rounded-2xl overflow-hidden relative border border-border/50 shadow-xl">
+                    <div className="space-y-3">
+                        <div className="aspect-square bg-white rounded-xl overflow-hidden relative border border-border/50 shadow-sm">
                             {mainImage ? (
                                 <img src={mainImage} alt={product.title} className="w-full h-full object-cover" />
                             ) : (
                                 <div className="flex items-center justify-center h-full text-muted-foreground">No Image</div>
                             )}
                             {product.stock === 0 && (
-                                <div className="absolute top-4 right-4 bg-red-900/90 text-white px-3 py-1 text-sm font-bold uppercase tracking-wider rounded border border-red-500/30 backdrop-blur-md">
+                                <div className="absolute top-4 right-4 bg-red-900/90 text-white px-3 py-1 text-xs font-bold uppercase tracking-wider rounded border border-red-500/30 backdrop-blur-md">
                                     Out of Stock
                                 </div>
                             )}
                         </div>
                         {/* Thumbnail Gallery */}
                         {product.images && product.images.length > 1 && (
-                            <div className="grid grid-cols-5 gap-4">
+                            <div className="grid grid-cols-5 gap-2 md:gap-4">
                                 {product.images.map((img, idx) => (
                                     <button
                                         key={idx}
@@ -286,67 +286,77 @@ export default function ProductDetailsPage({ params }) {
 
                     {/* Product Info */}
                     <div>
-                        <div className="mb-6 md:mb-8 border-b border-border pb-6 md:pb-8">
-                            <span className="text-xs md:text-sm font-bold text-primary uppercase tracking-widest mb-2 block">
+                        <div className="mb-4 md:mb-8 border-b border-border pb-4 md:pb-8">
+                            <span className="text-[10px] md:text-sm font-bold text-primary uppercase tracking-widest mb-1 block">
                                 {product.category}
                             </span>
-                            <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground mb-4 leading-tight">
+                            <h1 className="text-xl md:text-5xl font-serif font-bold text-foreground mb-2 md:mb-4 leading-tight">
                                 {product.title}
                             </h1>
-                            <div className="flex items-baseline gap-3">
+                            <div className="flex items-baseline gap-2 md:gap-3">
                                 {bestCoupon ? (
                                     <>
-                                        <span className="text-lg md:text-xl text-muted-foreground line-through decoration-red-500/50">
+                                        <span className="text-sm md:text-xl text-muted-foreground line-through decoration-red-500/50">
                                             ₹{product.price?.toLocaleString('en-IN')}
                                         </span>
-                                        <span className="text-2xl md:text-4xl font-bold text-primary">
+                                        <span className="text-lg md:text-4xl font-bold text-primary">
                                             ₹{(product.price ? (product.price - bestCoupon.savings) : 0).toLocaleString('en-IN')}
                                         </span>
-                                        <span className="text-[10px] md:text-xs bg-primary/10 text-primary px-2 py-1 rounded-full border border-primary/20 font-bold uppercase tracking-wider">
+                                        <span className="text-[9px] md:text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full border border-primary/20 font-bold uppercase tracking-wider">
                                             {bestCoupon.code} Applied
                                         </span>
                                     </>
                                 ) : (
-                                    <span className="text-2xl md:text-4xl font-bold text-primary">₹{product.price?.toLocaleString('en-IN')}</span>
+                                    <span className="text-lg md:text-4xl font-bold text-primary">₹{product.price?.toLocaleString('en-IN')}</span>
                                 )}
                             </div>
                         </div>
 
                         {/* Actions Section */}
-                        <div className="space-y-8">
-                            {/* Quantity Selector */}
-                            {product.stock > 0 && (
-                                <div className="flex items-center gap-6 mb-8">
-                                    <span className="text-xs md:text-sm font-bold text-muted-foreground uppercase tracking-widest whitespace-nowrap">Quantity</span>
-                                    <div className="flex items-center bg-white border border-border rounded-full overflow-hidden shadow-sm">
-                                        <button
-                                            onClick={() => handleQuantityChange('decrease')}
-                                            disabled={quantity <= 1}
-                                            className="px-5 py-3 hover:bg-muted disabled:opacity-30 transition-colors text-foreground"
-                                        >
-                                            <Minus size={14} />
-                                        </button>
-                                        <span className="w-10 text-center font-bold text-foreground text-lg">{quantity}</span>
-                                        <button
-                                            onClick={() => handleQuantityChange('increase')}
-                                            disabled={quantity >= product.stock}
-                                            className="px-5 py-3 hover:bg-muted disabled:opacity-30 transition-colors text-foreground"
-                                        >
-                                            <Plus size={14} />
-                                        </button>
+                        <div className="space-y-4">
+                            {/* Quantity & Wishlist Row */}
+                            <div className="flex items-center justify-between gap-3">
+                                {product.stock > 0 && (
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-[10px] md:text-xs font-bold text-muted-foreground uppercase tracking-widest whitespace-nowrap">Qty</span>
+                                        <div className="flex items-center bg-white border border-border rounded-full overflow-hidden shadow-sm h-8 md:h-10">
+                                            <button
+                                                onClick={() => handleQuantityChange('decrease')}
+                                                disabled={quantity <= 1}
+                                                className="px-2 md:px-3 hover:bg-muted disabled:opacity-30 transition-colors text-foreground h-full flex items-center justify-center"
+                                            >
+                                                <Minus size={12} className="md:w-3.5 md:h-3.5" />
+                                            </button>
+                                            <span className="w-6 md:w-8 text-center font-bold text-foreground text-xs md:text-sm">{quantity}</span>
+                                            <button
+                                                onClick={() => handleQuantityChange('increase')}
+                                                disabled={quantity >= product.stock}
+                                                className="px-2 md:px-3 hover:bg-muted disabled:opacity-30 transition-colors text-foreground h-full flex items-center justify-center"
+                                            >
+                                                <Plus size={12} className="md:w-3.5 md:h-3.5" />
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
 
-                            {/* CTAs */}
-                            <div className="flex flex-col sm:flex-row gap-4 items-center">
+                                <button
+                                    onClick={toggleWishlist}
+                                    className="p-2 md:p-3 rounded-full border border-border hover:border-red-500 hover:text-red-500 transition-all active:scale-95 group ml-auto"
+                                    title="Add to Wishlist"
+                                >
+                                    <Heart size={18} className="md:w-5 md:h-5 group-hover:fill-red-500 transition-colors" />
+                                </button>
+                            </div>
+
+                            {/* CTAs Row */}
+                            <div className="flex gap-2.5 w-full">
                                 <Button
-                                    variant="outline"
+                                    variant="white"
                                     onClick={() => addToCart(false)}
                                     disabled={product.stock === 0}
                                     isLoading={adding}
-                                    icon={<ShoppingCart size={18} />}
-                                    className="flex-1 py-4 text-sm md:text-base border-primary/30 text-primary hover:bg-primary/5 rounded-full"
+                                    icon={<ShoppingCart size={14} />}
+                                    className="flex-1 py-2 md:py-4 text-[11px] md:text-base !border !border-gray-300 !text-black !bg-white hover:!bg-gray-100 rounded-full font-bold h-9 md:h-auto flex items-center justify-center shadow-sm whitespace-nowrap"
                                 >
                                     Add to Cart
                                 </Button>
@@ -354,41 +364,34 @@ export default function ProductDetailsPage({ params }) {
                                     variant="primary"
                                     onClick={() => addToCart(true)}
                                     disabled={product.stock === 0}
-                                    className="flex-1 py-4 text-sm md:text-base rounded-full shadow-lg shadow-primary/20"
+                                    className="flex-1 py-2 md:py-4 text-[11px] md:text-base rounded-full shadow-lg shadow-primary/20 h-9 md:h-auto flex items-center justify-center whitespace-nowrap"
                                 >
                                     Buy Now
                                 </Button>
-                                <button
-                                    onClick={toggleWishlist}
-                                    className="p-4 rounded-full border border-border hover:border-red-500 hover:text-red-500 transition-all active:scale-95 group"
-                                    title="Add to Wishlist"
-                                >
-                                    <Heart size={24} className="group-hover:fill-red-500 transition-colors" />
-                                </button>
                             </div>
                         </div>
 
                         {/* Trust Badges */}
-                        <div className="mt-10 grid grid-cols-3 gap-3 md:gap-6 pt-8 border-t border-border">
-                            <div className="flex flex-col items-center text-center gap-2 p-4 bg-white/50 rounded-xl border border-border transition-colors group">
-                                <Truck size={24} className="text-secondary" />
-                                <span className="text-[9px] md:text-xs font-bold uppercase text-foreground tracking-widest">Free Shipping</span>
+                        <div className="mt-6 md:mt-10 grid grid-cols-3 gap-2 md:gap-3 lg:gap-6 pt-4 md:pt-8 border-t border-border">
+                            <div className="flex flex-col items-center text-center gap-1.5 md:gap-2 p-2 md:p-4 bg-white/50 rounded-xl border border-border transition-colors group">
+                                <Truck size={20} className="md:w-6 md:h-6 text-secondary" />
+                                <span className="text-[8px] md:text-xs font-bold uppercase text-foreground tracking-widest">Free Shipping</span>
                             </div>
-                            <div className="flex flex-col items-center text-center gap-2 p-4 bg-white/50 rounded-xl border border-border transition-colors group">
-                                <ShieldCheck size={24} className="text-secondary" />
-                                <span className="text-[9px] md:text-xs font-bold uppercase text-foreground tracking-widest">100% Authentic</span>
+                            <div className="flex flex-col items-center text-center gap-1.5 md:gap-2 p-2 md:p-4 bg-white/50 rounded-xl border border-border transition-colors group">
+                                <ShieldCheck size={20} className="md:w-6 md:h-6 text-secondary" />
+                                <span className="text-[8px] md:text-xs font-bold uppercase text-foreground tracking-widest">100% Authentic</span>
                             </div>
-                            <div className="flex flex-col items-center text-center gap-2 p-4 bg-white/50 rounded-xl border border-border transition-colors group">
-                                <Heart size={24} className="text-secondary" />
-                                <span className="text-[9px] md:text-xs font-bold uppercase text-foreground tracking-widest">Energized</span>
+                            <div className="flex flex-col items-center text-center gap-1.5 md:gap-2 p-2 md:p-4 bg-white/50 rounded-xl border border-border transition-colors group">
+                                <Heart size={20} className="md:w-6 md:h-6 text-secondary" />
+                                <span className="text-[8px] md:text-xs font-bold uppercase text-foreground tracking-widest">Energized</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Detailed Description Section */}
-                <div className="mt-16 border-t border-border pt-12 max-w-3xl">
-                    <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground mb-4">Product Description</h2>
+                <div className="mt-6 md:mt-16 border-t border-border pt-6 md:pt-12 max-w-3xl">
+                    <h2 className="text-xl md:text-3xl font-serif font-bold text-foreground mb-4">Product Description</h2>
                     <div className="text-muted-foreground leading-relaxed font-light text-sm md:text-base">
                         <p>{product.description}</p>
                     </div>
@@ -396,11 +399,11 @@ export default function ProductDetailsPage({ params }) {
 
                 {/* Related Products Section */}
                 {relatedProducts.length > 0 && (
-                    <div className="mt-24 border-t border-border pt-12 relative">
-                        <div className="flex justify-between items-end mb-8 relative z-10">
+                    <div className="mt-12 md:mt-24 border-t md:border-t border-border pt-8 md:pt-12 relative">
+                        <div className="flex justify-between items-end mb-6 md:mb-8 relative z-10">
                             <div>
                                 <span className="text-primary font-bold tracking-widest uppercase text-xs mb-1 block">Handpicked for you</span>
-                                <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">
+                                <h2 className="text-xl md:text-3xl font-serif font-bold text-foreground">
                                     Related <span className="text-primary italic">Treasures</span>
                                 </h2>
                             </div>
@@ -450,7 +453,7 @@ export default function ProductDetailsPage({ params }) {
                 {/* Recently Viewed Section */}
                 {recentlyViewed.length > 0 && (
                     <div className="mt-24 mb-12">
-                        <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground mb-8 flex items-center gap-4">
+                        <h2 className="text-lg md:text-2xl font-serif font-bold text-foreground mb-6 md:mb-8 flex items-center gap-4">
                             <span className="h-px bg-border flex-grow"></span>
                             Recently Viewed
                             <span className="h-px bg-border flex-grow"></span>

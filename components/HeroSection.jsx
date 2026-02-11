@@ -83,7 +83,7 @@ export default function HeroSection() {
     }, [slides.length]);
 
     return (
-        <section className="relative h-[85vh] w-full overflow-hidden bg-foreground text-white">
+        <section className="relative h-[60vh] md:h-[60vh] lg:h-[70vh] w-full overflow-hidden bg-foreground text-white">
             {/* Reverted to original fixed height h-[85vh] */}
             <AnimatePresence mode='wait'>
                 <motion.div
@@ -109,35 +109,35 @@ export default function HeroSection() {
             </AnimatePresence>
 
             {/* Content */}
-            <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-end md:justify-center pb-20 md:pb-0 max-w-7xl">
+            <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-end md:justify-end lg:justify-center pb-16 md:pb-8 lg:pb-0 max-w-7xl">
                 <motion.div
                     key={current + "-text"}
                     initial={{ opacity: 0, x: -50 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.8, delay: 0.5 }}
-                    className="max-w-2xl space-y-2 md:space-y-6"
+                    className="max-w-2xl space-y-2 md:space-y-4 lg:space-y-6"
                 >
                     <div className="flex flex-col items-start gap-0.5 md:gap-1">
-                        <span className="text-primary font-bold tracking-[0.3em] uppercase text-sm md:text-base">
+                        <span className="text-primary font-bold tracking-[0.3em] uppercase text-xs md:text-sm lg:text-base">
                             BRAHMAKOSH
                         </span>
-                        <span className="text-gray-300 font-light tracking-[0.2em] uppercase text-[10px] md:text-xs">
+                        <span className="text-gray-300 font-light tracking-[0.2em] uppercase text-[9px] md:text-[10px] lg:text-xs">
                             #NO.1 SPIRITUAL STORE
                         </span>
                     </div>
 
-                    <h1 className="text-4xl md:text-7xl font-serif font-bold leading-tight drop-shadow-lg">
+                    <h1 className="text-3xl md:text-5xl lg:text-7xl font-serif font-bold leading-tight drop-shadow-lg">
                         {slides[current].title}
                     </h1>
 
-                    <p className="text-base md:text-2xl text-gray-200 font-light max-w-xl">
+                    <p className="text-sm md:text-lg lg:text-2xl text-gray-200 font-light max-w-xl">
                         {slides[current].subtitle}
                     </p>
 
                     <div className="pt-2 md:pt-4">
                         <Link href={slides[current].link || '#'}>
-                            <button className="bg-primary text-foreground px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-sm md:text-lg hover:bg-white hover:scale-105 transition-all duration-300 flex items-center gap-2 shadow-[0_0_20px_rgba(214,158,46,0.5)]">
-                                {slides[current].cta} <ChevronRight size={16} className="md:w-5 md:h-5" />
+                            <button className="bg-primary text-foreground px-5 py-2.5 md:px-6 md:py-3 lg:px-8 lg:py-4 rounded-full font-bold text-xs md:text-base lg:text-lg hover:bg-white hover:scale-105 transition-all duration-300 flex items-center gap-2 shadow-[0_0_20px_rgba(214,158,46,0.5)]">
+                                {slides[current].cta} <ChevronRight size={14} className="md:w-4 md:h-4 lg:w-5 lg:h-5" />
                             </button>
                         </Link>
                     </div>

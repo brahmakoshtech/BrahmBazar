@@ -6,6 +6,8 @@ import ProductCard from '@/components/ProductCard';
 import BannerSlider from '@/components/BannerSlider';
 import { motion } from 'framer-motion';
 import { Sparkles, ShieldCheck } from 'lucide-react';
+import FaqAccordion from '@/components/FaqAccordion';
+import { getFaqs } from '@/services/faqService';
 
 const SUBTITLES = {
     shop: {
@@ -37,19 +39,22 @@ export default function ForYouSection() {
     const [loading, setLoading] = useState(true);
     const [contentLoading, setContentLoading] = useState(true);
     const [activeCoupons, setActiveCoupons] = useState([]);
+    const [faqs, setFaqs] = useState([]);
 
     // 1. Initial Fetch calling types
     useEffect(() => {
         const fetchTypes = async () => {
             try {
-                const [typesRes, couponsRes] = await Promise.all([
+                const [typesRes, couponsRes, faqsRes] = await Promise.all([
                     api.get('/api/admin/remedies/types'),
-                    api.get('/api/coupons/active')
+                    api.get('/api/coupons/active'),
+                    getFaqs()
                 ]);
 
                 const typeData = typesRes.data || [];
                 setTypes(typeData);
                 setActiveCoupons(couponsRes.data || []);
+                setFaqs(faqsRes || []);
 
                 if (typeData.length > 0) {
                     setActiveTab(typeData[0].slug);
@@ -107,9 +112,9 @@ export default function ForYouSection() {
     }
 
     return (
-        <main className="min-h-screen bg-transparent pb-20 pt-[40px] md:pt-28">
+        <main className="min-h-screen bg-transparent pb-0 md:pb-20 pt-[65px] md:pt-28">
             <div className="container mx-auto px-4 max-w-7xl">
-                <div className="text-center mb-1 md:mb-10 px-0">
+                <div className="text-center mb-5 md:mb-10 px-0">
                     <h1 className="text-xl xs:text-xl md:text-5xl font-serif font-bold text-[#5A4033] leading-none tracking-tight mb-0.5 md:mb-4 whitespace-nowrap">
                         Your <span className="text-primary italic">Personalized</span> Collections
                     </h1>
@@ -154,7 +159,7 @@ export default function ForYouSection() {
                                 if (section.type === 'banner_slider') {
                                     if (!section.data || section.data.length === 0) return null;
                                     return (
-                                        <div key={section.id || idx} className="mt-2 mb-1">
+                                        <div key={section.id || idx} className="mt-2 mb-3">
                                             <BannerSlider banners={section.data} />
                                         </div>
                                     );
@@ -174,33 +179,26 @@ export default function ForYouSection() {
                                         : (SUBTITLES[tabLower]?.good || SUBTITLES.default.good);
 
                                     return (
-                                        <section key={section.id || idx} className="relative pb-4 pt-0 md:pt-4">
-                                            <div className="mb-2 flex flex-col items-center text-center">
-
-                                                <div className="flex items-center justify-center gap-2 mb-0.5">
-                                                    {/* Icon Inline */}
+                                        <section key={section.id || idx} className="relative pb-4 pt-0 md:pt-4 mt-2">
+                                            <div className={`mb-4 pl-4 flex flex-col items-start text-left border-l-2 ${isMustHave ? 'border-[#9F1239]' : 'border-[#2E7D32]'}`}>
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <h3 className={`text-xl md:text-2xl font-serif font-bold tracking-wide ${isMustHave ? 'text-[#9F1239]' : 'text-[#2E7D32]'}`}>
+                                                        {section.title || sectionTitle}
+                                                    </h3>
                                                     <div className={`
-                                                        p-1.5 rounded-full border shadow-sm flex items-center justify-center
+                                                        p-1 rounded-full border shadow-sm flex items-center justify-center
                                                         ${isMustHave
                                                             ? 'bg-red-50 border-red-100 text-[#9F1239]'
                                                             : 'bg-emerald-50 border-emerald-100 text-emerald-700'}
                                                     `}>
                                                         {isMustHave
-                                                            ? <ShieldCheck size={14} strokeWidth={1.5} />
-                                                            : <Sparkles size={14} strokeWidth={1.5} />
+                                                            ? <ShieldCheck size={12} strokeWidth={1.5} />
+                                                            : <Sparkles size={12} strokeWidth={1.5} />
                                                         }
                                                     </div>
-
-                                                    <h3 className={`text-lg md:text-3xl font-serif font-bold tracking-wide ${isMustHave ? 'text-[#9F1239]' : 'text-[#2E7D32]'}`}>
-                                                        {section.title || sectionTitle}
-                                                    </h3>
                                                 </div>
-
-                                                {/* Subtitle */}
-                                                <p className="text-[10px] md:text-sm text-muted-foreground font-medium max-w-md mx-auto leading-relaxed italic relative px-6">
-                                                    <span className="hidden md:inline absolute left-0 top-0 text-2xl opacity-20 font-serif">"</span>
+                                                <p className="text-[11px] md:text-sm text-muted-foreground/80 font-medium leading-relaxed italic">
                                                     {subMsg}
-                                                    <span className="hidden md:inline absolute right-0 top-0 text-2xl opacity-20 font-serif">"</span>
                                                 </p>
                                             </div>
 
@@ -226,6 +224,28 @@ export default function ForYouSection() {
                     )}
                 </div>
             </div>
+
+            {/* FAQ SECTION */}
+            <section id="faq" className="pt-3 pb-[3px] md:pb-24 bg-transparent relative overflow-hidden mt-8 md:mt-16">
+                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
+                <div className="container mx-auto px-4 max-w-4xl relative z-10">
+                    <div className="text-center mb-6 md:mb-16">
+                        <span className="text-secondary font-bold tracking-[0.2em] uppercase text-xs md:text-sm mb-3 block">
+                            Common Queries
+                        </span>
+                        <h2 className="text-3xl md:text-4xl font-serif font-medium text-foreground mb-6">
+                            Divine <span className="text-primary italic">Answers</span>
+                        </h2>
+                        <div className="flex gap-2 items-center justify-center opacity-70">
+                            <div className="h-px w-12 bg-primary"></div>
+                            <span className="text-primary text-xl">❖</span>
+                            <div className="h-px w-12 bg-primary"></div>
+                        </div>
+                    </div>
+
+                    <FaqAccordion items={faqs} />
+                </div>
+            </section>
         </main>
     );
 }
