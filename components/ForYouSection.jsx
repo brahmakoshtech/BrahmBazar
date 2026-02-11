@@ -92,6 +92,67 @@ export default function ForYouSection() {
         fetchLayout();
     }, [activeTab]);
 
+    const renderSection = (section, idx) => {
+        // 1. BANNER SLIDER
+        if (section.type === 'banner_slider') {
+            if (!section.data || section.data.length === 0) return null;
+            return (
+                <div key={section.id || idx} className="mt-2 mb-3">
+                    <BannerSlider banners={section.data} />
+                </div>
+            );
+        }
+
+        // 2. REMEDY SECTIONS (Good/Must)
+        if (section.type === 'good_to_have' || section.type === 'must_have') {
+            if (!section.data || section.data.length === 0) return null;
+
+            const isMustHave = section.type === 'must_have';
+            const sectionTitle = isMustHave ? 'Must Have' : 'Good To Have';
+
+            // Subtitle Logic
+            const tabLower = activeTab ? activeTab.toLowerCase() : 'default';
+            const subMsg = isMustHave
+                ? (SUBTITLES[tabLower]?.must || SUBTITLES.default.must)
+                : (SUBTITLES[tabLower]?.good || SUBTITLES.default.good);
+
+            return (
+                <section key={section.id || idx} className="relative pb-4 pt-0 md:pt-4 mt-2">
+                    <div className={`mb-4 pl-4 flex flex-col items-start text-left border-l-2 ${isMustHave ? 'border-[#9F1239]' : 'border-[#2E7D32]'}`}>
+                        <div className="flex items-center gap-2 mb-1">
+                            <h3 className={`text-xl md:text-2xl font-serif font-bold tracking-wide ${isMustHave ? 'text-[#9F1239]' : 'text-[#2E7D32]'}`}>
+                                {section.title || sectionTitle}
+                            </h3>
+                            <div className={`
+                                p-1 rounded-full border shadow-sm flex items-center justify-center
+                                ${isMustHave
+                                    ? 'bg-red-50 border-red-100 text-[#9F1239]'
+                                    : 'bg-emerald-50 border-emerald-100 text-emerald-700'}
+                            `}>
+                                {isMustHave
+                                    ? <ShieldCheck size={12} strokeWidth={1.5} />
+                                    : <Sparkles size={12} strokeWidth={1.5} />
+                                }
+                            </div>
+                        </div>
+                        <p className="text-[11px] md:text-sm text-muted-foreground/80 font-medium leading-relaxed italic">
+                            {subMsg}
+                        </p>
+                    </div>
+
+                    <div className="flex overflow-x-auto pb-8 gap-3 md:gap-6 snap-x scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
+                        {section.data.map((remedy) => (
+                            <div key={remedy._id} className="min-w-[145px] xs:min-w-[160px] md:min-w-[240px] snap-start flex flex-col">
+                                <ProductCard product={remedy.product} activeCoupons={activeCoupons} />
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        }
+        return null;
+    };
+
     if (loading && !layoutData) {
         return (
             <div className="min-h-[50vh] flex items-center justify-center">
@@ -154,66 +215,36 @@ export default function ForYouSection() {
                             transition={{ duration: 0.5 }}
                             className="flex flex-col gap-0"
                         >
-                            {layoutData && layoutData.map((section, idx) => {
-                                // 1. BANNER SLIDER
-                                if (section.type === 'banner_slider') {
-                                    if (!section.data || section.data.length === 0) return null;
-                                    return (
-                                        <div key={section.id || idx} className="mt-2 mb-3">
-                                            <BannerSlider banners={section.data} />
-                                        </div>
-                                    );
-                                }
+                            {(() => {
+                                if (!layoutData) return null;
 
-                                // 2. REMEDY SECTIONS (Good/Must)
-                                if (section.type === 'good_to_have' || section.type === 'must_have') {
-                                    if (!section.data || section.data.length === 0) return null;
+                                // Helper to find section by type
+                                const findSection = (type) => layoutData.find(s => s.type === type);
 
-                                    const isMustHave = section.type === 'must_have';
-                                    const sectionTitle = isMustHave ? 'Must Have' : 'Good To Have';
+                                const mustHaveSection = findSection('must_have');
+                                const bannerSliderSection = findSection('banner_slider');
+                                const goodToHaveSection = findSection('good_to_have');
 
-                                    // Subtitle Logic
-                                    const tabLower = activeTab ? activeTab.toLowerCase() : 'default';
-                                    const subMsg = isMustHave
-                                        ? (SUBTITLES[tabLower]?.must || SUBTITLES.default.must)
-                                        : (SUBTITLES[tabLower]?.good || SUBTITLES.default.good);
+                                return (
+                                    <>
+                                        {/* 1. MUST HAVE */}
+                                        {mustHaveSection && renderSection(mustHaveSection, 0)}
 
-                                    return (
-                                        <section key={section.id || idx} className="relative pb-4 pt-0 md:pt-4 mt-2">
-                                            <div className={`mb-4 pl-4 flex flex-col items-start text-left border-l-2 ${isMustHave ? 'border-[#9F1239]' : 'border-[#2E7D32]'}`}>
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <h3 className={`text-xl md:text-2xl font-serif font-bold tracking-wide ${isMustHave ? 'text-[#9F1239]' : 'text-[#2E7D32]'}`}>
-                                                        {section.title || sectionTitle}
-                                                    </h3>
-                                                    <div className={`
-                                                        p-1 rounded-full border shadow-sm flex items-center justify-center
-                                                        ${isMustHave
-                                                            ? 'bg-red-50 border-red-100 text-[#9F1239]'
-                                                            : 'bg-emerald-50 border-emerald-100 text-emerald-700'}
-                                                    `}>
-                                                        {isMustHave
-                                                            ? <ShieldCheck size={12} strokeWidth={1.5} />
-                                                            : <Sparkles size={12} strokeWidth={1.5} />
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <p className="text-[11px] md:text-sm text-muted-foreground/80 font-medium leading-relaxed italic">
-                                                    {subMsg}
-                                                </p>
+                                        {/* 2. BANNER */}
+                                        {bannerSliderSection && (
+                                            <div key="banner-wrapper" className="mt-2 mb-3">
+                                                <BannerSlider banners={bannerSliderSection.data} />
                                             </div>
+                                        )}
 
-                                            <div className="flex overflow-x-auto pb-8 gap-3 md:gap-6 snap-x scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
-                                                {section.data.map((remedy) => (
-                                                    <div key={remedy._id} className="min-w-[145px] xs:min-w-[160px] md:min-w-[240px] snap-start flex flex-col">
-                                                        <ProductCard product={remedy.product} activeCoupons={activeCoupons} />
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </section>
-                                    );
-                                }
-                                return null;
-                            })}
+                                        {/* 3. GOOD TO HAVE */}
+                                        {goodToHaveSection && renderSection(goodToHaveSection, 2)}
+
+                                        {/* Render any other unexpected sections if they exist */}
+                                        {layoutData.filter(s => !['must_have', 'banner_slider', 'good_to_have'].includes(s.type)).map((s, i) => renderSection(s, i + 3))}
+                                    </>
+                                );
+                            })()}
 
                             {layoutData && layoutData.every(s => !s.data || s.data.length === 0) && (
                                 <div className="text-center py-20 text-muted-foreground">
