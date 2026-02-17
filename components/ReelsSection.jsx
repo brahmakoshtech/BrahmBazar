@@ -4,11 +4,13 @@ import { useState, useEffect, useRef } from 'react';
 import api from '@/services/api';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import Image from 'next/image';
+import { useContent } from '@/hooks/useContent';
 
 export default function ReelsSection() {
     const [reels, setReels] = useState([]);
     const [loading, setLoading] = useState(true);
     const scrollRef = useRef(null);
+    const { content, getContent } = useContent();
 
     useEffect(() => {
         const fetchReels = async () => {
@@ -67,6 +69,11 @@ export default function ReelsSection() {
     // Duplicate reels for infinite loop effect only if scrollable
     const displayReels = isScrollable ? [...reels, ...reels, ...reels] : reels;
 
+    // Auto-hide section if no reels
+    if (!loading && reels.length === 0) {
+        return null;
+    }
+
     return (
         <section className="py-12 bg-[#FFF8F0] border-t-2 border-[#DCC8B0]/30 relative overflow-hidden">
             {/* Decorative Background Elements */}
@@ -74,14 +81,16 @@ export default function ReelsSection() {
 
             <div className="container mx-auto px-4 mb-12 text-center relative z-10">
                 <div className="inline-block relative group cursor-default">
-                    <span className="absolute -top-4 md:-top-6 left-1/2 -translate-x-1/2 text-[8px] md:text-[10px] font-bold tracking-[0.3em] uppercase text-orange-500 opacity-60 w-max">Visual Stories</span>
+                    <span className="absolute -top-4 md:-top-6 left-1/2 -translate-x-1/2 text-[8px] md:text-[10px] font-bold tracking-[0.3em] uppercase text-orange-500 opacity-60 w-max">
+                        {getContent('reels_label', 'Visual Stories')}
+                    </span>
                     <h2 className="text-2xl md:text-5xl font-serif font-black text-[#2D241E] uppercase tracking-wider mb-2 md:mb-4 relative z-10">
-                        Sacred <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-500 drop-shadow-sm">Reels</span>
+                        {getContent('reels_title', 'Sacred')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-500 drop-shadow-sm">{getContent('reels_title_accent', 'Reels')}</span>
                     </h2>
                     <div className="w-20 md:w-32 h-1 md:h-1.5 bg-gradient-to-r from-transparent via-orange-500 to-transparent mx-auto rounded-full opacity-80 group-hover:w-32 md:group-hover:w-48 transition-all duration-700"></div>
                 </div>
                 <p className="text-xs md:text-base text-[#8C7A6B] mt-3 md:mt-6 font-medium max-w-2xl mx-auto leading-relaxed px-6">
-                    Immerse yourself in the divine energy through our curated visual journeys.
+                    {getContent('reels_subtitle', 'Immerse yourself in the divine energy through our curated visual journeys.')}
                 </p>
             </div>
 

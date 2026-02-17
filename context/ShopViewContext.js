@@ -5,16 +5,17 @@ import { createContext, useContext, useState, useEffect } from 'react';
 const ShopViewContext = createContext();
 
 export function ShopViewProvider({ children }) {
-    const [view, setView] = useState('shop');
+    const [view, setView] = useState('shop'); // Always default to 'shop' view
 
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const storedView = localStorage.getItem('shopView');
-            if (storedView) {
-                setView(storedView);
-            }
-        }
-    }, []);
+    // Commented out localStorage retrieval - always starts with 'shop' view on page load
+    // useEffect(() => {
+    //     if (typeof window !== 'undefined') {
+    //         const storedView = localStorage.getItem('shopView');
+    //         if (storedView) {
+    //             setView(storedView);
+    //         }
+    //     }
+    // }, []);
 
     const updateView = (newView) => {
         setView(newView);

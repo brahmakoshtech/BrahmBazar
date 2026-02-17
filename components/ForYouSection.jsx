@@ -8,29 +8,7 @@ import { motion } from 'framer-motion';
 import { Sparkles, ShieldCheck } from 'lucide-react';
 import FaqAccordion from '@/components/FaqAccordion';
 import { getFaqs } from '@/services/faqService';
-
-const SUBTITLES = {
-    shop: {
-        good: "Helps maintain calm and balance",
-        must: "Strengthens your energy"
-    },
-    seva: {
-        good: "Small sacred steps for harmony",
-        must: "Core spiritual alignment"
-    },
-    yatra: {
-        good: "Helpful companions for your journey",
-        must: "Essential protection for travel"
-    },
-    puja: {
-        good: "Enhances your ritual gently",
-        must: "Completes your sacred ritual"
-    },
-    default: {
-        good: "Recommended for spiritual balance",
-        must: "Essential for your well-being"
-    }
-};
+import { useContent } from '@/hooks/useContent';
 
 export default function ForYouSection() {
     const [types, setTypes] = useState([]);
@@ -40,6 +18,14 @@ export default function ForYouSection() {
     const [contentLoading, setContentLoading] = useState(true);
     const [activeCoupons, setActiveCoupons] = useState([]);
     const [faqs, setFaqs] = useState([]);
+    const { content, getContent } = useContent();
+
+    // Dynamic subtitle getter
+    const getSubtitle = (tabSlug, type) => {
+        const identifier = `subtitle_${tabSlug}_${type}`;
+        const fallbackIdentifier = `subtitle_default_${type}`;
+        return getContent(identifier, getContent(fallbackIdentifier, type === 'good' ? 'Recommended for spiritual balance' : 'Essential for your well-being'));
+    };
 
     // 1. Initial Fetch calling types
     useEffect(() => {
@@ -108,13 +94,13 @@ export default function ForYouSection() {
             if (!section.data || section.data.length === 0) return null;
 
             const isMustHave = section.type === 'must_have';
-            const sectionTitle = isMustHave ? 'Must Have' : 'Good To Have';
+            const sectionTitle = isMustHave
+                ? getContent('must_have_title', 'Must Have')
+                : getContent('good_to_have_title', 'Good To Have');
 
-            // Subtitle Logic
+            // Subtitle Logic - Dynamic from content blocks
             const tabLower = activeTab ? activeTab.toLowerCase() : 'default';
-            const subMsg = isMustHave
-                ? (SUBTITLES[tabLower]?.must || SUBTITLES.default.must)
-                : (SUBTITLES[tabLower]?.good || SUBTITLES.default.good);
+            const subMsg = getSubtitle(tabLower, isMustHave ? 'must' : 'good');
 
             return (
                 <section key={section.id || idx} className="relative pb-4 pt-0 md:pt-4 mt-2">

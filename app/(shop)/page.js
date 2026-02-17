@@ -17,11 +17,11 @@ import { getFaqs } from '@/services/faqService';
 import FeaturedSection from '@/components/FeaturedSection';
 import ForYouSection from '@/components/ForYouSection';
 import { useShopView } from '@/context/ShopViewContext';
-
-// ... (existing imports)
+import { useContent } from '@/hooks/useContent';
 
 export default function Home() {
   const { view } = useShopView();
+  const { content, getContent } = useContent();
   const [products, setProducts] = useState([]);
   const [newArrivals, setNewArrivals] = useState([]);
   const [trendingProducts, setTrendingProducts] = useState([]);
@@ -76,30 +76,24 @@ export default function Home() {
       {/* 3. Category Showcase */}
       <CategoryShowcase />
 
-      {/* 3.1 Trending Section */}
-      <section className="py-8 md:py-16 bg-secondary/5 relative border-t border-primary/5">
-        <div className="container mx-auto px-4 max-w-7xl">
-          <div className="text-center mb-6 md:mb-12">
-            <span className="text-secondary font-bold tracking-[0.2em] uppercase text-xs md:text-sm mb-1.5 md:mb-3 block">
-              Curated Favorites
-            </span>
-            <h2 className="text-3xl md:text-4xl font-serif font-medium text-foreground mb-2 md:mb-6">
-              Trending <span className="text-primary italic">Now</span>
-            </h2>
-            <div className="flex gap-2 items-center justify-center opacity-70">
-              <div className="h-px w-12 bg-primary"></div>
-              <span className="text-primary text-xl">❖</span>
-              <div className="h-px w-12 bg-primary"></div>
+      {/* 3.1 Trending Section - Auto-hide when empty */}
+      {!loading && trendingProducts.length > 0 && (
+        <section className="py-8 md:py-16 bg-secondary/5 relative border-t border-primary/5">
+          <div className="container mx-auto px-4 max-w-7xl">
+            <div className="text-center mb-6 md:mb-12">
+              <span className="text-secondary font-bold tracking-[0.2em] uppercase text-xs md:text-sm mb-1.5 md:mb-3 block">
+                {getContent('trending_label', 'Curated Favorites')}
+              </span>
+              <h2 className="text-3xl md:text-4xl font-serif font-medium text-foreground mb-2 md:mb-6">
+                {getContent('trending_title', 'Trending')} <span className="text-primary italic">{getContent('trending_title_accent', 'Now')}</span>
+              </h2>
+              <div className="flex gap-2 items-center justify-center opacity-70">
+                <div className="h-px w-12 bg-primary"></div>
+                <span className="text-primary text-xl">❖</span>
+                <div className="h-px w-12 bg-primary"></div>
+              </div>
             </div>
-          </div>
 
-          {loading ? (
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="animate-pulse bg-muted rounded-2xl h-64"></div>
-              ))}
-            </div>
-          ) : (
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-4 lg:gap-5">
               {trendingProducts.slice(0, 5).map((product, idx) => (
                 <motion.div
@@ -112,49 +106,40 @@ export default function Home() {
                   <ProductCard product={product} activeCoupons={activeCoupons} />
                 </motion.div>
               ))}
-              {trendingProducts.length === 0 && (
-                <div className="col-span-full text-center text-muted-foreground py-10">Check back later for trending items.</div>
-              )}
             </div>
-          )}
 
-          <div className="mt-8 md:mt-12 text-center">
-            <Link
-              href="/shop?sort=trending"
-              className="group relative px-6 py-2 md:px-8 md:py-3 bg-transparent border border-primary/40 rounded-full text-sm md:text-base text-foreground font-serif tracking-wide hover:border-primary hover:bg-primary/5 transition-all duration-300 inline-block"
-            >
-              <span className="flex items-center gap-2">
-                View All Trending <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            <div className="mt-8 md:mt-12 text-center">
+              <Link
+                href="/shop?sort=trending"
+                className="group relative px-6 py-2 md:px-8 md:py-3 bg-transparent border border-primary/40 rounded-full text-sm md:text-base text-foreground font-serif tracking-wide hover:border-primary hover:bg-primary/5 transition-all duration-300 inline-block"
+              >
+                <span className="flex items-center gap-2">
+                  {getContent('trending_cta', 'View All Trending')} <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                </span>
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 3.2 New Arrivals Section - Auto-hide when empty */}
+      {!loading && newArrivals.length > 0 && (
+        <section className="py-8 md:py-16 bg-background relative border-t border-primary/5">
+          <div className="container mx-auto px-4 max-w-7xl">
+            <div className="text-center mb-6 md:mb-12">
+              <span className="text-secondary font-bold tracking-[0.2em] uppercase text-xs md:text-sm mb-1.5 md:mb-3 block">
+                {getContent('arrivals_label', 'Latest Treasures')}
               </span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 3.2 New Arrivals Section */}
-      <section className="py-8 md:py-16 bg-background relative border-t border-primary/5">
-        <div className="container mx-auto px-4 max-w-7xl">
-          <div className="text-center mb-6 md:mb-12">
-            <span className="text-secondary font-bold tracking-[0.2em] uppercase text-xs md:text-sm mb-1.5 md:mb-3 block">
-              Latest Treasures
-            </span>
-            <h2 className="text-3xl md:text-4xl font-serif font-medium text-foreground mb-2 md:mb-6">
-              New <span className="text-primary italic">Arrivals</span>
-            </h2>
-            <div className="flex gap-2 items-center justify-center opacity-70">
-              <div className="h-px w-12 bg-primary"></div>
-              <span className="text-primary text-xl">❖</span>
-              <div className="h-px w-12 bg-primary"></div>
+              <h2 className="text-3xl md:text-4xl font-serif font-medium text-foreground mb-2 md:mb-6">
+                {getContent('arrivals_title', 'New')} <span className="text-primary italic">{getContent('arrivals_title_accent', 'Arrivals')}</span>
+              </h2>
+              <div className="flex gap-2 items-center justify-center opacity-70">
+                <div className="h-px w-12 bg-primary"></div>
+                <span className="text-primary text-xl">❖</span>
+                <div className="h-px w-12 bg-primary"></div>
+              </div>
             </div>
-          </div>
 
-          {loading ? (
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="animate-pulse bg-muted rounded-2xl h-64"></div>
-              ))}
-            </div>
-          ) : (
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-4 lg:gap-5">
               {newArrivals.slice(0, 5).map((product, idx) => (
                 <motion.div
@@ -167,24 +152,21 @@ export default function Home() {
                   <ProductCard product={product} activeCoupons={activeCoupons} />
                 </motion.div>
               ))}
-              {newArrivals.length === 0 && (
-                <div className="col-span-full text-center text-muted-foreground py-10">No new arrivals at the moment.</div>
-              )}
             </div>
-          )}
 
-          <div className="mt-8 md:mt-12 text-center">
-            <Link
-              href="/shop"
-              className="group relative px-6 py-2 md:px-8 md:py-3 bg-transparent border border-primary/40 rounded-full text-sm md:text-base text-foreground font-serif tracking-wide hover:border-primary hover:bg-primary/5 transition-all duration-300 inline-block"
-            >
-              <span className="flex items-center gap-2">
-                See All Collection <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-              </span>
-            </Link>
+            <div className="mt-8 md:mt-12 text-center">
+              <Link
+                href="/shop"
+                className="group relative px-6 py-2 md:px-8 md:py-3 bg-transparent border border-primary/40 rounded-full text-sm md:text-base text-foreground font-serif tracking-wide hover:border-primary hover:bg-primary/5 transition-all duration-300 inline-block"
+              >
+                <span className="flex items-center gap-2">
+                  {getContent('arrivals_cta', 'See All Collection')} <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                </span>
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
 
 
