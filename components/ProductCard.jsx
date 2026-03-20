@@ -9,6 +9,20 @@ import { useMemo } from 'react';
 export default function ProductCard({ product, activeCoupons = [] }) {
     const { refreshCounts, addToCart } = useCart();
 
+    const ensureAuthenticated = async () => {
+        const userInfo = localStorage.getItem('userInfo');
+        if (userInfo) return true;
+
+        try {
+            await api.get('/api/users/profile');
+            // UI gating uses localStorage.userInfo presence; set placeholder.
+            localStorage.setItem('userInfo', JSON.stringify({}));
+            return true;
+        } catch (_) {
+            return false;
+        }
+    };
+
     const bestCoupon = useMemo(() => {
         if (!activeCoupons || activeCoupons.length === 0 || !product) return null;
 
@@ -109,8 +123,8 @@ export default function ProductCard({ product, activeCoupons = [] }) {
                     onClick={async (e) => {
                         e.stopPropagation();
                         e.preventDefault();
-                        const userInfo = localStorage.getItem('userInfo');
-                        if (!userInfo) {
+                        const ok = await ensureAuthenticated();
+                        if (!ok) {
                             // Redirect to login with return url
                             const currentPath = window.location.pathname;
                             window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
@@ -171,8 +185,8 @@ export default function ProductCard({ product, activeCoupons = [] }) {
                     onClick={async (e) => {
                         e.stopPropagation();
                         e.preventDefault();
-                        const userInfo = localStorage.getItem('userInfo');
-                        if (!userInfo) {
+                        const ok = await ensureAuthenticated();
+                        if (!ok) {
                             const currentPath = window.location.pathname;
                             window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
                             return;

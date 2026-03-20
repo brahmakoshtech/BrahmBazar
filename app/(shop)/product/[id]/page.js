@@ -26,6 +26,18 @@ export default function ProductDetailsPage({ params }) {
     const { success, error } = useToast();
     const [activeCoupons, setActiveCoupons] = useState([]);
 
+    const ensureAuthenticated = async () => {
+        const userInfo = localStorage.getItem('userInfo');
+        if (userInfo) return true;
+        try {
+            await api.get('/api/users/profile');
+            localStorage.setItem('userInfo', JSON.stringify({}));
+            return true;
+        } catch (_) {
+            return false;
+        }
+    };
+
     // Fetch active coupons
     useEffect(() => {
         const fetchCoupons = async () => {
@@ -192,8 +204,8 @@ export default function ProductDetailsPage({ params }) {
 
     const addToCart = async (redirect = false) => {
         // Check authentication
-        const userInfo = localStorage.getItem('userInfo');
-        if (!userInfo) {
+        const ok = await ensureAuthenticated();
+        if (!ok) {
             const currentPath = window.location.pathname;
             router.push(`/login?redirect=${encodeURIComponent(currentPath)}`);
             return;
@@ -217,8 +229,8 @@ export default function ProductDetailsPage({ params }) {
     };
 
     const toggleWishlist = async () => {
-        const userInfo = localStorage.getItem('userInfo');
-        if (!userInfo) {
+        const ok = await ensureAuthenticated();
+        if (!ok) {
             const currentPath = window.location.pathname;
             router.push(`/login?redirect=${encodeURIComponent(currentPath)}`);
             return;

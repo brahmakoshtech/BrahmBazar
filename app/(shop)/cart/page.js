@@ -289,12 +289,19 @@ export default function CartPage() {
         }
     };
 
-    const handleCheckout = () => {
+    const handleCheckout = async () => {
         const userInfo = localStorage.getItem('userInfo');
         if (userInfo) {
             router.push('/checkout');
-        } else {
-            // Redirect to register if guest
+            return;
+        }
+
+        try {
+            await api.get('/api/users/profile');
+            localStorage.setItem('userInfo', JSON.stringify({}));
+            router.push('/checkout');
+        } catch (_) {
+            // Redirect to register if not authenticated
             router.push('/register?redirect=/checkout');
         }
     };
