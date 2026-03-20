@@ -246,6 +246,21 @@ export default function ProductDetailsPage({ params }) {
             </div>
         </div>
     );
+    
+    // If product fetch failed (proxy 404, CORS, etc.), avoid crashing on `product.stock` / `product.images`.
+    if (!product) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-transparent text-foreground py-20">
+                <div className="text-center max-w-md px-4">
+                    <div className="text-2xl md:text-3xl font-serif font-bold mb-3">Product not found</div>
+                    <div className="text-muted-foreground mb-6">Please go back and try another item.</div>
+                    <Link href="/shop" className="px-5 py-3 rounded-full bg-primary text-white font-bold hover:opacity-90 transition-opacity">
+                        Back to Shop
+                    </Link>
+                </div>
+            </div>
+        );
+    }
     return (
         <div className="min-h-screen bg-transparent text-foreground py-4 md:py-8">
             <div className="container max-w-7xl mx-auto px-4">
