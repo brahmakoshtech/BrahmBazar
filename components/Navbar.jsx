@@ -37,7 +37,25 @@ export default function Navbar() {
    const [isSticky, setIsSticky] = useState(false);
    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
    const [expandedCategory, setExpandedCategory] = useState(null); // For mobile accordion
-   const [categories, setCategories] = useState([]);
+   // Fallback so navbar still renders after SSO/deep-linking even if /api/categories fails.
+   // (Navbar visibility depends on `categories.map(...)`.)
+   const fallbackCategories = [
+     { _id: 'bracelets', name: 'Bracelets', slug: 'bracelets', subcategories: [] },
+     { _id: 'gemstones', name: 'Gemstones', slug: 'gemstones', subcategories: [] },
+     { _id: 'malas', name: 'Malas', slug: 'malas', subcategories: [] },
+     { _id: 'parad', name: 'Parad', slug: 'parad', subcategories: [] },
+     {
+       _id: 'rudraksha',
+       name: 'Rudraksha',
+       slug: 'rudraksha',
+       subcategories: [],
+     },
+     { _id: 'sale', name: 'Sale', slug: 'sale', subcategories: [] },
+     { _id: 'sphatik', name: 'Sphatik', slug: 'sphatik', subcategories: [] },
+     { _id: 'yantra', name: 'Yantra', slug: 'yantra', subcategories: [] },
+   ];
+
+   const [categories, setCategories] = useState(fallbackCategories);
    const { cartCount, wishlistCount } = useCart();
    const [isMobileSearching, setIsMobileSearching] = useState(false);
    const [mounted, setMounted] = useState(false);
@@ -54,7 +72,10 @@ export default function Navbar() {
       const fetchCategories = async () => {
          try {
             const { data } = await api.get('/api/categories');
-            setCategories(data);
+            // If API returns empty/unexpected data, keep fallback so navbar still works.
+            if (Array.isArray(data) && data.length > 0) {
+               setCategories(data);
+            }
          } catch (error) {
             console.error('Failed to fetch categories:', error);
          }
