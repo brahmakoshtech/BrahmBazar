@@ -54,6 +54,7 @@ export default function Navbar() {
      { _id: 'sphatik', name: 'Sphatik', slug: 'sphatik', subcategories: [] },
      { _id: 'yantra', name: 'Yantra', slug: 'yantra', subcategories: [] },
    ];
+   
 
    const [categories, setCategories] = useState(fallbackCategories);
    const { cartCount, wishlistCount } = useCart();
