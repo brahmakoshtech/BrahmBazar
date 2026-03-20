@@ -7,12 +7,14 @@ import { useRouter } from 'next/navigation';
 import { Trash2, ShoppingBag, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ProductCard from '@/components/ProductCard';
+import { useCart } from '@/context/CartContext';
 
 import { useToast } from '@/context/ToastContext';
 import EmptyState from '@/components/ui/EmptyState';
 
 export default function CartPage() {
     const router = useRouter();
+    const { isAuthenticated } = useCart();
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [total, setTotal] = useState(0);

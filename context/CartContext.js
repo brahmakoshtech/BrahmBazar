@@ -9,13 +9,39 @@ export function CartProvider({ children }) {
     const [cartCount, setCartCount] = useState(0);
     const [wishlistCount, setWishlistCount] = useState(0);
     const [cartItems, setCartItems] = useState([]);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    const checkAuth = async () => {
+        try {
+            await api.get('/api/users/profile');
+            // Important: some UI gates use `localStorage.userInfo` presence.
+            // SSO uses httpOnly cookies, so token isn't in localStorage.
+            // We set a placeholder so the UI treats the user as logged in.
+            if (!localStorage.getItem('userInfo')) {
+                localStorage.setItem('userInfo', JSON.stringify({}));
+                // Trigger listeners (cart page refetches guest->user cart).
+                try { window.dispatchEvent(new Event('storage')); } catch (_) {}
+            }
+            return true;
+        } catch (e) {
+            return false;
+        }
+    };
 
     const fetchCounts = async () => {
         try {
             const userInfo = localStorage.getItem('userInfo');
+            let authed = !!userInfo;
 
-            if (!userInfo) {
-                // Guest mode
+            // If SSO user exists but localStorage isn't set, detect auth via cookie.
+            if (!authed) {
+                authed = await checkAuth();
+            }
+
+            setIsAuthenticated(authed);
+
+            if (!authed) {
+                // Guest mode (no valid SSO cookie session)
                 let guestCart = [];
                 try {
                     guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]');
@@ -63,8 +89,9 @@ export function CartProvider({ children }) {
 
     const addToCart = async (product, quantity = 1) => {
         const userInfo = localStorage.getItem('userInfo');
+        const authed = !!userInfo || isAuthenticated;
 
-        if (!userInfo) {
+        if (!authed) {
             // Guest Logic
             let guestCart = [];
             try {
@@ -96,7 +123,7 @@ export function CartProvider({ children }) {
     };
 
     return (
-        <CartContext.Provider value={{ cartCount, wishlistCount, refreshCounts, addToCart, cartItems }}>
+        <CartContext.Provider value={{ cartCount, wishlistCount, refreshCounts, addToCart, cartItems, isAuthenticated }}>
             {children}
         </CartContext.Provider>
     );
